@@ -1,0 +1,125 @@
+@layer theme, base, clerk, components, utilities; /* Ensure Clerk is compatible with Tailwind CSS v4 */
+
+@import 'tailwindcss';
+
+@layer theme {
+  :root {
+    --font-size-2xs: 12px;
+    --line-height-2xs: 16px;
+  }
+}
+
+@layer base {
+  /* Smooth scrolling for hash navigation (respects user motion preferences) */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* Matrix-specific styles */
+@layer components {
+  .matrix-text {
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px #00ff00;
+  }
+
+  .matrix-glow {
+    box-shadow: 0 0 20px #00ff00;
+  }
+
+  .matrix-bg {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 255, 0, 0.1) 100%
+    );
+  }
+
+  /* Form select dropdown styling */
+  select.font-mono {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2334d399' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+    padding-right: 2.5rem;
+    appearance: none;
+  }
+}
+
+@layer utilities {
+  .text-2xs {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .header-nav-link {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .header-status {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .header-nav-link {
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    .header-status {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+}
+
+/* Custom animations */
+@keyframes matrix-fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes matrix-glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.animate-matrix-fade {
+  animation: matrix-fade 2s ease-in-out infinite;
+}
+
+.animate-matrix-glitch {
+  animation: matrix-glitch 0.3s ease-in-out infinite;
+}
