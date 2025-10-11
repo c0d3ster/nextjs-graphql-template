@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { ContactForm } from '@/components/molecules'
+import { LandingPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function Index() {
   return (
-    <div className='min-h-screen bg-gray-900'>
+    <LandingPageTemplate>
       {/* Main Content */}
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
@@ -55,6 +56,6 @@ export default function Index() {
       <div id='contact' className='bg-gray-800 py-16'>
         <ContactForm />
       </div>
-    </div>
+    </LandingPageTemplate>
   )
 }

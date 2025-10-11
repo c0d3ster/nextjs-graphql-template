@@ -2,13 +2,11 @@
 
 A minimal, production-ready template for modern web applications built with Next.js, GraphQL, and TypeScript.
 
-> **Inspired by**: [Next.js Boilerplate](https://github.com/ixartz/Next-js-Boilerplate) - A comprehensive Next.js starter template
-
 ## 🎯 What This Template Provides
 
 - **Modern Frontend**: Next.js 15 with App Router, React 19, TypeScript, Tailwind CSS
 - **GraphQL API**: Apollo Server with type-graphql for schema-first development
-- **Authentication**: Clerk integration for user management
+- **Authentication**: Clerk integration with modal-based sign-in/sign-up
 - **Atomic Design**: Organized component structure (atoms, molecules, organisms, templates)
 - **Type Safety**: Full TypeScript coverage with automatic GraphQL type generation
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
@@ -29,14 +27,52 @@ A minimal, production-ready template for modern web applications built with Next
 
 Clean, layered architecture designed for scalability:
 
+```
+FRONTEND (React / Next.js)
+──────────────────────────
+components/pages/hooks
+   │
+   ▼
+apiClients/ (GraphQL operations)
+   - ContactApiClient.ts
+   - UserApiClient.ts
+   │
+   ▼
+APOLLO CLIENT
+   - GraphQL query/mutation execution
+   - Caching and state management
+   - Type-safe operations
+   │
+   ▼
+APOLLO SERVER (GraphQL API)
+   - type-graphql schema generation
+   - Resolver execution
+   - Authentication & authorization
+   │
+   ▼
+GRAPHQL RESOLVERS
+   - ContactResolver.ts
+   - UserResolver.ts
+   │
+   ▼
+SERVICE LAYER
+   - ContactService.ts
+   - UserService.ts
+   - Authentication & permission checking
+   │
+   ▼
+DATABASE / EXTERNAL APIs
+   - Drizzle ORM / Clerk / PostgreSQL
+```
+
+### Key Features
+
 - **Frontend**: React components with TypeScript and Tailwind CSS
 - **API Layer**: GraphQL with Apollo Client and automatic code generation
 - **Business Logic**: Service layer with authentication and permission handling
 - **Data Layer**: PostgreSQL with Drizzle ORM
-- **Authentication**: Clerk for user management and authentication
+- **Authentication**: Clerk for user management with modal-based auth
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
-
-**[📋 View Detailed Architecture →](./ARCHITECTURE.md)**
 
 ## ⚙️ Quick Start
 
@@ -67,7 +103,19 @@ Clean, layered architecture designed for scalability:
    npm run dev
    ```
 
-**[🔧 Full Development Setup →](./DEVELOPMENT.md)**
+## 🔐 Authentication Demo
+
+This template includes a complete authentication demonstration:
+
+- **Public Pages**: Homepage with contact form
+- **Protected Pages**: `/profile` (requires authentication)
+- **Authentication Flow**:
+  - Sign in/up via Clerk modals
+  - Automatic redirects for protected routes
+  - User session management
+  - Sign out functionality
+
+Try accessing `/profile` without signing in - you'll be redirected to the sign-in modal.
 
 ## 🎨 Component Structure
 
@@ -76,19 +124,62 @@ Organized using Atomic Design principles:
 ```
 src/components/
 ├── atoms/          # Basic building blocks (buttons, inputs, etc.)
-├── molecules/      # Simple combinations of atoms
-├── organisms/      # Complex UI components
+├── molecules/      # Simple combinations of atoms (ContactForm, etc.)
+├── organisms/      # Complex UI components (SiteHeader, etc.)
 └── templates/      # Page-level layouts
 ```
 
 ## 📦 Available Scripts
 
-- `npm run dev` - Start development server
+- `npm run dev` - Start development server with GraphQL codegen watch
 - `npm run build` - Build for production
-- `npm run test` - Run tests
+- `npm run test` - Run unit tests with Vitest
+- `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Run ESLint
 - `npm run db:studio` - Open database studio
+- `npm run codegen` - Generate GraphQL types
+- `npm run codegen:watch` - Watch and regenerate GraphQL types
+
+## 🧪 Testing
+
+- **Unit Tests**: Vitest with comprehensive coverage
+- **E2E Tests**: Playwright for end-to-end testing
+- **Mocking**: Centralized mocks in `tests/mocks/`
+- **Test Setup**: Configured for both unit and E2E testing
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── (auth)/            # Protected routes
+│   │   └── profile/       # User profile page
+│   ├── (public)/          # Public routes
+│   │   └── page.tsx       # Homepage
+│   └── api/               # API routes
+│       └── graphql/       # GraphQL endpoint
+├── components/            # React components (atomic design)
+├── graphql/              # GraphQL schema, resolvers, and context
+├── services/             # Business logic layer
+├── libs/                 # Utility libraries (DB, Logger, etc.)
+├── models/               # Database models
+├── validations/          # Form validation schemas
+└── utils/                # Helper utilities
+```
+
+## 🚀 Deployment
+
+This template is ready for deployment on platforms like:
+
+- Vercel (recommended for Next.js)
+- Railway
+- Render
+- DigitalOcean App Platform
+
+Make sure to configure your environment variables in your deployment platform.
 
 ---
 
 **Template for modern web applications** 🚀
+
+> **Inspired by**: [Next.js Boilerplate](https://github.com/ixartz/Next-js-Boilerplate) - A comprehensive Next.js starter template

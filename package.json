@@ -1,6 +1,6 @@
 {
-  "name": "c0d3ster",
-  "author": "c0d3ster (https://github.com/c0d3ster)",
+  "name": "{{PROJECT_NAME}}",
+  "author": "{{AUTHOR_NAME}} (https://github.com/{{GITHUB_USERNAME}})",
   "engines": {
     "node": ">=20"
   },

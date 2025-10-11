@@ -4,9 +4,25 @@ import { describe, expect, it, vi } from 'vitest'
 import { LandingPageTemplate } from './LandingPageTemplate'
 
 // Mock child components
-vi.mock('@/components/atoms', () => ({
+vi.mock('@/components/organisms', () => ({
   __esModule: true,
-  MatrixBackground: () => <canvas data-testid='matrix-background' />,
+  SiteHeader: ({
+    menuItems,
+  }: {
+    menuItems: Array<{ label: string; href: string }>
+  }) => (
+    <header data-testid='site-header'>
+      {menuItems.map((item) => (
+        <a
+          key={item.label}
+          href={item.href}
+          data-testid={`nav-${item.label.toLowerCase()}`}
+        >
+          {item.label}
+        </a>
+      ))}
+    </header>
+  ),
 }))
 
 describe('LandingPageTemplate', () => {
@@ -21,28 +37,39 @@ describe('LandingPageTemplate', () => {
     expect(screen.getByText(testContent)).toBeInTheDocument()
   })
 
-  it('renders MatrixBackground component', () => {
+  it('renders SiteHeader component', () => {
     render(
       <LandingPageTemplate>
         <div>content</div>
       </LandingPageTemplate>
     )
 
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
   })
 
-  it('renders MatrixBackground before content', () => {
+  it('renders navigation menu items', () => {
+    render(
+      <LandingPageTemplate>
+        <div>content</div>
+      </LandingPageTemplate>
+    )
+
+    expect(screen.getByTestId('nav-home')).toBeInTheDocument()
+    expect(screen.getByTestId('nav-contact')).toBeInTheDocument()
+  })
+
+  it('renders SiteHeader before content', () => {
     render(
       <LandingPageTemplate>
         <div data-testid='test-content'>content</div>
       </LandingPageTemplate>
     )
 
-    const background = screen.getByTestId('matrix-background')
+    const header = screen.getByTestId('site-header')
     const content = screen.getByTestId('test-content')
 
-    // MatrixBackground should be rendered before the content in the DOM
-    expect(background.compareDocumentPosition(content)).toBe(
+    // SiteHeader should be rendered before the content in the DOM
+    expect(header.compareDocumentPosition(content)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     )
   })
@@ -78,17 +105,13 @@ describe('LandingPageTemplate', () => {
   it('handles complex landing page structure', () => {
     render(
       <LandingPageTemplate>
-        <header data-testid='header'>
-          <nav>Navigation</nav>
-        </header>
         <section data-testid='hero'>Hero Section</section>
         <section data-testid='portfolio'>Portfolio Section</section>
         <section data-testid='contact'>Contact Section</section>
       </LandingPageTemplate>
     )
 
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
-    expect(screen.getByTestId('header')).toBeInTheDocument()
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
     expect(screen.getByTestId('hero')).toBeInTheDocument()
     expect(screen.getByTestId('portfolio')).toBeInTheDocument()
     expect(screen.getByTestId('contact')).toBeInTheDocument()
@@ -97,10 +120,12 @@ describe('LandingPageTemplate', () => {
   it('handles empty children gracefully', () => {
     render(<LandingPageTemplate>{null}</LandingPageTemplate>)
 
-    // Should still render MatrixBackground and container structure
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    // Should still render SiteHeader and container structure
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
 
-    const container = document.querySelector('.relative.min-h-screen')
+    const container = document.querySelector(
+      '.min-h-screen.scroll-smooth.bg-gray-900'
+    )
 
     expect(container).toBeInTheDocument()
   })
@@ -109,18 +134,18 @@ describe('LandingPageTemplate', () => {
     render(<LandingPageTemplate>Simple string content</LandingPageTemplate>)
 
     expect(screen.getByText('Simple string content')).toBeInTheDocument()
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
   })
 
-  it('ensures background and content coexist', () => {
+  it('ensures header and content coexist', () => {
     render(
       <LandingPageTemplate>
         <div data-testid='content'>Landing content</div>
       </LandingPageTemplate>
     )
 
-    // Both background and content should be present
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    // Both header and content should be present
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
     expect(screen.getByTestId('content')).toBeInTheDocument()
   })
 
@@ -132,7 +157,7 @@ describe('LandingPageTemplate', () => {
     )
 
     expect(screen.getByText('Initial content')).toBeInTheDocument()
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
 
     rerender(
       <LandingPageTemplate>
@@ -141,6 +166,33 @@ describe('LandingPageTemplate', () => {
     )
 
     expect(screen.getByText('Updated content')).toBeInTheDocument()
-    expect(screen.getByTestId('matrix-background')).toBeInTheDocument()
+    expect(screen.getByTestId('site-header')).toBeInTheDocument()
+  })
+
+  it('applies correct CSS classes to container', () => {
+    render(
+      <LandingPageTemplate>
+        <div>content</div>
+      </LandingPageTemplate>
+    )
+
+    const container = document.querySelector(
+      '.min-h-screen.scroll-smooth.bg-gray-900'
+    )
+
+    expect(container).toBeInTheDocument()
+  })
+
+  it('applies correct padding to content area', () => {
+    render(
+      <LandingPageTemplate>
+        <div data-testid='content'>content</div>
+      </LandingPageTemplate>
+    )
+
+    const contentArea = document.querySelector('.pt-16')
+
+    expect(contentArea).toBeInTheDocument()
+    expect(screen.getByTestId('content')).toBeInTheDocument()
   })
 })
