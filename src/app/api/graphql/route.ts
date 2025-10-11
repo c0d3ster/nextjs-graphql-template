@@ -27,9 +27,9 @@ const server = new ApolloServer({
   },
 })
 
-const handler = startServerAndCreateNextHandler(server, {
-  context: async () => {
-    return await createContext()
+const handler = startServerAndCreateNextHandler<NextRequest>(server, {
+  context: async (req) => {
+    return await createContext(req)
   },
 })
 

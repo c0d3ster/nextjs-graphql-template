@@ -19,6 +19,15 @@
       "logoPath": "{{LOGO_PATH}}",
       "linkedinUsername": "{{LINKEDIN_USERNAME}}"
     },
+    "theme": {
+      "colors": {
+        "primary": "{{PRIMARY_COLOR:59 130 246}}",
+        "secondary": "{{SECONDARY_COLOR:139 92 246}}",
+        "accent": "{{ACCENT_COLOR:16 185 129}}",
+        "background": "{{BACKGROUND_COLOR:17 24 39}}",
+        "surface": "{{SURFACE_COLOR:31 41 55}}"
+      }
+    },
     "features": {
       "portfolio": true,
       "projectManagement": true,
@@ -35,7 +44,8 @@
       "src/constants/brand.ts",
       "src/app/layout.tsx",
       "src/app/(public)/page.tsx",
-      "src/app/(public)/layout.tsx"
+      "src/app/(public)/layout.tsx",
+      "src/styles/global.css"
     ],
     "remove": [
       "src/app/(public)/ballz/",

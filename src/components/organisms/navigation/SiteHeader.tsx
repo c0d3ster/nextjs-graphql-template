@@ -2,40 +2,19 @@
 
 import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 export type NavItem = { label: string; href: string }
 
 type SiteHeaderProps = {
   menuItems: NavItem[]
+  activeItem?: string
 }
 
-export const SiteHeader = ({ menuItems }: SiteHeaderProps) => {
+export const SiteHeader = ({
+  menuItems,
+  activeItem = 'home',
+}: SiteHeaderProps) => {
   const { user, isLoaded } = useUser()
-  const [activeItem, setActiveItem] = useState<string>('home')
-
-  // Handle scroll-based highlighting
-  useEffect(() => {
-    const handleScroll = () => {
-      const contactSection = document.getElementById('contact')
-      if (contactSection) {
-        const rect = contactSection.getBoundingClientRect()
-        // Check if contact section is visible in viewport (top of section is above viewport center)
-        const isInView = rect.top <= window.innerHeight / 2
-
-        if (isInView) {
-          setActiveItem('contact')
-        } else {
-          setActiveItem('home')
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Check initial position
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <header className='fixed top-0 right-0 left-0 z-50 border-b border-gray-700 bg-gray-800 shadow-sm'>

@@ -4,8 +4,25 @@
 
 @layer theme {
   :root {
+    /* Typography */
     --font-size-2xs: 12px;
     --line-height-2xs: 16px;
+
+    /* Theme Colors - RGB values for Tailwind opacity support */
+    --color-primary: {{PRIMARY_COLOR}};
+    --color-secondary: {{SECONDARY_COLOR}};
+    --color-accent: {{ACCENT_COLOR}};
+    --color-background: {{BACKGROUND_COLOR}};
+    --color-surface: {{SURFACE_COLOR}};
+  }
+
+  /* Define Tailwind color utilities using CSS variables */
+  @theme {
+    --color-primary: rgb(var(--color-primary) / <alpha-value>);
+    --color-secondary: rgb(var(--color-secondary) / <alpha-value>);
+    --color-accent: rgb(var(--color-accent) / <alpha-value>);
+    --color-background: rgb(var(--color-background) / <alpha-value>);
+    --color-surface: rgb(var(--color-surface) / <alpha-value>);
   }
 }
 
