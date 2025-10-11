@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import Link from 'next/link'
 
-import { ContactForm } from '@/components/molecules'
+import { ContactForm, ThemeEditor } from '@/components/molecules'
 import { LandingPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
 
@@ -26,7 +26,7 @@ export default function Index() {
           </p>
 
           {/* Auth Demo Section */}
-          <div className='mb-8 rounded-lg bg-gray-800 p-6'>
+          <div className='bg-surface mb-8 rounded-lg p-6'>
             <h3 className='mb-4 text-xl font-semibold text-white'>
               Authentication Demo
             </h3>
@@ -38,7 +38,7 @@ export default function Index() {
                   Protected pages (try accessing{' '}
                   <Link
                     href='/profile'
-                    className='text-blue-400 hover:text-blue-300'
+                    className='text-primary hover:text-primary/80'
                   >
                     /profile
                   </Link>{' '}
@@ -49,11 +49,14 @@ export default function Index() {
               </ul>
             </div>
           </div>
+
+          {/* Theme Editor */}
+          <ThemeEditor />
         </div>
       </div>
 
       {/* Contact Form Section */}
-      <div id='contact' className='bg-gray-800 py-16'>
+      <div id='contact' className='bg-surface py-16'>
         <ContactForm />
       </div>
     </LandingPageTemplate>

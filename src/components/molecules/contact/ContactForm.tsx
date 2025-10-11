@@ -89,7 +89,7 @@ export const ContactForm = () => {
               {...register('name')}
               id='name'
               type='text'
-              className='w-full rounded border border-gray-600 bg-gray-800 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              className='bg-secondary w-full rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
               placeholder='Your name'
             />
           </div>
@@ -104,7 +104,7 @@ export const ContactForm = () => {
               {...register('email')}
               id='email'
               type='email'
-              className='w-full rounded border border-gray-600 bg-gray-800 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              className='bg-secondary w-full rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
               placeholder='your@email.com'
             />
           </div>
@@ -137,7 +137,7 @@ export const ContactForm = () => {
             {...register('message')}
             id='message'
             rows={4}
-            className='w-full resize-none rounded border border-gray-600 bg-gray-800 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+            className='bg-secondary w-full resize-none rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
             placeholder='Tell us about your project...'
           />
         </div>

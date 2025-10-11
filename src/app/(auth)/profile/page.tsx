@@ -19,35 +19,35 @@ export default function ProfilePage() {
       {/* Content Cards */}
       <div className='grid gap-6 md:grid-cols-2'>
         {/* Authentication Status Card */}
-        <div className='rounded-lg bg-gray-800 p-6'>
+        <div className='bg-surface rounded-lg p-6'>
           <h2 className='mb-4 text-xl font-semibold text-white'>
             Authentication Status
           </h2>
           <div className='space-y-3'>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-green-500'></div>
+              <div className='bg-accent h-2 w-2 rounded-full'></div>
               <span className='text-gray-300'>Signed in successfully</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-green-500'></div>
+              <div className='bg-accent h-2 w-2 rounded-full'></div>
               <span className='text-gray-300'>Protected route accessed</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-green-500'></div>
+              <div className='bg-accent h-2 w-2 rounded-full'></div>
               <span className='text-gray-300'>User session active</span>
             </div>
           </div>
         </div>
 
         {/* Quick Actions Card */}
-        <div className='rounded-lg bg-gray-800 p-6'>
+        <div className='bg-surface rounded-lg p-6'>
           <h2 className='mb-4 text-xl font-semibold text-white'>
             Quick Actions
           </h2>
           <div className='space-y-3'>
             <Link
               href='/'
-              className='block rounded bg-blue-600 px-4 py-2 text-center text-white transition-colors hover:bg-blue-700'
+              className='bg-primary hover:bg-primary/90 block rounded px-4 py-2 text-center text-white transition-colors'
             >
               Return to Home
             </Link>
@@ -56,7 +56,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Information Section */}
-      <div className='mt-8 rounded-lg bg-gray-800 p-6'>
+      <div className='bg-surface mt-8 rounded-lg p-6'>
         <h2 className='mb-4 text-xl font-semibold text-white'>
           About This Demo
         </h2>

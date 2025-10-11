@@ -23,7 +23,7 @@ export const ClerkProvider = ({
       cssLayerName: 'clerk', // Ensure Clerk is compatible with Tailwind CSS v4
       elements: {
         // Main container styling
-        card: '!bg-gray-800 !border !border-gray-600 !rounded-lg !shadow-lg',
+        card: '!bg-secondary !border !border-gray-600 !rounded-lg !shadow-lg',
         headerTitle: '!text-white !font-semibold !text-xl',
         headerSubtitle: '!text-gray-300 !text-base',
 
@@ -67,7 +67,7 @@ export const ClerkProvider = ({
         // Modal styling
         modalBackdrop: '!bg-black/60 !backdrop-blur-sm',
         modalContent:
-          '!bg-gray-800 !border !border-gray-600 !rounded-lg !shadow-lg',
+          '!bg-secondary !border !border-gray-600 !rounded-lg !shadow-lg',
 
         // Form field wrapper
         formField: '!space-y-2',

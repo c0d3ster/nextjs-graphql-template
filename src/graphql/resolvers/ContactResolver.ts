@@ -1,8 +1,9 @@
 import { Arg, Mutation, Resolver } from 'type-graphql'
 
+import type { ContactFormInput } from '@/graphql/schema'
 import type { ContactService } from '@/services'
 
-import { ContactFormInput, ContactSubmission } from '@/graphql/schema'
+import { ContactSubmission } from '@/graphql/schema'
 import { logger } from '@/libs/Logger'
 
 @Resolver()

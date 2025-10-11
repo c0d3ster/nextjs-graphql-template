@@ -17,7 +17,7 @@ export const SiteHeader = ({
   const { user, isLoaded } = useUser()
 
   return (
-    <header className='fixed top-0 right-0 left-0 z-50 border-b border-gray-700 bg-gray-800 shadow-sm'>
+    <header className='bg-surface fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-sm'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
@@ -27,7 +27,7 @@ export const SiteHeader = ({
             </Link>
           </div>
 
-          {/* Navigation - Centered */}
+          {/* Navigation */}
           <nav className='flex space-x-8'>
             {menuItems.map((item) => {
               const isActive = activeItem === item.label.toLowerCase()
@@ -36,9 +36,7 @@ export const SiteHeader = ({
                   key={item.label}
                   href={item.href}
                   className={`text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'text-blue-400'
-                      : 'text-gray-300 hover:text-blue-400'
+                    isActive ? 'text-primary' : 'hover:text-primary text-gray-300'
                   }`}
                 >
                   {item.label}
@@ -47,17 +45,17 @@ export const SiteHeader = ({
             })}
           </nav>
 
-          {/* Auth - Simple */}
+          {/* Auth */}
           <div className='flex items-center'>
             {isLoaded && user ? (
               <SignOutButton>
-                <button className='text-sm text-gray-300 hover:text-blue-400'>
+                <button className='hover:text-primary text-sm text-gray-300'>
                   Sign Out
                 </button>
               </SignOutButton>
             ) : (
               <SignInButton mode='modal'>
-                <button className='text-sm text-gray-300 hover:text-blue-400'>
+                <button className='hover:text-primary text-sm text-gray-300'>
                   Sign In
                 </button>
               </SignInButton>

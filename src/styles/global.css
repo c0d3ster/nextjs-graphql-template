@@ -8,21 +8,12 @@
     --font-size-2xs: 12px;
     --line-height-2xs: 16px;
 
-    /* Theme Colors - RGB values for Tailwind opacity support */
-    --color-primary: {{PRIMARY_COLOR}};
-    --color-secondary: {{SECONDARY_COLOR}};
-    --color-accent: {{ACCENT_COLOR}};
-    --color-background: {{BACKGROUND_COLOR}};
-    --color-surface: {{SURFACE_COLOR}};
-  }
-
-  /* Define Tailwind color utilities using CSS variables */
-  @theme {
-    --color-primary: rgb(var(--color-primary) / <alpha-value>);
-    --color-secondary: rgb(var(--color-secondary) / <alpha-value>);
-    --color-accent: rgb(var(--color-accent) / <alpha-value>);
-    --color-background: rgb(var(--color-background) / <alpha-value>);
-    --color-surface: rgb(var(--color-surface) / <alpha-value>);
+    /* Theme Colors - RGB values (space-separated for opacity support) */
+    --color-primary: 59 130 246;
+    --color-secondary: 31 41 55;
+    --color-accent: 16 185 129;
+    --color-background: 17 24 39;
+    --color-surface: 31 41 55;
   }
 }
 
@@ -40,103 +31,29 @@
   }
 }
 
-/* Matrix-specific styles */
-@layer components {
-  .matrix-text {
-    font-family: 'Courier New', monospace;
-    text-shadow: 0 0 10px #00ff00;
-  }
-
-  .matrix-glow {
-    box-shadow: 0 0 20px #00ff00;
-  }
-
-  .matrix-bg {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(0, 255, 0, 0.1) 100%
-    );
-  }
-
-  /* Form select dropdown styling */
-  select.font-mono {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2334d399' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.75rem center;
-    background-repeat: no-repeat;
-    background-size: 1rem 1rem;
-    padding-right: 2.5rem;
-    appearance: none;
-  }
-}
-
 @layer utilities {
-  .text-2xs {
-    font-size: 12px;
-    line-height: 16px;
+  .bg-background {
+    background-color: rgb(var(--color-background));
   }
-
-  .header-nav-link {
-    font-size: 12px;
-    line-height: 16px;
+  .bg-surface {
+    background-color: rgb(var(--color-surface));
   }
-
-  .header-status {
-    font-size: 12px;
-    line-height: 16px;
+  .bg-primary {
+    background-color: rgb(var(--color-primary));
   }
-
-  @media (min-width: 768px) {
-    .header-nav-link {
-      font-size: 18px;
-      line-height: 28px;
-    }
-
-    .header-status {
-      font-size: 14px;
-      line-height: 20px;
-    }
+  .bg-secondary {
+    background-color: rgb(var(--color-secondary));
   }
-}
-
-/* Custom animations */
-@keyframes matrix-fade {
-  0% {
-    opacity: 0;
+  .bg-accent {
+    background-color: rgb(var(--color-accent));
   }
-  50% {
-    opacity: 1;
+  .text-primary {
+    color: rgb(var(--color-primary));
   }
-  100% {
-    opacity: 0;
+  .text-secondary {
+    color: rgb(var(--color-secondary));
   }
-}
-
-@keyframes matrix-glitch {
-  0% {
-    transform: translate(0);
+  .text-accent {
+    color: rgb(var(--color-accent));
   }
-  20% {
-    transform: translate(-2px, 2px);
-  }
-  40% {
-    transform: translate(-2px, -2px);
-  }
-  60% {
-    transform: translate(2px, 2px);
-  }
-  80% {
-    transform: translate(2px, -2px);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-
-.animate-matrix-fade {
-  animation: matrix-fade 2s ease-in-out infinite;
-}
-
-.animate-matrix-glitch {
-  animation: matrix-glitch 0.3s ease-in-out infinite;
 }

@@ -86,9 +86,45 @@ DATABASE / EXTERNAL APIs
 
 2. **Set up environment:**
 
+   **Development:**
+
    ```bash
-   cp .env.example .env.local
-   # Configure your environment variables
+   cp .env .env.local
+   # Edit .env.local with your development values
+   ```
+
+   **Production:**
+
+   ```bash
+   cp .env.production .env.production.local
+   # Edit .env.production.local with your production values
+   ```
+
+   Required environment variables:
+
+   ```bash
+   # Database
+   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+   # Clerk Authentication
+   CLERK_SECRET_KEY=sk_test_...
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+
+   # App Configuration
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   ```
+
+   Optional environment variables:
+
+   ```bash
+   # Clerk Webhooks (if using webhooks)
+   CLERK_WEBHOOK_SECRET=whsec_...
+
+   # Portfolio Site Integration (for theme updates)
+   PORTFOLIO_SECRET_TOKEN=your-secret-token
+
+   # Email (Resend - for contact form)
+   RESEND_API_KEY=re_...
    ```
 
 3. **Set up database:**
