@@ -9,9 +9,6 @@ import type {
 } from '@/graphql/generated/graphql'
 
 import {
-  GetMeDocument,
-  GetUserDocument,
-  UpdateUserDocument,
   useGetMeQuery,
   useGetUserQuery,
   useUpdateUserMutation,
@@ -87,19 +84,21 @@ export const useUpdateUser = () => useUpdateUserMutation()
 export const getMe = async () => {
   const client = getApolloClient()
   const result = await client.query<GetMeQuery>({
-    query: GetMeDocument,
+    query: GET_ME,
   })
   if (!result.data) throw new Error('No data returned from GetMe query')
+  if (!result.data.me) throw new Error('User not found')
   return result.data.me
 }
 
 export const getUser = async (id: string) => {
   const client = getApolloClient()
   const result = await client.query<GetUserQuery, GetUserQueryVariables>({
-    query: GetUserDocument,
+    query: GET_USER,
     variables: { id },
   })
   if (!result.data) throw new Error('No data returned from GetUser query')
+  if (!result.data.user) throw new Error(`User with id ${id} not found`)
   return result.data.user
 }
 
@@ -112,9 +111,11 @@ export const updateUser = async (
     UpdateUserMutation,
     UpdateUserMutationVariables
   >({
-    mutation: UpdateUserDocument,
+    mutation: UPDATE_USER,
     variables: { id, input },
   })
   if (!result.data) throw new Error('No data returned from UpdateUser mutation')
+  if (!result.data.updateUser)
+    throw new Error(`Failed to update user with id ${id}`)
   return result.data.updateUser
 }

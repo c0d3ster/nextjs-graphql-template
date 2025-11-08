@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 
 import type { NextRequest } from 'next/server'
+import type { WebhookEvent } from 'svix'
 
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
       has_timestamp: Boolean(svix_timestamp),
       has_signature: Boolean(svix_signature),
     })
-    return new Response('Error occured -- no svix headers', {
+    return new Response('Error occurred -- no svix headers', {
       status: 400,
     })
   }
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET)
 
-  let evt: any
+  let evt: WebhookEvent
 
   // Verify the payload with the headers
   try {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (err) {
     logger.error('Webhook verification failed', { error: err, svix_id })
-    return new Response('Error occured', {
+    return new Response('Error occurred', {
       status: 400,
     })
   }
@@ -80,34 +81,38 @@ export async function POST(request: NextRequest) {
     const email = email_addresses?.[0]?.email_address
 
     if (!email) {
-      logger.warn('Skipping user.created with no email', { clerkId })
-    } else {
-      try {
-        await db
-          .insert(users)
-          .values({
-            clerkId,
+      logger.warn('User creation failed: email is required', { clerkId })
+      return NextResponse.json(
+        { error: 'Email is required for user creation' },
+        { status: 422 }
+      )
+    }
+
+    try {
+      await db
+        .insert(users)
+        .values({
+          clerkId,
+          email,
+          firstName: first_name || null,
+          lastName: last_name || null,
+        })
+        .onConflictDoUpdate({
+          target: users.clerkId, // Only update if same clerkId
+          set: {
             email,
             firstName: first_name || null,
             lastName: last_name || null,
-          })
-          .onConflictDoUpdate({
-            target: users.clerkId, // Only update if same clerkId
-            set: {
-              email,
-              firstName: first_name || null,
-              lastName: last_name || null,
-              updatedAt: new Date(),
-            },
-          })
-        logger.info('User upserted in database', { clerkId })
-      } catch (error) {
-        logger.error('Error upserting user in database', { error, clerkId })
-        return NextResponse.json(
-          { error: 'Failed to upsert user record' },
-          { status: 500 }
-        )
-      }
+            updatedAt: new Date(),
+          },
+        })
+      logger.info('User upserted in database', { clerkId })
+    } catch (error) {
+      logger.error('Error upserting user in database', { error, clerkId })
+      return NextResponse.json(
+        { error: 'Failed to upsert user record' },
+        { status: 500 }
+      )
     }
   }
 
@@ -116,14 +121,23 @@ export async function POST(request: NextRequest) {
 
     const email = email_addresses?.[0]?.email_address
     try {
-      const updateSet: Partial<typeof users.$inferInsert> = {
+      const updateSet: Partial<typeof users.$inferSelect> = {
         firstName: first_name || null,
         lastName: last_name || null,
         updatedAt: new Date(),
       }
       if (email) updateSet.email = email
 
-      await db.update(users).set(updateSet).where(eq(users.clerkId, clerkId))
+      const result = await db
+        .update(users)
+        .set(updateSet)
+        .where(eq(users.clerkId, clerkId))
+
+      if (!result.rowCount || result.rowCount === 0) {
+        logger.warn('User not found for update', { clerkId })
+        return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      }
+
       logger.info('User updated in database', { clerkId })
     } catch (error) {
       logger.error('Error updating user in database', { error, clerkId })

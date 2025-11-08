@@ -23,17 +23,22 @@ export async function createContext(req: NextRequest): Promise<GraphQLContext> {
     }
 
     // Get user from database
-    const user = await db.query.users.findFirst({
-      where: eq(schemas.users.clerkId, userId),
-    })
+    try {
+      const user = await db.query.users.findFirst({
+        where: eq(schemas.users.clerkId, userId),
+      })
 
-    if (!user) {
+      if (!user) {
+        return { userId, db, schemas, req }
+      }
+
+      return { userId, user, db, schemas, req }
+    } catch {
+      // Preserve userId even if DB query fails
       return { userId, db, schemas, req }
     }
-
-    return { userId, user, db, schemas, req }
   } catch {
-    // Return empty context on error to prevent crashes
+    // Auth failed, return empty context
     return { db, schemas, req }
   }
 }

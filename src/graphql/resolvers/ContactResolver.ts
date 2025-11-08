@@ -1,9 +1,8 @@
 import { Arg, Mutation, Resolver } from 'type-graphql'
 
-import type { ContactFormInput } from '@/graphql/schema'
 import type { ContactService } from '@/services'
 
-import { ContactSubmission } from '@/graphql/schema'
+import { ContactFormInput, ContactSubmission } from '@/graphql/schema'
 import { logger } from '@/libs/Logger'
 
 @Resolver()
@@ -11,7 +10,9 @@ export class ContactResolver {
   constructor(private contactService: ContactService) {}
 
   @Mutation(() => ContactSubmission)
-  async submitContactForm(@Arg('input') input: ContactFormInput) {
+  async submitContactForm(
+    @Arg('input', () => ContactFormInput) input: ContactFormInput
+  ) {
     try {
       return await this.contactService.submitContactForm(input)
     } catch (error) {

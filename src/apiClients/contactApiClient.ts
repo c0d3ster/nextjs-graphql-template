@@ -5,10 +5,7 @@ import type {
   SubmitContactFormMutationVariables,
 } from '@/graphql/generated/graphql'
 
-import {
-  SubmitContactFormDocument,
-  useSubmitContactFormMutation,
-} from '@/graphql/generated/graphql'
+import { useSubmitContactFormMutation } from '@/graphql/generated/graphql'
 import { getApolloClient } from '@/libs/ApolloClient'
 
 // GraphQL Operations
@@ -37,7 +34,7 @@ export const submitContactForm = async (
     SubmitContactFormMutation,
     SubmitContactFormMutationVariables
   >({
-    mutation: SubmitContactFormDocument,
+    mutation: SUBMIT_CONTACT_FORM,
     variables: { input },
   })
   if (!result.data)

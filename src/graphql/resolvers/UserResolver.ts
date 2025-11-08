@@ -1,9 +1,8 @@
 import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
 
-import type { UpdateUserInput } from '@/graphql/schema'
 import type { UserService } from '@/services'
 
-import { User } from '@/graphql/schema'
+import { UpdateUserInput, User } from '@/graphql/schema'
 import { logger } from '@/libs/Logger'
 
 @Resolver(() => User)
@@ -35,7 +34,7 @@ export class UserResolver {
   @Mutation(() => User)
   async updateUser(
     @Arg('id', () => ID) id: string,
-    @Arg('input') input: UpdateUserInput
+    @Arg('input', () => UpdateUserInput) input: UpdateUserInput
   ) {
     try {
       const user = await this.userService.updateUser(id, input)
