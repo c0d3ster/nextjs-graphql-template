@@ -20,34 +20,34 @@ export default function ProfilePage() {
       <div className='grid gap-6 md:grid-cols-2'>
         {/* Authentication Status Card */}
         <div className='bg-surface rounded-lg p-6'>
-          <h2 className='mb-4 text-xl font-semibold text-white'>
+          <h2 className='text-text mb-4 text-xl font-semibold'>
             Authentication Status
           </h2>
           <div className='space-y-3'>
             <div className='flex items-center space-x-2'>
               <div className='bg-accent h-2 w-2 rounded-full'></div>
-              <span className='text-gray-300'>Signed in successfully</span>
+              <span className='text-text-muted'>Signed in successfully</span>
             </div>
             <div className='flex items-center space-x-2'>
               <div className='bg-accent h-2 w-2 rounded-full'></div>
-              <span className='text-gray-300'>Protected route accessed</span>
+              <span className='text-text-muted'>Protected route accessed</span>
             </div>
             <div className='flex items-center space-x-2'>
               <div className='bg-accent h-2 w-2 rounded-full'></div>
-              <span className='text-gray-300'>User session active</span>
+              <span className='text-text-muted'>User session active</span>
             </div>
           </div>
         </div>
 
         {/* Quick Actions Card */}
         <div className='bg-surface rounded-lg p-6'>
-          <h2 className='mb-4 text-xl font-semibold text-white'>
+          <h2 className='text-text mb-4 text-xl font-semibold'>
             Quick Actions
           </h2>
           <div className='space-y-3'>
             <Link
               href='/'
-              className='bg-primary hover:bg-primary/90 block rounded px-4 py-2 text-center text-white transition-colors'
+              className='bg-primary hover:bg-primary/90 text-text block rounded px-4 py-2 text-center transition-colors'
             >
               Return to Home
             </Link>
@@ -57,10 +57,10 @@ export default function ProfilePage() {
 
       {/* Information Section */}
       <div className='bg-surface mt-8 rounded-lg p-6'>
-        <h2 className='mb-4 text-xl font-semibold text-white'>
+        <h2 className='text-text mb-4 text-xl font-semibold'>
           About This Demo
         </h2>
-        <div className='space-y-2 text-gray-300'>
+        <div className='text-text-muted space-y-2'>
           <p>
             This page demonstrates successful authentication with Clerk. You can
             see:

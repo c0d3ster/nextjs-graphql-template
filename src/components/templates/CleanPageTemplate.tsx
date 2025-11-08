@@ -19,8 +19,8 @@ export const CleanPageTemplate = ({
         {/* Header */}
         <div className='mb-8 flex items-center justify-between'>
           <div>
-            <h1 className='text-3xl font-bold text-white'>{title}</h1>
-            {subtitle && <p className='text-gray-300'>{subtitle}</p>}
+            <h1 className='text-text text-3xl font-bold'>{title}</h1>
+            {subtitle && <p className='text-text-muted'>{subtitle}</p>}
           </div>
           {header}
         </div>

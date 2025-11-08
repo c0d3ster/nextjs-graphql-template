@@ -153,146 +153,17 @@ This template includes a complete authentication demonstration:
 
 Try accessing `/profile` without signing in - you'll be redirected to the sign-in modal.
 
-## 🎨 Theming System
+## 🎨 Theming
 
-This template includes a powerful, runtime-configurable theming system using Tailwind CSS v4 and CSS variables.
+Six color variables in `src/styles/global.css`:
 
-### Color Customization
+- `primary`, `accent`, `background`, `surface`, `text`, `text-muted`
 
-The template supports five semantic color variables:
+Use as Tailwind classes: `bg-primary`, `text-text`, `bg-surface`, etc.
 
-- `primary` - Main brand color (buttons, links, highlights)
-- `secondary` - Secondary brand color (accents, backgrounds)
-- `accent` - Accent color (call-to-actions, highlights)
-- `background` - Main background color
-- `surface` - Card/section backgrounds
+Colors must be in RGB format (space-separated) for opacity support: `59 130 246`
 
-### Usage in Components
-
-Use clean Tailwind syntax - CSS variables work behind the scenes:
-
-```tsx
-<button className="bg-primary hover:bg-primary/80 text-white">
-  Primary Button
-</button>
-
-<div className="bg-surface text-accent border-primary/50">
-  Themed Card
-</div>
-```
-
-### Changing Theme Colors
-
-#### Option 1: Template Configuration (Initial Setup)
-
-Edit `src/styles/global.css`:
-
-```css
-:root {
-  --color-primary: 59 130 246; /* RGB: blue-500 */
-  --color-secondary: 139 92 246; /* RGB: violet-500 */
-  --color-accent: 16 185 129; /* RGB: emerald-500 */
-  --color-background: 17 24 39; /* RGB: gray-900 */
-  --color-surface: 31 41 55; /* RGB: gray-800 */
-}
-```
-
-**Note**: Colors must be in RGB format (space-separated, no `rgb()` wrapper) for opacity support.
-
-#### Option 2: Runtime API (Dynamic Theming)
-
-Use the GraphQL `updateTheme` mutation to change colors at runtime. **Requires authentication** via the `PORTFOLIO_SECRET_TOKEN` environment variable.
-
-**Setup:**
-
-```bash
-# In your .env.local file
-PORTFOLIO_SECRET_TOKEN=your-secret-token-here
-```
-
-**From your portfolio site:**
-
-```typescript
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-
-// Create client for the client site
-const client = new ApolloClient({
-  uri: 'https://client-site.com/api/graphql',
-  cache: new InMemoryCache(),
-  headers: {
-    'x-portfolio-token': process.env.CLIENT_SITE_SECRET_TOKEN, // Must match client's PORTFOLIO_SECRET_TOKEN
-  },
-})
-
-// Update theme colors
-const UPDATE_THEME = gql`
-  mutation UpdateTheme($colors: ThemeColorsInput!) {
-    updateTheme(colors: $colors) {
-      colors {
-        primary
-        secondary
-        accent
-        background
-        surface
-      }
-      css
-    }
-  }
-`
-
-const { data } = await client.mutate({
-  mutation: UPDATE_THEME,
-  variables: {
-    colors: {
-      primary: '239 68 68', // red-500
-      accent: '34 197 94', // green-500
-    },
-  },
-})
-
-// Use data.updateTheme.css to inject or trigger rebuild
-```
-
-**Security Notes:**
-
-- The `updateTheme` mutation requires the `x-portfolio-token` header
-- If `PORTFOLIO_SECRET_TOKEN` is not set, theme updates are allowed (development mode)
-- Store the token securely in your portfolio site's environment variables
-
-#### Option 3: Portfolio Site Integration
-
-For projects managed via a portfolio site:
-
-1. Portfolio site calls GraphQL `updateTheme` mutation with new colors
-2. Changes are committed to the repository
-3. Site rebuilds automatically with new theme
-4. Or use CSS injection for instant preview
-
-### Converting Hex to RGB
-
-Tailwind uses RGB format for opacity support. Convert hex colors:
-
-```javascript
-// Hex to RGB
-const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result
-    ? `${Number.parseInt(result[1], 16)} ${Number.parseInt(result[2], 16)} ${Number.parseInt(result[3], 16)}`
-    : null
-}
-
-hexToRgb('#3B82F6') // Returns: "59 130 246"
-```
-
-### Benefits
-
-- ✅ **Clean syntax**: Use `bg-primary` instead of complex CSS var syntax
-- ✅ **Opacity support**: Works with Tailwind's opacity modifiers (`bg-primary/50`)
-- ✅ **Runtime changes**: Update colors without rebuilding (via CSS injection)
-- ✅ **Type-safe**: Full Tailwind IntelliSense support
-- ✅ **All Tailwind features**: Hover, focus, responsive, etc.
-
-## 🎨 Component Structure
+## 📦 Component Structure
 
 Organized using Atomic Design principles:
 
@@ -355,6 +226,6 @@ Make sure to configure your environment variables in your deployment platform.
 
 ---
 
-**Template for modern web applications** 🚀
+**Template for modern web applications**
 
 > **Inspired by**: [Next.js Boilerplate](https://github.com/ixartz/Next-js-Boilerplate) - A comprehensive Next.js starter template

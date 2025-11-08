@@ -22,7 +22,7 @@ export const SiteHeader = ({
         <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
           <div className='flex items-center'>
-            <Link href='/' className='text-lg font-semibold text-white'>
+            <Link href='/' className='text-text text-lg font-semibold'>
               LOGO
             </Link>
           </div>
@@ -36,7 +36,9 @@ export const SiteHeader = ({
                   key={item.label}
                   href={item.href}
                   className={`text-sm font-medium transition-colors ${
-                    isActive ? 'text-primary' : 'hover:text-primary text-gray-300'
+                    isActive
+                      ? 'text-primary'
+                      : 'hover:text-primary text-text-muted'
                   }`}
                 >
                   {item.label}
@@ -49,13 +51,13 @@ export const SiteHeader = ({
           <div className='flex items-center'>
             {isLoaded && user ? (
               <SignOutButton>
-                <button className='hover:text-primary text-sm text-gray-300'>
+                <button className='hover:text-primary text-text-muted text-sm'>
                   Sign Out
                 </button>
               </SignOutButton>
             ) : (
               <SignInButton mode='modal'>
-                <button className='hover:text-primary text-sm text-gray-300'>
+                <button className='hover:text-primary text-text-muted text-sm'>
                   Sign In
                 </button>
               </SignInButton>

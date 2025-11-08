@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import Link from 'next/link'
 
-import { ContactForm, ThemeEditor } from '@/components/molecules'
+import { ContactForm } from '@/components/molecules'
 import { LandingPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
 
@@ -18,19 +18,19 @@ export default function Index() {
       {/* Main Content */}
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
-          <h2 className='mb-4 text-4xl font-bold text-white'>
+          <h2 className='text-text mb-4 text-4xl font-bold'>
             Welcome to {BRAND_NAME}
           </h2>
-          <p className='mb-8 text-lg text-gray-300'>
+          <p className='text-text-muted mb-8 text-lg'>
             A modern web application template with authentication
           </p>
 
           {/* Auth Demo Section */}
           <div className='bg-surface mb-8 rounded-lg p-6'>
-            <h3 className='mb-4 text-xl font-semibold text-white'>
+            <h3 className='text-text mb-4 text-xl font-semibold'>
               Authentication Demo
             </h3>
-            <div className='space-y-2 text-gray-300'>
+            <div className='text-text-muted space-y-2'>
               <p>This template includes:</p>
               <ul className='ml-4 list-disc space-y-1 text-left'>
                 <li>Public pages (this page)</li>
@@ -49,9 +49,6 @@ export default function Index() {
               </ul>
             </div>
           </div>
-
-          {/* Theme Editor */}
-          <ThemeEditor />
         </div>
       </div>
 

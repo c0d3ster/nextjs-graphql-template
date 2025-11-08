@@ -10,10 +10,11 @@
 
     /* Theme Colors - RGB values (space-separated for opacity support) */
     --color-primary: 59 130 246;
-    --color-secondary: 31 41 55;
     --color-accent: 16 185 129;
     --color-background: 17 24 39;
     --color-surface: 31 41 55;
+    --color-text: 255 255 255;
+    --color-text-muted: 156 163 175;
   }
 }
 
@@ -41,19 +42,19 @@
   .bg-primary {
     background-color: rgb(var(--color-primary));
   }
-  .bg-secondary {
-    background-color: rgb(var(--color-secondary));
-  }
   .bg-accent {
     background-color: rgb(var(--color-accent));
   }
   .text-primary {
     color: rgb(var(--color-primary));
   }
-  .text-secondary {
-    color: rgb(var(--color-secondary));
-  }
   .text-accent {
     color: rgb(var(--color-accent));
+  }
+  .text-text {
+    color: rgb(var(--color-text));
+  }
+  .text-text-muted {
+    color: rgb(var(--color-text-muted));
   }
 }

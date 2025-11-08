@@ -23,35 +23,35 @@ export const ClerkProvider = ({
       cssLayerName: 'clerk', // Ensure Clerk is compatible with Tailwind CSS v4
       elements: {
         // Main container styling
-        card: '!bg-secondary !border !border-gray-600 !rounded-lg !shadow-lg',
-        headerTitle: '!text-white !font-semibold !text-xl',
-        headerSubtitle: '!text-gray-300 !text-base',
+        card: '!bg-surface !border !border-gray-600 !rounded-lg !shadow-lg',
+        headerTitle: '!text-text !font-semibold !text-xl',
+        headerSubtitle: '!text-text-muted !text-base',
 
         // Form elements - using !important to override Clerk defaults
         formButtonPrimary:
-          '!rounded !border !font-medium !transition-all !duration-200 !border-blue-600 !bg-blue-600 !text-white hover:!bg-blue-700 !text-base !text-center',
+          '!rounded !border !font-medium !transition-all !duration-200 !border-blue-600 !bg-blue-600 !text-text hover:!bg-blue-700 !text-base !text-center',
         formFieldInput:
-          '!bg-gray-700 !border !border-gray-600 !rounded !px-3 !py-2 !text-white focus:!outline-none focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/30 !transition-all !duration-200 !placeholder-gray-400',
-        formFieldLabel: '!text-gray-300 !font-medium !text-sm !mb-2',
+          '!bg-gray-700 !border !border-gray-600 !rounded !px-3 !py-2 !text-text focus:!outline-none focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/30 !transition-all !duration-200 !placeholder-gray-400',
+        formFieldLabel: '!text-text-muted !font-medium !text-sm !mb-2',
         formFieldInputShowPasswordButton:
-          '!text-gray-400 hover:!text-gray-300 !transition-colors',
+          '!text-text-muted hover:!text-text !transition-colors',
 
         // Social buttons
         socialButtonsBlockButton:
-          '!rounded !border !font-medium !transition-all !duration-200 !border-gray-600 !bg-gray-700 !text-white hover:!bg-gray-600 !px-4 !py-2 !text-sm !text-center',
+          '!rounded !border !font-medium !transition-all !duration-200 !border-gray-600 !bg-gray-700 !text-text hover:!bg-gray-600 !px-4 !py-2 !text-sm !text-center',
         socialButtonsBlockButtonText: '!font-medium',
 
         // Divider
         dividerLine: '!bg-gray-600',
-        dividerText: '!text-gray-400 !font-medium',
+        dividerText: '!text-text-muted !font-medium',
 
         // Footer
-        footerActionText: '!text-gray-400',
+        footerActionText: '!text-text-muted',
         footerActionLink:
           '!text-blue-400 hover:!text-blue-300 !font-medium hover:!underline !transition-colors',
 
         // Identity preview
-        identityPreviewText: '!text-gray-300',
+        identityPreviewText: '!text-text-muted',
         identityPreviewEditButton:
           '!text-blue-400 hover:!text-blue-300 !transition-colors',
 
@@ -61,13 +61,13 @@ export const ClerkProvider = ({
 
         // Alert styling
         alert:
-          '!bg-gray-700 !border !border-gray-600 !text-gray-300 !rounded !p-3',
-        alertText: '!text-gray-300',
+          '!bg-gray-700 !border !border-gray-600 !text-text-muted !rounded !p-3',
+        alertText: '!text-text-muted',
 
         // Modal styling
         modalBackdrop: '!bg-black/60 !backdrop-blur-sm',
         modalContent:
-          '!bg-secondary !border !border-gray-600 !rounded-lg !shadow-lg',
+          '!bg-surface !border !border-gray-600 !rounded-lg !shadow-lg',
 
         // Form field wrapper
         formField: '!space-y-2',
@@ -80,7 +80,7 @@ export const ClerkProvider = ({
 
         // Additional input styling
         input:
-          '!bg-gray-700 !border !border-gray-600 !rounded !px-3 !py-2 !text-white focus:!outline-none focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/30 !transition-all !duration-200',
+          '!bg-gray-700 !border !border-gray-600 !rounded !px-3 !py-2 !text-text focus:!outline-none focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/30 !transition-all !duration-200',
       },
       variables: {
         colorPrimary: '#3b82f6', // blue-500

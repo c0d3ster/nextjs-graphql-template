@@ -68,7 +68,7 @@ export const ContactForm = () => {
 
   return (
     <div className='mx-auto max-w-2xl'>
-      <h3 className='mb-6 text-center text-2xl font-bold text-white'>
+      <h3 className='text-text mb-6 text-center text-2xl font-bold'>
         Contact Us
       </h3>
 
@@ -81,7 +81,7 @@ export const ContactForm = () => {
           <div>
             <label
               htmlFor='name'
-              className='mb-2 block text-sm font-medium text-gray-300'
+              className='text-text-muted mb-2 block text-sm font-medium'
             >
               Name
             </label>
@@ -89,14 +89,14 @@ export const ContactForm = () => {
               {...register('name')}
               id='name'
               type='text'
-              className='bg-secondary w-full rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
               placeholder='Your name'
             />
           </div>
           <div>
             <label
               htmlFor='email'
-              className='mb-2 block text-sm font-medium text-gray-300'
+              className='text-text-muted mb-2 block text-sm font-medium'
             >
               Email
             </label>
@@ -104,7 +104,7 @@ export const ContactForm = () => {
               {...register('email')}
               id='email'
               type='email'
-              className='bg-secondary w-full rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
               placeholder='your@email.com'
             />
           </div>
@@ -113,7 +113,7 @@ export const ContactForm = () => {
         <div>
           <label
             htmlFor='subject'
-            className='mb-2 block text-sm font-medium text-gray-300'
+            className='text-text-muted mb-2 block text-sm font-medium'
           >
             Subject
           </label>
@@ -121,7 +121,7 @@ export const ContactForm = () => {
             {...register('subject')}
             id='subject'
             type='text'
-            className='w-full rounded border border-gray-600 bg-gray-800 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+            className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
             placeholder="What's this about?"
           />
         </div>
@@ -129,7 +129,7 @@ export const ContactForm = () => {
         <div>
           <label
             htmlFor='message'
-            className='mb-2 block text-sm font-medium text-gray-300'
+            className='text-text-muted mb-2 block text-sm font-medium'
           >
             Message
           </label>
@@ -137,7 +137,7 @@ export const ContactForm = () => {
             {...register('message')}
             id='message'
             rows={4}
-            className='bg-secondary w-full resize-none rounded border border-gray-600 p-3 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+            className='bg-surface text-text w-full resize-none rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
             placeholder='Tell us about your project...'
           />
         </div>
@@ -146,7 +146,7 @@ export const ContactForm = () => {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='rounded bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50'
+            className='text-text rounded bg-blue-600 px-6 py-3 font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50'
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>
