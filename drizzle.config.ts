@@ -15,12 +15,22 @@ if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
 }
 // Remote environments (CI: NODE_ENV=test, Vercel: VERCEL_ENV set) use environment variables only
 
+const getDatabaseUrl = () => {
+  const url = process.env.DATABASE_URL
+  if (!url) {
+    throw new Error(
+      'DATABASE_URL environment variable is required for database operations'
+    )
+  }
+  return url
+}
+
 export default defineConfig({
   out: './migrations',
   schema: './src/models/index.ts',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? '',
+    url: getDatabaseUrl(),
   },
   verbose: true,
   strict: true,

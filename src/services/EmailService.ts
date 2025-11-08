@@ -1,5 +1,6 @@
 import type { Resend } from 'resend'
 
+import { SUPPORT_EMAIL } from '@/constants'
 import { logger } from '@/libs/Logger'
 
 export class EmailService {
@@ -24,7 +25,7 @@ export class EmailService {
     try {
       await this.resend.emails.send({
         from: 'Contact Form <onboarding@resend.dev>', // Replace with your verified domain
-        to: '{{SUPPORT_EMAIL}}', // Replace with your email
+        to: SUPPORT_EMAIL,
         replyTo: data.email,
         subject: `Contact Form: ${data.subject}`,
         html: `

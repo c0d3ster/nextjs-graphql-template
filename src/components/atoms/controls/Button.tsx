@@ -1,5 +1,7 @@
 'use client'
 
+import type { ComponentPropsWithoutRef, ReactNode, Ref } from 'react'
+
 import Link from 'next/link'
 
 type ButtonProps = {
@@ -7,11 +9,12 @@ type ButtonProps = {
   href?: string
   external?: boolean
   className?: string
-  children: React.ReactNode
+  children: ReactNode
   onClick?: () => void
   type?: 'button' | 'submit'
   disabled?: boolean
-}
+  ref?: Ref<HTMLButtonElement>
+} & Omit<ComponentPropsWithoutRef<'button'>, 'type'>
 
 const baseStyles =
   'inline-block rounded border font-mono font-bold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50'
@@ -26,7 +29,6 @@ const sizes = {
 }
 
 export const Button = ({
-  ref,
   size = 'md',
   href,
   external = false,
@@ -35,8 +37,9 @@ export const Button = ({
   onClick,
   type = 'button',
   disabled = false,
+  ref,
   ...props
-}: ButtonProps & { ref?: React.RefObject<HTMLButtonElement | null> }) => {
+}: ButtonProps) => {
   const buttonClasses = `${baseStyles} ${buttonStyle} ${sizes[size]} ${className}`
 
   if (href) {
@@ -47,7 +50,6 @@ export const Button = ({
           target='_blank'
           rel='noopener noreferrer'
           className={buttonClasses}
-          {...props}
         >
           {children}
         </a>
@@ -55,7 +57,7 @@ export const Button = ({
     }
 
     return (
-      <Link href={href} className={buttonClasses} {...props}>
+      <Link href={href} className={buttonClasses}>
         {children}
       </Link>
     )

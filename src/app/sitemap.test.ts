@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import GET from './sitemap'
+import sitemap from './sitemap'
 
 describe('sitemap.xml', () => {
   it('should return sitemap.xml content', () => {
-    const response = GET()
+    const response = sitemap()
 
     expect(response).toBeDefined()
     expect(Array.isArray(response)).toBe(true)

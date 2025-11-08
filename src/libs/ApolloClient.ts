@@ -11,10 +11,12 @@ const getGraphQLEndpoint = () => {
   return '/api/graphql'
 }
 
-const httpLink = new HttpLink({
-  uri: getGraphQLEndpoint(),
-  credentials: 'include', // send cookies if you need auth
-})
+// Create HTTP link
+const createHttpLink = () =>
+  new HttpLink({
+    uri: getGraphQLEndpoint(),
+    credentials: 'include', // send cookies if you need auth
+  })
 
 // Attach cookies for SSR requests
 const authLink = setContext(async (_, { headers }) => {
@@ -26,15 +28,25 @@ const authLink = setContext(async (_, { headers }) => {
   return { headers }
 })
 
-export const apolloClient = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-and-network',
+// Create a new Apollo Client instance (for server-side rendering)
+export const createApolloClient = () =>
+  new ApolloClient({
+    link: authLink.concat(createHttpLink()),
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+      query: {
+        fetchPolicy: 'network-only',
+      },
     },
-    query: {
-      fetchPolicy: 'network-only',
-    },
-  },
-})
+  })
+
+// Singleton for client-side only (safe because browser instances are per-tab)
+let clientSideApolloClient: ApolloClient<any> | null = null
+
+export const apolloClient =
+  typeof window === 'undefined'
+    ? createApolloClient() // Server-side: always create new instance
+    : (clientSideApolloClient ??= createApolloClient()) // Client-side: reuse singleton

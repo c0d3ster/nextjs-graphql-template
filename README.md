@@ -86,46 +86,27 @@ DATABASE / EXTERNAL APIs
 
 2. **Set up environment:**
 
-   **Development:**
+   Create a `.env.local` file (git-ignored) with your development values:
 
    ```bash
-   cp .env .env.local
-   # Edit .env.local with your development values
-   ```
-
-   **Production:**
-
-   ```bash
-   cp .env.production .env.production.local
-   # Edit .env.production.local with your production values
-   ```
-
-   Required environment variables:
-
-   ```bash
-   # Database
+   # Required variables
    DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-
-   # Clerk Authentication
    CLERK_SECRET_KEY=sk_test_...
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 
-   # App Configuration
+   # Optional variables
    NEXT_PUBLIC_APP_URL=http://localhost:3000
-   ```
-
-   Optional environment variables:
-
-   ```bash
-   # Clerk Webhooks (if using webhooks)
    CLERK_WEBHOOK_SECRET=whsec_...
-
-   # Portfolio Site Integration (for theme updates)
-   PORTFOLIO_SECRET_TOKEN=your-secret-token
-
-   # Email (Resend - for contact form)
    RESEND_API_KEY=re_...
+   PORTFOLIO_SECRET_TOKEN=your-secret-token
    ```
+
+   **For production**, create `.env.production.local` with production values.
+
+   **For CI/CD**, configure GitHub secrets:
+   - Navigate to: Repository → Settings → Secrets and variables → Actions
+   - Add: `CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `DATABASE_URL`
+   - See `.github/workflows/CI.yml` for the complete list
 
 3. **Set up database:**
 

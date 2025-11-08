@@ -38,7 +38,7 @@ export default function Index() {
                   Protected pages (try accessing{' '}
                   <Link
                     href='/profile'
-                    className='text-primary hover:text-primary/80'
+                    className='text-primary transition-opacity hover:opacity-80'
                   >
                     /profile
                   </Link>{' '}

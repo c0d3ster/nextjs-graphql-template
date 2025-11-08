@@ -47,7 +47,7 @@ export default function ProfilePage() {
           <div className='space-y-3'>
             <Link
               href='/'
-              className='bg-primary hover:bg-primary/90 text-text block rounded px-4 py-2 text-center transition-colors'
+              className='bg-primary text-text block rounded px-4 py-2 text-center transition-all hover:opacity-90'
             >
               Return to Home
             </Link>

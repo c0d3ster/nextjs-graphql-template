@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 
-import { UserRole } from '@/graphql/schema'
+import { UserRole } from '@/graphql/schema/user'
 
 import { userRoleEnum } from './enums'
 

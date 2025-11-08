@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import type { ContactFormData } from '@/validations'
 
 import { useSubmitContactForm } from '@/apiClients'
+import { logger } from '@/libs/Logger'
 import { Toast } from '@/libs/Toast'
 import { contactFormSchema } from '@/validations'
 
@@ -36,18 +37,24 @@ export const ContactForm = () => {
       } else {
         Toast.error('Failed to send message. Please try again.')
       }
-    } catch (error: any) {
-      // Log detailed error information for debugging (server-side)
-      if (error?.graphQLErrors?.length > 0) {
+    } catch (error) {
+      // Log detailed error information for debugging
+      if (
+        error
+        && typeof error === 'object'
+        && 'graphQLErrors' in error
+        && Array.isArray(error.graphQLErrors)
+        && error.graphQLErrors.length > 0
+      ) {
         const graphQLError = error.graphQLErrors[0]
-        console.error('Contact form error details:', {
+        logger.error('Contact form error details', {
           originalError: graphQLError.extensions?.originalError,
           details: graphQLError.extensions?.details,
           code: graphQLError.extensions?.code,
           message: graphQLError.message,
         })
       } else {
-        console.error('Contact form error:', error)
+        logger.error('Contact form error', { error })
       }
 
       // Show generic user-friendly message regardless of error type
@@ -59,9 +66,9 @@ export const ContactForm = () => {
     }
   }
 
-  const onError = (errors: any) => {
+  const onError = (errors: Record<string, { message: string }>) => {
     const errorMessages = Object.values(errors)
-      .map((err: any) => err.message)
+      .map(err => err.message)
       .join(', ')
     Toast.error(`Please fix the following errors: ${errorMessages}`)
   }
