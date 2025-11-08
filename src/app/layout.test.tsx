@@ -10,47 +10,20 @@ vi.mock('next/font/google', () => ({
 
 // Mock providers
 vi.mock('@/providers', () => ({
-  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='clerk-provider'>{children}</div>
-  ),
-  QueryProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='query-provider'>{children}</div>
-  ),
-}))
-
-// Mock analytics
-vi.mock('@/analytics', () => ({
-  PostHogProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='posthog-provider'>{children}</div>
-  ),
-  PostHogPageView: () => <div data-testid='posthog-pageview' />,
-}))
-
-// Mock Apollo Client
-vi.mock('@apollo/client', () => ({
-  HttpLink: vi.fn(),
-  InMemoryCache: vi.fn(),
-  ApolloClient: vi.fn(),
-}))
-
-vi.mock('@apollo/client/react', () => ({
-  ApolloProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='apollo-provider'>{children}</div>
+  ProvidersWrapper: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid='providers-wrapper'>{children}</div>
   ),
 }))
 
 describe('RootLayout', () => {
-  it('should render with all providers', () => {
+  it('should render with providers wrapper', () => {
     render(
       <RootLayout>
         <div data-testid='page-content'>Page Content</div>
       </RootLayout>
     )
 
-    expect(screen.getByTestId('clerk-provider')).toBeInTheDocument()
-    expect(screen.getByTestId('posthog-provider')).toBeInTheDocument()
-    expect(screen.getByTestId('apollo-provider')).toBeInTheDocument()
-    expect(screen.getByTestId('query-provider')).toBeInTheDocument()
+    expect(screen.getByTestId('providers-wrapper')).toBeInTheDocument()
     expect(screen.getByTestId('page-content')).toBeInTheDocument()
   })
 

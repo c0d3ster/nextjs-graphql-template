@@ -12,13 +12,13 @@ type LandingPageTemplateProps = {
   children: ReactNode
 }
 
+const menuItems: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Contact', href: '/#contact' },
+]
+
 export const LandingPageTemplate = ({ children }: LandingPageTemplateProps) => {
   const [activeItem, setActiveItem] = useState('home')
-
-  const menuItems: NavItem[] = [
-    { label: 'Home', href: '/' },
-    { label: 'Contact', href: '/#contact' },
-  ]
 
   useEffect(() => {
     const contactSection = document.getElementById('contact')
@@ -34,7 +34,7 @@ export const LandingPageTemplate = ({ children }: LandingPageTemplateProps) => {
       },
       {
         root: null,
-        threshold: 0.25, // trigger as soon as any pixel of #contact is visible
+        threshold: 0.25, // trigger as soon as 25% of #contact is visible
       }
     )
 

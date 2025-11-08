@@ -103,6 +103,10 @@ export async function POST(request: NextRequest) {
         logger.info('User upserted in database', { clerkId })
       } catch (error) {
         logger.error('Error upserting user in database', { error, clerkId })
+        return NextResponse.json(
+          { error: 'Failed to upsert user record' },
+          { status: 500 }
+        )
       }
     }
   }
@@ -123,6 +127,10 @@ export async function POST(request: NextRequest) {
       logger.info('User updated in database', { clerkId })
     } catch (error) {
       logger.error('Error updating user in database', { error, clerkId })
+      return NextResponse.json(
+        { error: 'Failed to update user record' },
+        { status: 500 }
+      )
     }
   }
 
@@ -134,6 +142,10 @@ export async function POST(request: NextRequest) {
       logger.info('User deleted from database', { clerkId })
     } catch (error) {
       logger.error('Error deleting user from database', { error, clerkId })
+      return NextResponse.json(
+        { error: 'Failed to delete user record' },
+        { status: 500 }
+      )
     }
   }
 

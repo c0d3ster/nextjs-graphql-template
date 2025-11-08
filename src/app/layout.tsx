@@ -1,11 +1,12 @@
-'use client'
+import type { Metadata } from 'next'
 
-import { ApolloProvider } from '@apollo/client/react'
-
-import { ToastContainer } from '@/components/atoms'
-import { apolloClient } from '@/libs/ApolloClient'
-import { ClerkProvider, QueryProvider } from '@/providers'
+import { ProvidersWrapper } from '@/providers/ProvidersWrapper'
 import '@/styles/global.css'
+
+export const metadata: Metadata = {
+  title: 'Next.js GraphQL Template',
+  description: 'A modern full-stack template with Next.js, GraphQL, and TypeScript',
+}
 
 export default function RootLayout({
   children,
@@ -20,14 +21,7 @@ export default function RootLayout({
         <link rel='icon' href='/favicon.ico' />
       </head>
       <body>
-        <ClerkProvider>
-          <ApolloProvider client={apolloClient}>
-            <QueryProvider>
-              {children}
-              <ToastContainer />
-            </QueryProvider>
-          </ApolloProvider>
-        </ClerkProvider>
+        <ProvidersWrapper>{children}</ProvidersWrapper>
       </body>
     </html>
   )

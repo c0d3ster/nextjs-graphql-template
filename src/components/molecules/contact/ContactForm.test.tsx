@@ -29,21 +29,21 @@ describe('ContactForm', () => {
   it('renders all form fields', () => {
     render(<ContactForm />)
 
-    expect(screen.getByLabelText('NAME')).toBeInTheDocument()
-    expect(screen.getByLabelText('EMAIL')).toBeInTheDocument()
-    expect(screen.getByLabelText('SUBJECT')).toBeInTheDocument()
-    expect(screen.getByLabelText('MESSAGE')).toBeInTheDocument()
+    expect(screen.getByLabelText('Name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toBeInTheDocument()
+    expect(screen.getByLabelText('Subject')).toBeInTheDocument()
+    expect(screen.getByLabelText('Message')).toBeInTheDocument()
   })
 
   it('renders submit button with correct text', () => {
     render(<ContactForm />)
 
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
 
     expect(submitButton).toBeInTheDocument()
-    expect(submitButton).toHaveTextContent('INITIATE TRANSMISSION')
+    expect(submitButton).toHaveTextContent('Send Message')
   })
 
   it('handles form submission successfully', async () => {
@@ -56,22 +56,22 @@ describe('ContactForm', () => {
     render(<ContactForm />)
 
     // Fill out the form
-    fireEvent.change(screen.getByLabelText('NAME'), {
+    fireEvent.change(screen.getByLabelText('Name'), {
       target: { value: 'John Doe' },
     })
-    fireEvent.change(screen.getByLabelText('EMAIL'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'john@example.com' },
     })
-    fireEvent.change(screen.getByLabelText('SUBJECT'), {
+    fireEvent.change(screen.getByLabelText('Subject'), {
       target: { value: 'Project Inquiry' },
     })
-    fireEvent.change(screen.getByLabelText('MESSAGE'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'I would like to discuss a project.' },
     })
 
     // Submit the form
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
     fireEvent.click(submitButton)
 
@@ -82,10 +82,10 @@ describe('ContactForm', () => {
     })
 
     // Check that form was reset
-    expect(screen.getByLabelText('NAME')).toHaveValue('')
-    expect(screen.getByLabelText('EMAIL')).toHaveValue('')
-    expect(screen.getByLabelText('SUBJECT')).toHaveValue('')
-    expect(screen.getByLabelText('MESSAGE')).toHaveValue('')
+    expect(screen.getByLabelText('Name')).toHaveValue('')
+    expect(screen.getByLabelText('Email')).toHaveValue('')
+    expect(screen.getByLabelText('Subject')).toHaveValue('')
+    expect(screen.getByLabelText('Message')).toHaveValue('')
   })
 
   it('handles form submission error', async () => {
@@ -96,22 +96,22 @@ describe('ContactForm', () => {
     render(<ContactForm />)
 
     // Fill out the form
-    fireEvent.change(screen.getByLabelText('NAME'), {
+    fireEvent.change(screen.getByLabelText('Name'), {
       target: { value: 'John Doe' },
     })
-    fireEvent.change(screen.getByLabelText('EMAIL'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'john@example.com' },
     })
-    fireEvent.change(screen.getByLabelText('SUBJECT'), {
+    fireEvent.change(screen.getByLabelText('Subject'), {
       target: { value: 'Project Inquiry' },
     })
-    fireEvent.change(screen.getByLabelText('MESSAGE'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'I would like to discuss a project.' },
     })
 
     // Submit the form
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
     fireEvent.click(submitButton)
 
@@ -134,22 +134,22 @@ describe('ContactForm', () => {
     render(<ContactForm />)
 
     // Fill out the form
-    fireEvent.change(screen.getByLabelText('NAME'), {
+    fireEvent.change(screen.getByLabelText('Name'), {
       target: { value: 'John Doe' },
     })
-    fireEvent.change(screen.getByLabelText('EMAIL'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'john@example.com' },
     })
-    fireEvent.change(screen.getByLabelText('SUBJECT'), {
+    fireEvent.change(screen.getByLabelText('Subject'), {
       target: { value: 'Project Inquiry' },
     })
-    fireEvent.change(screen.getByLabelText('MESSAGE'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'I would like to discuss a project.' },
     })
 
     // Submit the form
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
     fireEvent.click(submitButton)
 
@@ -165,7 +165,7 @@ describe('ContactForm', () => {
 
     // Submit the form without filling it out
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
     fireEvent.click(submitButton)
 
@@ -184,29 +184,29 @@ describe('ContactForm', () => {
     render(<ContactForm />)
 
     // Fill out the form
-    fireEvent.change(screen.getByLabelText('NAME'), {
+    fireEvent.change(screen.getByLabelText('Name'), {
       target: { value: 'John Doe' },
     })
-    fireEvent.change(screen.getByLabelText('EMAIL'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'john@example.com' },
     })
-    fireEvent.change(screen.getByLabelText('SUBJECT'), {
+    fireEvent.change(screen.getByLabelText('Subject'), {
       target: { value: 'Project Inquiry' },
     })
-    fireEvent.change(screen.getByLabelText('MESSAGE'), {
+    fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'I would like to discuss a project.' },
     })
 
     // Submit the form
     const submitButton = screen.getByRole('button', {
-      name: 'INITIATE TRANSMISSION',
+      name: 'Send Message',
     })
     fireEvent.click(submitButton)
 
     // Check that button shows loading state
     await waitFor(() => {
       expect(submitButton).toBeDisabled()
-      expect(submitButton).toHaveTextContent('TRANSMITTING...')
+      expect(submitButton).toHaveTextContent('Sending...')
     })
   })
 })

@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { apolloClient } from '@/libs/ApolloClient'
-
 import {
   GET_ME,
   GET_USER,
@@ -15,11 +13,13 @@ import {
 } from './userApiClient'
 
 // Mock Apollo Client
+const mockQuery = vi.fn()
+const mockMutate = vi.fn()
 vi.mock('@/libs/ApolloClient', () => ({
-  apolloClient: {
-    query: vi.fn(),
-    mutate: vi.fn(),
-  },
+  getApolloClient: vi.fn(() => ({
+    query: mockQuery,
+    mutate: mockMutate,
+  })),
 }))
 
 // Mock the generated GraphQL hooks
@@ -87,18 +87,18 @@ describe('User API Client', () => {
           },
         }
 
-        vi.mocked(apolloClient.query).mockResolvedValue(mockResponse)
+        mockQuery.mockResolvedValue(mockResponse)
 
         const result = await getMe()
 
-        expect(apolloClient.query).toHaveBeenCalledWith({
+        expect(mockQuery).toHaveBeenCalledWith({
           query: 'GET_ME_DOCUMENT',
         })
         expect(result).toEqual(mockUser)
       })
 
       it('should throw error when no data is returned', async () => {
-        vi.mocked(apolloClient.query).mockResolvedValue({ data: null })
+        mockQuery.mockResolvedValue({ data: null })
 
         await expect(getMe()).rejects.toThrow(
           'No data returned from GetMe query'
@@ -107,7 +107,7 @@ describe('User API Client', () => {
 
       it('should throw error when apollo client throws', async () => {
         const error = new Error('Network error')
-        vi.mocked(apolloClient.query).mockRejectedValue(error)
+        mockQuery.mockRejectedValue(error)
 
         await expect(getMe()).rejects.toThrow('Network error')
       })
@@ -139,11 +139,11 @@ describe('User API Client', () => {
           },
         }
 
-        vi.mocked(apolloClient.query).mockResolvedValue(mockResponse)
+        mockQuery.mockResolvedValue(mockResponse)
 
         const result = await getUser(mockUserId)
 
-        expect(apolloClient.query).toHaveBeenCalledWith({
+        expect(mockQuery).toHaveBeenCalledWith({
           query: 'GET_USER_DOCUMENT',
           variables: { id: mockUserId },
         })
@@ -153,7 +153,7 @@ describe('User API Client', () => {
       it('should throw error when no data is returned', async () => {
         const mockUserId = 'user-1'
 
-        vi.mocked(apolloClient.query).mockResolvedValue({ data: null })
+        mockQuery.mockResolvedValue({ data: null })
 
         await expect(getUser(mockUserId)).rejects.toThrow(
           'No data returned from GetUser query'
@@ -164,7 +164,7 @@ describe('User API Client', () => {
         const mockUserId = 'user-1'
         const error = new Error('Network error')
 
-        vi.mocked(apolloClient.query).mockRejectedValue(error)
+        mockQuery.mockRejectedValue(error)
 
         await expect(getUser(mockUserId)).rejects.toThrow('Network error')
       })
@@ -201,11 +201,11 @@ describe('User API Client', () => {
           },
         }
 
-        vi.mocked(apolloClient.mutate).mockResolvedValue(mockResponse)
+        mockMutate.mockResolvedValue(mockResponse)
 
         const result = await updateUser(mockUserId, mockInput)
 
-        expect(apolloClient.mutate).toHaveBeenCalledWith({
+        expect(mockMutate).toHaveBeenCalledWith({
           mutation: 'UPDATE_USER_DOCUMENT',
           variables: { id: mockUserId, input: mockInput },
         })
@@ -219,7 +219,7 @@ describe('User API Client', () => {
           lastName: 'Smith',
         }
 
-        vi.mocked(apolloClient.mutate).mockResolvedValue({ data: null })
+        mockMutate.mockResolvedValue({ data: null })
 
         await expect(updateUser(mockUserId, mockInput)).rejects.toThrow(
           'No data returned from UpdateUser mutation'
@@ -234,7 +234,7 @@ describe('User API Client', () => {
         }
         const error = new Error('Network error')
 
-        vi.mocked(apolloClient.mutate).mockRejectedValue(error)
+        mockMutate.mockRejectedValue(error)
 
         await expect(updateUser(mockUserId, mockInput)).rejects.toThrow(
           'Network error'

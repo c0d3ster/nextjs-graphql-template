@@ -51,13 +51,19 @@ export const SiteHeader = ({
           <div className='flex items-center'>
             {isLoaded && user ? (
               <SignOutButton>
-                <button className='hover:text-primary text-text-muted text-sm'>
+                <button
+                  type='button'
+                  className='hover:text-primary text-text-muted text-sm'
+                >
                   Sign Out
                 </button>
               </SignOutButton>
             ) : (
               <SignInButton mode='modal'>
-                <button className='hover:text-primary text-text-muted text-sm'>
+                <button
+                  type='button'
+                  className='hover:text-primary text-text-muted text-sm'
+                >
                   Sign In
                 </button>
               </SignInButton>

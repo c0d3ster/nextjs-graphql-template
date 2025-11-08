@@ -9,11 +9,11 @@ export class ContactService {
   constructor(private emailService: EmailService) {}
 
   async submitContactForm(input: ContactFormInput) {
+    const submissionId = `contact_${Date.now()}`
     try {
       // Log the contact form submission
       logger.info('Contact form submission received', {
-        name: input.name,
-        email: input.email,
+        submissionId,
         subject: input.subject,
         messageLength: input.message.length,
       })
@@ -33,7 +33,7 @@ export class ContactService {
 
       // Return submission confirmation
       return {
-        id: `contact_${Date.now()}`,
+        id: submissionId,
         name: input.name,
         email: input.email,
         subject: input.subject,
@@ -43,11 +43,9 @@ export class ContactService {
     } catch (error) {
       logger.error('Error processing contact form submission', {
         error: String(error),
-        input: {
-          name: input.name,
-          email: input.email,
-          subject: input.subject,
-        },
+        submissionId,
+        subject: input.subject,
+        messageLength: input.message.length,
       })
 
       throw new GraphQLError('Failed to submit contact form', {

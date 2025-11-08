@@ -2,8 +2,6 @@ import type { NextConfig } from 'next'
 
 import withBundleAnalyzer from '@next/bundle-analyzer'
 
-import './src/libs/Env'
-
 // R2 configuration constants
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME

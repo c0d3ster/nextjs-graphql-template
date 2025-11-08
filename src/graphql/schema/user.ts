@@ -1,5 +1,6 @@
 import {
   Field,
+  Float,
   ID,
   InputType,
   ObjectType,
@@ -47,7 +48,7 @@ export class User {
   @Field(() => String, { nullable: true })
   portfolio?: string
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Float, { nullable: true })
   hourlyRate?: number
 
   @Field(() => String, { nullable: true })
@@ -95,7 +96,7 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true })
   portfolio?: string
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Float, { nullable: true })
   hourlyRate?: number
 
   @Field(() => String, { nullable: true })

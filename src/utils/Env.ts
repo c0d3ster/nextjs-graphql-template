@@ -1,6 +1,9 @@
 export const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL
+    const url = process.env.NEXT_PUBLIC_APP_URL
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`
   }
 
   if (

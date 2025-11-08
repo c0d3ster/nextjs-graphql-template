@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { apolloClient } from '@/libs/ApolloClient'
-
 import {
   SUBMIT_CONTACT_FORM,
   submitContactForm,
@@ -9,10 +7,11 @@ import {
 } from './contactApiClient'
 
 // Mock Apollo Client
+const mockMutate = vi.fn()
 vi.mock('@/libs/ApolloClient', () => ({
-  apolloClient: {
-    mutate: vi.fn(),
-  },
+  getApolloClient: vi.fn(() => ({
+    mutate: mockMutate,
+  })),
 }))
 
 // Mock the generated GraphQL hooks
@@ -66,11 +65,11 @@ describe('Contact API Client', () => {
           },
         }
 
-        vi.mocked(apolloClient.mutate).mockResolvedValue(mockResponse)
+        mockMutate.mockResolvedValue(mockResponse)
 
         const result = await submitContactForm(mockInput)
 
-        expect(apolloClient.mutate).toHaveBeenCalledWith({
+        expect(mockMutate).toHaveBeenCalledWith({
           mutation: 'SUBMIT_CONTACT_FORM_DOCUMENT',
           variables: { input: mockInput },
         })
@@ -85,7 +84,7 @@ describe('Contact API Client', () => {
           message: 'Test message',
         }
 
-        vi.mocked(apolloClient.mutate).mockResolvedValue({ data: null })
+        mockMutate.mockResolvedValue({ data: null })
 
         await expect(submitContactForm(mockInput)).rejects.toThrow(
           'No data returned from SubmitContactForm mutation'
@@ -101,7 +100,7 @@ describe('Contact API Client', () => {
         }
 
         const error = new Error('Network error')
-        vi.mocked(apolloClient.mutate).mockRejectedValue(error)
+        mockMutate.mockRejectedValue(error)
 
         await expect(submitContactForm(mockInput)).rejects.toThrow(
           'Network error'

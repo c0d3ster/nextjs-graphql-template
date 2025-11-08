@@ -1,4 +1,4 @@
-import { gql } from 'graphql-tag'
+import gql from 'graphql-tag'
 
 import type {
   GetMeQuery,
@@ -16,7 +16,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from '@/graphql/generated/graphql'
-import { apolloClient } from '@/libs/ApolloClient'
+import { getApolloClient } from '@/libs/ApolloClient'
 
 // GraphQL Operations
 export const GET_ME = gql`
@@ -85,7 +85,8 @@ export const useUpdateUser = () => useUpdateUserMutation()
 
 // Async functions for SSR / non-hook usage
 export const getMe = async () => {
-  const result = await apolloClient.query<GetMeQuery>({
+  const client = getApolloClient()
+  const result = await client.query<GetMeQuery>({
     query: GetMeDocument,
   })
   if (!result.data) throw new Error('No data returned from GetMe query')
@@ -93,7 +94,8 @@ export const getMe = async () => {
 }
 
 export const getUser = async (id: string) => {
-  const result = await apolloClient.query<GetUserQuery, GetUserQueryVariables>({
+  const client = getApolloClient()
+  const result = await client.query<GetUserQuery, GetUserQueryVariables>({
     query: GetUserDocument,
     variables: { id },
   })
@@ -105,7 +107,8 @@ export const updateUser = async (
   id: string,
   input: UpdateUserMutationVariables['input']
 ) => {
-  const result = await apolloClient.mutate<
+  const client = getApolloClient()
+  const result = await client.mutate<
     UpdateUserMutation,
     UpdateUserMutationVariables
   >({

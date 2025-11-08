@@ -28,7 +28,8 @@ const authLink = setContext(async (_, { headers }) => {
   return { headers }
 })
 
-// Create a new Apollo Client instance (for server-side rendering)
+// Create a new Apollo Client instance
+// Each call creates a fresh instance to prevent cache pollution between requests
 export const createApolloClient = () =>
   new ApolloClient({
     link: authLink.concat(createHttpLink()),
@@ -43,10 +44,11 @@ export const createApolloClient = () =>
     },
   })
 
-// Singleton for client-side only (safe because browser instances are per-tab)
-let clientSideApolloClient: ApolloClient<any> | null = null
-
-export const apolloClient =
-  typeof window === 'undefined'
-    ? createApolloClient() // Server-side: always create new instance
-    : (clientSideApolloClient ??= createApolloClient()) // Client-side: reuse singleton
+/**
+ * Get Apollo Client instance for use in Server Components or API routes
+ * Always creates a new instance on the server to prevent cache pollution
+ * @returns A fresh Apollo Client instance
+ */
+export const getApolloClient = () => {
+  return createApolloClient()
+}

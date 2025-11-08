@@ -1,6 +1,6 @@
 {
-  "name": "{{PROJECT_NAME}}",
-  "author": "{{AUTHOR_NAME}} (https://github.com/{{GITHUB_USERNAME}})",
+  "name": "nextjs-graphql-template",
+  "author": "codyd",
   "engines": {
     "node": ">=20"
   },

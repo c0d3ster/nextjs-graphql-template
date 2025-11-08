@@ -28,7 +28,7 @@ export async function createContext(req: NextRequest): Promise<GraphQLContext> {
     })
 
     if (!user) {
-      return { db, schemas, req }
+      return { userId, db, schemas, req }
     }
 
     return { userId, user, db, schemas, req }

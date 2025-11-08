@@ -9,7 +9,7 @@ import {
   SubmitContactFormDocument,
   useSubmitContactFormMutation,
 } from '@/graphql/generated/graphql'
-import { apolloClient } from '@/libs/ApolloClient'
+import { getApolloClient } from '@/libs/ApolloClient'
 
 // GraphQL Operations
 export const SUBMIT_CONTACT_FORM = gql`
@@ -32,7 +32,8 @@ export const useSubmitContactForm = () => useSubmitContactFormMutation()
 export const submitContactForm = async (
   input: SubmitContactFormMutationVariables['input']
 ) => {
-  const result = await apolloClient.mutate<
+  const client = getApolloClient()
+  const result = await client.mutate<
     SubmitContactFormMutation,
     SubmitContactFormMutationVariables
   >({
