@@ -19,29 +19,29 @@ export default function ProfilePage() {
       {/* Content Cards */}
       <div className='grid gap-6 md:grid-cols-2'>
         {/* Authentication Status Card */}
-        <div className='bg-surface rounded-lg p-6'>
-          <h2 className='text-text mb-4 text-xl font-semibold'>
+        <div className='rounded-lg bg-surface p-6'>
+          <h2 className='mb-4 text-xl font-semibold text-text'>
             Authentication Status
           </h2>
           <div className='space-y-3'>
             <div className='flex items-center space-x-2'>
-              <div className='bg-accent h-2 w-2 rounded-full'></div>
+              <div className='h-2 w-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>Signed in successfully</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='bg-accent h-2 w-2 rounded-full'></div>
+              <div className='h-2 w-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>Protected route accessed</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='bg-accent h-2 w-2 rounded-full'></div>
+              <div className='h-2 w-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>User session active</span>
             </div>
           </div>
         </div>
 
         {/* Quick Actions Card */}
-        <div className='bg-surface rounded-lg p-6'>
-          <h2 className='text-text mb-4 text-xl font-semibold'>
+        <div className='rounded-lg bg-surface p-6'>
+          <h2 className='mb-4 text-xl font-semibold text-text'>
             Quick Actions
           </h2>
           <div className='space-y-3'>
@@ -53,11 +53,11 @@ export default function ProfilePage() {
       </div>
 
       {/* Information Section */}
-      <div className='bg-surface mt-8 rounded-lg p-6'>
-        <h2 className='text-text mb-4 text-xl font-semibold'>
+      <div className='mt-8 rounded-lg bg-surface p-6'>
+        <h2 className='mb-4 text-xl font-semibold text-text'>
           About This Demo
         </h2>
-        <div className='text-text-muted space-y-2'>
+        <div className='space-y-2 text-text-muted'>
           <p>
             This page demonstrates successful authentication with Clerk. You can
             see:

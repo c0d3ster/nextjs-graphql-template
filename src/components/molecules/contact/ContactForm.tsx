@@ -19,9 +19,14 @@ export const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitContactForm] = useSubmitContactForm()
 
-  const { register, handleSubmit, reset } = useForm<ContactFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
-    mode: 'onSubmit',
+    mode: 'onBlur', // Validate on blur for better UX
   })
 
   const onSubmit = async (data: ContactFormData) => {
@@ -79,20 +84,20 @@ export const ContactForm = () => {
 
   return (
     <div className='mx-auto max-w-2xl'>
-      <h3 className='text-text mb-6 text-center text-2xl font-bold'>
+      <h3 className='mb-6 text-center text-2xl font-bold text-text'>
         Contact Us
       </h3>
 
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className='space-y-6'
+        className='space-y-3'
         noValidate
       >
         <div className='grid gap-6 md:grid-cols-2'>
           <div>
             <label
               htmlFor='name'
-              className='text-text-muted mb-2 block text-sm font-medium'
+              className='mb-2 block text-sm font-medium text-text-muted'
             >
               Name
             </label>
@@ -100,14 +105,27 @@ export const ContactForm = () => {
               {...register('name')}
               id='name'
               type='text'
-              className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+              className={`w-full rounded border bg-surface p-3 text-text placeholder-gray-400 focus:ring-2 focus:outline-none ${
+                errors.name
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50'
+                  : 'border-gray-600 focus:border-blue-400 focus:ring-blue-400'
+              }`}
               placeholder='Your name'
             />
+            <div className='min-h-[20px]'>
+              {errors.name && (
+                <p id='name-error' className='mt-1 text-sm text-red-500'>
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
           </div>
           <div>
             <label
               htmlFor='email'
-              className='text-text-muted mb-2 block text-sm font-medium'
+              className='mb-2 block text-sm font-medium text-text-muted'
             >
               Email
             </label>
@@ -115,16 +133,29 @@ export const ContactForm = () => {
               {...register('email')}
               id='email'
               type='email'
-              className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              className={`w-full rounded border bg-surface p-3 text-text placeholder-gray-400 focus:ring-2 focus:outline-none ${
+                errors.email
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50'
+                  : 'border-gray-600 focus:border-blue-400 focus:ring-blue-400'
+              }`}
               placeholder='your@email.com'
             />
+            <div className='min-h-[20px]'>
+              {errors.email && (
+                <p id='email-error' className='mt-1 text-sm text-red-500'>
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
         <div>
           <label
             htmlFor='subject'
-            className='text-text-muted mb-2 block text-sm font-medium'
+            className='mb-2 block text-sm font-medium text-text-muted'
           >
             Subject
           </label>
@@ -132,15 +163,28 @@ export const ContactForm = () => {
             {...register('subject')}
             id='subject'
             type='text'
-            className='bg-surface text-text w-full rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+            aria-invalid={errors.subject ? 'true' : 'false'}
+            aria-describedby={errors.subject ? 'subject-error' : undefined}
+            className={`w-full rounded border bg-surface p-3 text-text placeholder-gray-400 focus:ring-2 focus:outline-none ${
+              errors.subject
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50'
+                : 'border-gray-600 focus:border-blue-400 focus:ring-blue-400'
+            }`}
             placeholder="What's this about?"
           />
+          <div className='min-h-[20px]'>
+            {errors.subject && (
+              <p id='subject-error' className='mt-1 text-sm text-red-500'>
+                {errors.subject.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <div>
           <label
             htmlFor='message'
-            className='text-text-muted mb-2 block text-sm font-medium'
+            className='mb-2 block text-sm font-medium text-text-muted'
           >
             Message
           </label>
@@ -148,13 +192,29 @@ export const ContactForm = () => {
             {...register('message')}
             id='message'
             rows={4}
-            className='bg-surface text-text w-full resize-none rounded border border-gray-600 p-3 placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none'
+            aria-invalid={errors.message ? 'true' : 'false'}
+            aria-describedby={errors.message ? 'message-error' : undefined}
+            className={`w-full resize-none rounded border bg-surface p-3 text-text placeholder-gray-400 focus:ring-2 focus:outline-none ${
+              errors.message
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50'
+                : 'border-gray-600 focus:border-blue-400 focus:ring-blue-400'
+            }`}
             placeholder='Tell us about your project...'
           />
+          <div className='min-h-[20px]'>
+            {errors.message && (
+              <p id='message-error' className='mt-1 text-sm text-red-500'>
+                {errors.message.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className='text-center'>
-          <Button type='submit' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            disabled={isSubmitting || Object.keys(errors).length > 0}
+          >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </Button>
         </div>
