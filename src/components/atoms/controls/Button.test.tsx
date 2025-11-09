@@ -19,9 +19,21 @@ describe('Button', () => {
     const button = screen.getByRole('button')
 
     expect(button).toHaveClass(
-      'inline-block rounded border font-mono font-bold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50',
-      'border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400 hover:text-black',
-      'px-6 py-3 text-base'
+      'inline-block',
+      'rounded',
+      'font-medium',
+      'transition-all',
+      'duration-300',
+      'disabled:cursor-not-allowed',
+      'disabled:opacity-50',
+      'focus:ring-2',
+      'focus:ring-primary/50',
+      'bg-primary',
+      'text-text',
+      'hover:bg-primary/90',
+      'px-6',
+      'py-3',
+      'text-base'
     )
   })
 

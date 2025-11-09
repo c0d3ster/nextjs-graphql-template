@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 import { UserButton } from '@clerk/nextjs'
-import Link from 'next/link'
 
+import { Button } from '@/components/atoms'
 import { CleanPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
 
@@ -45,12 +45,9 @@ export default function ProfilePage() {
             Quick Actions
           </h2>
           <div className='space-y-3'>
-            <Link
-              href='/'
-              className='bg-primary text-text block rounded px-4 py-2 text-center transition-all hover:opacity-90'
-            >
+            <Button href='/' className='w-full text-center'>
               Return to Home
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

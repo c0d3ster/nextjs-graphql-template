@@ -17,10 +17,9 @@ type ButtonProps = {
 } & Record<string, unknown>
 
 const baseStyles =
-  'inline-block rounded border font-mono font-bold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-block rounded font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background focus:outline-none'
 
-const buttonStyle =
-  'border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400 hover:text-black'
+const buttonStyle = 'bg-primary text-text hover:bg-primary/90'
 
 const sizes = {
   sm: 'px-4 py-2 text-sm',

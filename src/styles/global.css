@@ -2,19 +2,21 @@
 
 @import 'tailwindcss';
 
+@theme {
+  /* Register colors with Tailwind - must be at root level */
+  --color-primary: rgb(37 99 235); /* blue-600 - darker blue */
+  --color-accent: rgb(16 185 129);
+  --color-background: rgb(17 24 39);
+  --color-surface: rgb(31 41 55);
+  --color-text: rgb(255 255 255);
+  --color-text-muted: rgb(156 163 175);
+}
+
 @layer theme {
   :root {
     /* Typography */
     --font-size-2xs: 12px;
     --line-height-2xs: 16px;
-
-    /* Theme Colors - RGB values (space-separated for opacity support) */
-    --color-primary: 59 130 246;
-    --color-accent: 16 185 129;
-    --color-background: 17 24 39;
-    --color-surface: 31 41 55;
-    --color-text: 255 255 255;
-    --color-text-muted: 156 163 175;
   }
 }
 
@@ -34,27 +36,27 @@
 
 @layer utilities {
   .bg-background {
-    background-color: rgb(var(--color-background));
+    background-color: var(--color-background);
   }
   .bg-surface {
-    background-color: rgb(var(--color-surface));
+    background-color: var(--color-surface);
   }
   .bg-primary {
-    background-color: rgb(var(--color-primary));
+    background-color: var(--color-primary);
   }
   .bg-accent {
-    background-color: rgb(var(--color-accent));
+    background-color: var(--color-accent);
   }
   .text-primary {
-    color: rgb(var(--color-primary));
+    color: var(--color-primary);
   }
   .text-accent {
-    color: rgb(var(--color-accent));
+    color: var(--color-accent);
   }
   .text-text {
-    color: rgb(var(--color-text));
+    color: var(--color-text);
   }
   .text-text-muted {
-    color: rgb(var(--color-text-muted));
+    color: var(--color-text-muted);
   }
 }
