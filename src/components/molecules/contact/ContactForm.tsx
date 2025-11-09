@@ -1,5 +1,7 @@
 'use client'
 
+import type { FieldErrors } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -40,11 +42,11 @@ export const ContactForm = () => {
     } catch (error) {
       // Log detailed error information for debugging
       if (
-        error
-        && typeof error === 'object'
-        && 'graphQLErrors' in error
-        && Array.isArray(error.graphQLErrors)
-        && error.graphQLErrors.length > 0
+        error &&
+        typeof error === 'object' &&
+        'graphQLErrors' in error &&
+        Array.isArray(error.graphQLErrors) &&
+        error.graphQLErrors.length > 0
       ) {
         const graphQLError = error.graphQLErrors[0]
         logger.error('Contact form error details', {
@@ -66,9 +68,10 @@ export const ContactForm = () => {
     }
   }
 
-  const onError = (errors: Record<string, { message: string }>) => {
+  const onError = (errors: FieldErrors<ContactFormData>) => {
     const errorMessages = Object.values(errors)
-      .map(err => err.message)
+      .map((err) => err?.message)
+      .filter((msg): msg is string => Boolean(msg))
       .join(', ')
     Toast.error(`Please fix the following errors: ${errorMessages}`)
   }

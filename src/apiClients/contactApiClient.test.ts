@@ -17,7 +17,6 @@ vi.mock('@/libs/ApolloClient', () => ({
 // Mock the generated GraphQL hooks
 vi.mock('@/graphql/generated/graphql', () => ({
   useSubmitContactFormMutation: vi.fn(),
-  SubmitContactFormDocument: 'SUBMIT_CONTACT_FORM_DOCUMENT',
 }))
 
 describe('Contact API Client', () => {
@@ -70,7 +69,7 @@ describe('Contact API Client', () => {
         const result = await submitContactForm(mockInput)
 
         expect(mockMutate).toHaveBeenCalledWith({
-          mutation: 'SUBMIT_CONTACT_FORM_DOCUMENT',
+          mutation: SUBMIT_CONTACT_FORM,
           variables: { input: mockInput },
         })
         expect(result).toEqual(mockResponse.data.submitContactForm)

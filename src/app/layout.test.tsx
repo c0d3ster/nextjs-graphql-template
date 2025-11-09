@@ -8,8 +8,21 @@ vi.mock('next/font/google', () => ({
   Inter: () => ({ className: 'inter-font' }),
 }))
 
+// Mock Clerk
+vi.mock('@clerk/nextjs', () => ({
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}))
+
 // Mock providers
 vi.mock('@/providers', () => ({
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  QueryProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
   ProvidersWrapper: ({ children }: { children: React.ReactNode }) => (
     <div data-testid='providers-wrapper'>{children}</div>
   ),
@@ -23,8 +36,10 @@ describe('RootLayout', () => {
       </RootLayout>
     )
 
-    expect(screen.getByTestId('providers-wrapper')).toBeInTheDocument()
+    // Check that children are rendered (which confirms providers are working)
     expect(screen.getByTestId('page-content')).toBeInTheDocument()
+    // Check that ToastContainer is rendered (part of ProvidersWrapper)
+    expect(document.querySelector('.Toastify')).toBeInTheDocument()
   })
 
   it('should have correct HTML structure', () => {

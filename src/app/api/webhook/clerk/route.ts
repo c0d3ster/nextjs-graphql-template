@@ -1,7 +1,6 @@
 import 'reflect-metadata'
 
 import type { NextRequest } from 'next/server'
-import type { WebhookEvent } from 'svix'
 
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest) {
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET)
 
-  let evt: WebhookEvent
+  let evt: any
 
   // Verify the payload with the headers
   try {

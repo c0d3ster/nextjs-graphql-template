@@ -1,6 +1,6 @@
 'use client'
 
-import type { ComponentPropsWithoutRef, ReactNode, Ref } from 'react'
+import type { ReactNode, Ref } from 'react'
 
 import Link from 'next/link'
 
@@ -14,7 +14,7 @@ type ButtonProps = {
   type?: 'button' | 'submit'
   disabled?: boolean
   ref?: Ref<HTMLButtonElement>
-} & Omit<ComponentPropsWithoutRef<'button'>, 'type'>
+} & Record<string, unknown>
 
 const baseStyles =
   'inline-block rounded border font-mono font-bold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50'
@@ -43,6 +43,17 @@ export const Button = ({
   const buttonClasses = `${baseStyles} ${buttonStyle} ${sizes[size]} ${className}`
 
   if (href) {
+    // Extract only props relevant for anchor/link elements
+    const {
+      onClick: _onClick,
+      type: _type,
+      disabled: _disabled,
+      ref: _ref,
+      size: _size,
+      external: _external,
+      ...linkProps
+    } = props
+
     if (external) {
       return (
         <a
@@ -50,6 +61,7 @@ export const Button = ({
           target='_blank'
           rel='noopener noreferrer'
           className={buttonClasses}
+          {...(linkProps as Record<string, unknown>)}
         >
           {children}
         </a>
@@ -57,11 +69,23 @@ export const Button = ({
     }
 
     return (
-      <Link href={href} className={buttonClasses}>
+      <Link
+        href={href}
+        className={buttonClasses}
+        {...(linkProps as Record<string, unknown>)}
+      >
         {children}
       </Link>
     )
   }
+
+  // Extract only props relevant for button elements
+  const {
+    href: _href,
+    external: _external,
+    size: _size,
+    ...buttonProps
+  } = props
 
   return (
     <button
@@ -70,7 +94,7 @@ export const Button = ({
       className={buttonClasses}
       onClick={onClick}
       disabled={disabled}
-      {...props}
+      {...(buttonProps as Record<string, unknown>)}
     >
       {children}
     </button>

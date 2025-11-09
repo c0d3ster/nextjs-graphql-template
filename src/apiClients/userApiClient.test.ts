@@ -27,9 +27,6 @@ vi.mock('@/graphql/generated/graphql', () => ({
   useGetMeQuery: vi.fn(),
   useGetUserQuery: vi.fn(),
   useUpdateUserMutation: vi.fn(),
-  GetMeDocument: 'GET_ME_DOCUMENT',
-  GetUserDocument: 'GET_USER_DOCUMENT',
-  UpdateUserDocument: 'UPDATE_USER_DOCUMENT',
 }))
 
 describe('User API Client', () => {
@@ -92,7 +89,7 @@ describe('User API Client', () => {
         const result = await getMe()
 
         expect(mockQuery).toHaveBeenCalledWith({
-          query: 'GET_ME_DOCUMENT',
+          query: GET_ME,
         })
         expect(result).toEqual(mockUser)
       })
@@ -144,7 +141,7 @@ describe('User API Client', () => {
         const result = await getUser(mockUserId)
 
         expect(mockQuery).toHaveBeenCalledWith({
-          query: 'GET_USER_DOCUMENT',
+          query: GET_USER,
           variables: { id: mockUserId },
         })
         expect(result).toEqual(mockUser)
@@ -206,7 +203,7 @@ describe('User API Client', () => {
         const result = await updateUser(mockUserId, mockInput)
 
         expect(mockMutate).toHaveBeenCalledWith({
-          mutation: 'UPDATE_USER_DOCUMENT',
+          mutation: UPDATE_USER,
           variables: { id: mockUserId, input: mockInput },
         })
         expect(result).toEqual(mockUpdatedUser)

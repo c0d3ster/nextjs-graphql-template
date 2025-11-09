@@ -128,7 +128,7 @@ describe('CleanPageTemplate', () => {
     )
 
     // Should render the template structure even with no content
-    const container = document.querySelector('.min-h-screen.bg-gray-900')
+    const container = document.querySelector('.min-h-screen.bg-background')
 
     expect(container).toBeInTheDocument()
     expect(screen.getByText('Empty Page')).toBeInTheDocument()

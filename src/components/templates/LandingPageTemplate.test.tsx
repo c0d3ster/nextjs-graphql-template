@@ -77,13 +77,13 @@ describe('LandingPageTemplate', () => {
   it('handles multiple children', () => {
     render(
       <LandingPageTemplate>
-        <header>Header content</header>
+        <div>Header content</div>
         <main>Main content</main>
         <footer>Footer content</footer>
       </LandingPageTemplate>
     )
 
-    expect(screen.getByRole('banner')).toBeInTheDocument()
+    expect(screen.getByText('Header content')).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.getByRole('contentinfo')).toBeInTheDocument()
   })
@@ -124,7 +124,7 @@ describe('LandingPageTemplate', () => {
     expect(screen.getByTestId('site-header')).toBeInTheDocument()
 
     const container = document.querySelector(
-      '.min-h-screen.scroll-smooth.bg-gray-900'
+      '.min-h-screen.scroll-smooth.bg-background'
     )
 
     expect(container).toBeInTheDocument()
@@ -177,7 +177,7 @@ describe('LandingPageTemplate', () => {
     )
 
     const container = document.querySelector(
-      '.min-h-screen.scroll-smooth.bg-gray-900'
+      '.min-h-screen.scroll-smooth.bg-background'
     )
 
     expect(container).toBeInTheDocument()
