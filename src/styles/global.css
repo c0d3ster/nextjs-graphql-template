@@ -33,30 +33,3 @@
     }
   }
 }
-
-@layer utilities {
-  .bg-background {
-    background-color: var(--color-background);
-  }
-  .bg-surface {
-    background-color: var(--color-surface);
-  }
-  .bg-primary {
-    background-color: var(--color-primary);
-  }
-  .bg-accent {
-    background-color: var(--color-accent);
-  }
-  .text-primary {
-    color: var(--color-primary);
-  }
-  .text-accent {
-    color: var(--color-accent);
-  }
-  .text-text {
-    color: var(--color-text);
-  }
-  .text-text-muted {
-    color: var(--color-text-muted);
-  }
-}
