@@ -44,7 +44,7 @@ export const LandingPageTemplate = ({ children }: LandingPageTemplateProps) => {
   }, [])
 
   return (
-    <div className='bg-background min-h-screen scroll-smooth'>
+    <div className='min-h-screen scroll-smooth bg-background'>
       <SiteHeader menuItems={menuItems} activeItem={activeItem} />
       <div className='pt-16'>{children}</div>
     </div>

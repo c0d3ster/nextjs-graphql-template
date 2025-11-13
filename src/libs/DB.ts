@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 
 import { schemas } from '@/models'
 
-import { Env } from './Env'
+import { Env, requireEnv } from './Env'
 
 // Stores the db connection in the global scope to prevent multiple instances due to hot reloading with Next.js
 const globalForDb = globalThis as unknown as {
@@ -14,12 +14,13 @@ const globalForDb = globalThis as unknown as {
 // Need a database for production? Check out https://www.prisma.io/?via=nextjsboilerplate
 // Tested and compatible with Next.js Boilerplate
 const createDbConnection = () => {
+  const databaseUrl = requireEnv.DATABASE_URL()
   return drizzle({
     connection: {
-      connectionString: Env.DATABASE_URL,
+      connectionString: databaseUrl,
       ssl:
-        !Env.DATABASE_URL.includes('localhost') &&
-        !Env.DATABASE_URL.includes('127.0.0.1'),
+        !databaseUrl.includes('localhost') &&
+        !databaseUrl.includes('127.0.0.1'),
     },
     schema: schemas,
   })

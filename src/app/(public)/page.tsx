@@ -18,19 +18,19 @@ export default function Index() {
       {/* Main Content */}
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
-          <h2 className='text-text mb-4 text-4xl font-bold'>
+          <h2 className='mb-4 text-4xl font-bold text-text'>
             Welcome to {BRAND_NAME}
           </h2>
-          <p className='text-text-muted mb-8 text-lg'>
+          <p className='mb-8 text-lg text-text-muted'>
             A modern web application template with authentication
           </p>
 
           {/* Auth Demo Section */}
-          <div className='bg-surface mb-8 rounded-lg p-6'>
-            <h3 className='text-text mb-4 text-xl font-semibold'>
+          <div className='mb-8 rounded-lg bg-surface p-6'>
+            <h3 className='mb-4 text-xl font-semibold text-text'>
               Authentication Demo
             </h3>
-            <div className='text-text-muted space-y-2'>
+            <div className='space-y-2 text-text-muted'>
               <p>This template includes:</p>
               <ul className='ml-4 list-disc space-y-1 text-left'>
                 <li>Public pages (this page)</li>

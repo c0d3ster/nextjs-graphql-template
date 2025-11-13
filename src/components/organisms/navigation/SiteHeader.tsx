@@ -17,12 +17,12 @@ export const SiteHeader = ({
   const { user, isLoaded } = useUser()
 
   return (
-    <header className='bg-surface fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-sm'>
+    <header className='fixed top-0 right-0 left-0 z-50 border-b border-gray-700 bg-surface shadow-sm'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
           <div className='flex items-center'>
-            <Link href='/' className='text-text text-lg font-semibold'>
+            <Link href='/' className='text-lg font-semibold text-text'>
               LOGO
             </Link>
           </div>
@@ -38,7 +38,7 @@ export const SiteHeader = ({
                   className={`text-sm font-medium transition-colors ${
                     isActive
                       ? 'text-primary'
-                      : 'hover:text-primary text-text-muted'
+                      : 'text-text-muted hover:text-primary'
                   }`}
                 >
                   {item.label}
@@ -53,7 +53,7 @@ export const SiteHeader = ({
               <SignOutButton>
                 <button
                   type='button'
-                  className='hover:text-primary text-text-muted text-sm'
+                  className='text-sm text-text-muted hover:text-primary'
                 >
                   Sign Out
                 </button>
@@ -62,7 +62,7 @@ export const SiteHeader = ({
               <SignInButton mode='modal'>
                 <button
                   type='button'
-                  className='hover:text-primary text-text-muted text-sm'
+                  className='text-sm text-text-muted hover:text-primary'
                 >
                   Sign In
                 </button>
