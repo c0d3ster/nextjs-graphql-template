@@ -12,6 +12,7 @@ const config: KnipConfig = {
     '@commitlint/types',
     '@types/testing-library__jest-dom', // Used in test setup for custom matchers
     'conventional-changelog-conventionalcommits',
+    'lefthook', // Git hooks manager — used as a CLI tool, not imported
     'vite',
   ],
   // Binaries to ignore during analysis

@@ -9,9 +9,9 @@ import { UserService } from './UserService'
 
 // Create services with their dependencies
 const resend = Env.RESEND_API_KEY ? new Resend(Env.RESEND_API_KEY) : null
-export const emailService = new EmailService(resend)
+const emailService = new EmailService(resend)
 export const contactService = new ContactService(emailService)
 export const userService = new UserService()
 
 // Export types for dependency injection
-export type { ContactService, EmailService, UserService }
+export type { ContactService, UserService }

@@ -40,12 +40,12 @@ test.describe('Contact Form', () => {
     await page.goto('/')
 
     // Check if the form elements are visible
-    await expect(page.getByLabel('NAME')).toBeVisible()
-    await expect(page.getByLabel('EMAIL')).toBeVisible()
-    await expect(page.getByLabel('SUBJECT')).toBeVisible()
-    await expect(page.getByLabel('MESSAGE')).toBeVisible()
+    await expect(page.getByLabel('Name')).toBeVisible()
+    await expect(page.getByLabel('Email')).toBeVisible()
+    await expect(page.getByLabel('Subject')).toBeVisible()
+    await expect(page.getByLabel('Message')).toBeVisible()
     await expect(
-      page.getByRole('button', { name: 'INITIATE TRANSMISSION' })
+      page.getByRole('button', { name: 'Send Message' })
     ).toBeVisible()
   })
 
@@ -55,7 +55,7 @@ test.describe('Contact Form', () => {
     await page.goto('/')
 
     // Try to submit empty form
-    await page.getByRole('button', { name: 'INITIATE TRANSMISSION' }).click()
+    await page.getByRole('button', { name: 'Send Message' }).click()
 
     // Check for validation errors in toast (these appear at the top-right)
     // The form validation shows errors via toast notifications
@@ -70,9 +70,9 @@ test.describe('Contact Form', () => {
     await page.goto('/')
 
     // Fill out the form
-    await page.getByLabel('NAME').fill('John Doe')
-    await page.getByLabel('EMAIL').fill('john@example.com')
-    await page.getByLabel('SUBJECT').fill('Website Project')
+    await page.getByLabel('Name').fill('John Doe')
+    await page.getByLabel('Email').fill('john@example.com')
+    await page.getByLabel('Subject').fill('Website Project')
     await page
       .getByLabel('MESSAGE')
       .fill(
@@ -80,7 +80,7 @@ test.describe('Contact Form', () => {
       )
 
     // Submit the form
-    await page.getByRole('button', { name: 'INITIATE TRANSMISSION' }).click()
+    await page.getByRole('button', { name: 'Send Message' }).click()
 
     // Check for success message in toast
     await expect(
@@ -94,16 +94,16 @@ test.describe('Contact Form', () => {
     await page.goto('/')
 
     // Fill form with invalid email
-    await page.getByLabel('NAME').fill('John Doe')
-    await page.getByLabel('EMAIL').fill('invalid-email')
-    await page.getByLabel('SUBJECT').fill('Test Project')
+    await page.getByLabel('Name').fill('John Doe')
+    await page.getByLabel('Email').fill('invalid-email')
+    await page.getByLabel('Subject').fill('Test Project')
     await page
       .getByLabel('MESSAGE')
       .fill(
         'This is a test message that is long enough to meet the minimum requirement.'
       )
 
-    await page.getByRole('button', { name: 'INITIATE TRANSMISSION' }).click()
+    await page.getByRole('button', { name: 'Send Message' }).click()
 
     // Check for email validation error in toast
     await expect(page.getByText('Invalid email address')).toBeVisible()
@@ -113,12 +113,12 @@ test.describe('Contact Form', () => {
     await page.goto('/')
 
     // Fill form with message that's too short
-    await page.getByLabel('NAME').fill('John Doe')
-    await page.getByLabel('EMAIL').fill('john@example.com')
-    await page.getByLabel('SUBJECT').fill('Test Project')
-    await page.getByLabel('MESSAGE').fill('Short')
+    await page.getByLabel('Name').fill('John Doe')
+    await page.getByLabel('Email').fill('john@example.com')
+    await page.getByLabel('Subject').fill('Test Project')
+    await page.getByLabel('Message').fill('Short')
 
-    await page.getByRole('button', { name: 'INITIATE TRANSMISSION' }).click()
+    await page.getByRole('button', { name: 'Send Message' }).click()
 
     // Check for message length validation error in toast
     await expect(

@@ -97,14 +97,8 @@ export const ClerkProvider = ({
     []
   )
 
-  // During Next.js build/SSG, Clerk publishable key might not be available
-  // Skip ClerkProvider during build to prevent errors
-  // Check if we're in a build context (server-side without publishable key)
-  const isBuildTime =
-    typeof window === 'undefined' && !publishableKey
-
-  // During build without publishable key, render children without Clerk
-  if (isBuildTime) {
+  // Skip ClerkProvider when no publishable key is configured
+  if (!publishableKey) {
     return <>{children}</>
   }
 

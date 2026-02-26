@@ -154,24 +154,6 @@ vi.mock('@/libs/DB', () => ({
         findFirst: vi.fn(),
         findMany: vi.fn(),
       },
-      projects: {
-        findFirst: vi.fn(),
-        findMany: vi.fn(),
-      },
-      projectRequests: {
-        findFirst: vi.fn(),
-        findMany: vi.fn(),
-      },
-      statusUpdates: {
-        findMany: vi.fn(),
-      },
-      projectCollaborators: {
-        findFirst: vi.fn(),
-        findMany: vi.fn(),
-      },
-      projectFiles: {
-        findMany: vi.fn(),
-      },
     },
     insert: vi.fn(),
     update: vi.fn(),

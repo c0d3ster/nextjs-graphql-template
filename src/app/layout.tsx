@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { ProvidersWrapper } from '@/providers/ProvidersWrapper'
+import { ProvidersWrapper } from '@/providers'
 import '@/styles/global.css'
 
 export const metadata: Metadata = {

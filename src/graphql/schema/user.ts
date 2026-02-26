@@ -1,6 +1,5 @@
 import {
   Field,
-  Float,
   ID,
   InputType,
   ObjectType,
@@ -40,21 +39,6 @@ export class User {
   role?: UserRole
 
   @Field(() => String, { nullable: true })
-  bio?: string
-
-  @Field(() => [String], { nullable: true })
-  skills?: string[]
-
-  @Field(() => String, { nullable: true })
-  portfolio?: string
-
-  @Field(() => Float, { nullable: true })
-  hourlyRate?: number
-
-  @Field(() => String, { nullable: true })
-  availability?: string
-
-  @Field(() => String, { nullable: true })
   avatarUrl?: string
 
   @Field(() => String, { nullable: true })
@@ -88,21 +72,6 @@ export class UpdateUserInput {
   lastName?: string
 
   @Field(() => String, { nullable: true })
-  bio?: string
-
-  @Field(() => [String], { nullable: true })
-  skills?: string[]
-
-  @Field(() => String, { nullable: true })
-  portfolio?: string
-
-  @Field(() => Float, { nullable: true })
-  hourlyRate?: number
-
-  @Field(() => String, { nullable: true })
-  availability?: string
-
-  @Field(() => String, { nullable: true })
   avatarUrl?: string
 }
 
@@ -119,7 +88,4 @@ export class UserFilter {
 
   @Field(() => String, { nullable: true })
   lastName?: string
-
-  @Field(() => String, { nullable: true })
-  availability?: string
 }

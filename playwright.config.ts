@@ -1,5 +1,3 @@
-import type { ChromaticConfig } from '@chromatic-com/playwright'
-
 import { defineConfig, devices } from '@playwright/test'
 
 // Utility to pick explicit keys and allow certain prefixes from process.env
@@ -21,7 +19,7 @@ const baseURL = `http://localhost:${PORT}`
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig<ChromaticConfig>({
+export default defineConfig({
   testDir: './tests',
   // Look for files with the .spec.js or .e2e.js extension
   testMatch: '*.@(spec|e2e).?(c|m)[jt]s?(x)',
@@ -74,8 +72,6 @@ export default defineConfig<ChromaticConfig>({
     // Record videos when retrying the failed test.
     video: process.env.CI ? 'retain-on-failure' : undefined,
 
-    // Disable automatic screenshots at test completion when using Chromatic test fixture.
-    disableAutoSnapshot: true,
   },
 
   projects: [

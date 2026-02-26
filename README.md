@@ -91,15 +91,17 @@ DATABASE / EXTERNAL APIs
    - **`.env.local`** files contain sensitive values (git-ignored, never committed)
    - Sensitive variables like API keys, secrets, and database URLs should always go in `.local` files
 
-   Create a `.env.local` file (git-ignored) with your development values:
+   Create a `.env.local` file (git-ignored) with your values:
 
    ```bash
-   # Required variables
-   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-   CLERK_SECRET_KEY=sk_test_...
+   # Clerk authentication — https://clerk.com → Dashboard → API Keys
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+   CLERK_SECRET_KEY=sk_test_...
 
-   # Optional variables
+   # PostgreSQL connection string
+   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+   # Optional
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    CLERK_WEBHOOK_SECRET=whsec_...
    RESEND_API_KEY=re_...
@@ -108,10 +110,9 @@ DATABASE / EXTERNAL APIs
 
    **For production**, create `.env.production.local` with production values.
 
-   **For CI/CD**, configure GitHub secrets:
+   **For CI/CD**, the pipeline spins up its own PostgreSQL service container automatically — no `DATABASE_URL` secret needed. The only secret required is:
    - Navigate to: Repository → Settings → Secrets and variables → Actions
-   - Add: `CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `DATABASE_URL`
-   - See `.github/workflows/CI.yml` for the complete list
+   - Add: `CLERK_SECRET_KEY`
 
 3. **Set up database:**
 

@@ -1,29 +1,16 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
-// Check if we're in CI or build-time (where env vars might not be available)
-const isCI = Boolean(
-  process.env.CI ||
-    process.env.GITHUB_ACTIONS ||
-    process.env.CONTINUOUS_INTEGRATION
-)
-
-// For CI/build, allow undefined values; for runtime, require non-empty strings
-const requiredString = isCI
-  ? z.string().optional()
-  : z.string().min(1, 'Required environment variable is missing')
-
 export const Env = createEnv({
   server: {
-    CLERK_SECRET_KEY: requiredString,
+    CLERK_SECRET_KEY: z.string().optional(),
     CLERK_WEBHOOK_SECRET: z.string().optional(),
-    DATABASE_URL: requiredString,
-    PORTFOLIO_SECRET_TOKEN: z.string().optional(),
+    DATABASE_URL: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: requiredString,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(['test', 'development', 'production']).optional(),
@@ -33,15 +20,12 @@ export const Env = createEnv({
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
-    PORTFOLIO_SECRET_TOKEN: process.env.PORTFOLIO_SECRET_TOKEN,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
-  // Skip validation in CI/build environments
-  skipValidation: isCI,
 })
 
 // Runtime validation helpers - use these when you actually need the variables
