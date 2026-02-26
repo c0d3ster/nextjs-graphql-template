@@ -16,13 +16,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
 // Remote environments (CI: NODE_ENV=test, Vercel: VERCEL_ENV set) use environment variables only
 
 const getDatabaseUrl = () => {
-  const url = process.env.DATABASE_URL
-  if (!url) {
-    throw new Error(
-      'DATABASE_URL environment variable is required for database operations'
-    )
-  }
-  return url
+  return process.env.DATABASE_URL ?? ''
 }
 
 export default defineConfig({

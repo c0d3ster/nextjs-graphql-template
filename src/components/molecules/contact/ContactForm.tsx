@@ -213,7 +213,7 @@ export const ContactForm = () => {
         <div className='text-center'>
           <Button
             type='submit'
-            disabled={isSubmitting || Object.keys(errors).length > 0}
+            disabled={isSubmitting}
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </Button>
