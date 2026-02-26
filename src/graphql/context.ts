@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/libs/DB'
+import { logger } from '@/libs/Logger'
 import { schemas } from '@/models'
 
 export type GraphQLContext = {
@@ -33,12 +34,19 @@ export async function createContext(req: NextRequest): Promise<GraphQLContext> {
       }
 
       return { userId, user, db, schemas, req }
-    } catch {
+    } catch (error) {
       // Preserve userId even if DB query fails
+      logger.error('Database query failed in GraphQL context', {
+        error: String(error),
+        userId,
+      })
       return { userId, db, schemas, req }
     }
-  } catch {
+  } catch (error) {
     // Auth failed, return empty context
+    logger.error('Authentication failed in GraphQL context', {
+      error: String(error),
+    })
     return { db, schemas, req }
   }
 }

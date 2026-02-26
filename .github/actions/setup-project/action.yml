@@ -37,5 +37,6 @@ runs:
       with:
         path: |
           .next
-        key: nextjs-build-${{ inputs.node-version }}-${{ github.sha }}
-        fail-on-cache-miss: true
+        key: nextjs-build-${{ inputs.node-version }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          nextjs-build-${{ inputs.node-version }}-

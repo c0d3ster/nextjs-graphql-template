@@ -24,7 +24,10 @@ vi.mock('@/providers', () => ({
     <div>{children}</div>
   ),
   ProvidersWrapper: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='providers-wrapper'>{children}</div>
+    <div data-testid='providers-wrapper'>
+      <div className='Toastify'></div>
+      {children}
+    </div>
   ),
 }))
 

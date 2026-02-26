@@ -5,11 +5,10 @@ import { z } from 'zod'
 const isCI = Boolean(
   process.env.CI ||
     process.env.GITHUB_ACTIONS ||
-    process.env.VERCEL ||
     process.env.CONTINUOUS_INTEGRATION
 )
 
-// For CI/build, allow empty strings; for runtime, require values
+// For CI/build, allow undefined values; for runtime, require non-empty strings
 const requiredString = isCI
   ? z.string().optional()
   : z.string().min(1, 'Required environment variable is missing')

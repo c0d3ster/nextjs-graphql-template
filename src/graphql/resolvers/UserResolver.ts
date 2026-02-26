@@ -1,4 +1,5 @@
 import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
+import { GraphQLError } from 'graphql'
 
 import type { UserService } from '@/services'
 
@@ -25,9 +26,17 @@ export class UserResolver {
     try {
       const user = await this.userService.getUserById(id)
       return user
-    } catch (error) {
-      logger.error('Error in user query', { error: String(error), id })
-      return null
+    } catch (error: unknown) {
+      logger.error('Error in user query', { error, id })
+
+      if (
+        error instanceof GraphQLError &&
+        error.extensions?.code === 'USER_NOT_FOUND'
+      ) {
+        return null
+      }
+
+      throw error
     }
   }
 

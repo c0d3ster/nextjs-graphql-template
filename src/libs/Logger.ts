@@ -5,6 +5,8 @@ import {
   getLogger,
 } from '@logtape/logtape'
 
+const isDevelopment = process.env.NODE_ENV === 'development'
+
 configure({
   sinks: {
     console: getConsoleSink({ formatter: getJsonLinesFormatter() }),
@@ -18,7 +20,7 @@ configure({
     {
       category: ['app'],
       sinks: ['console'],
-      lowestLevel: 'debug',
+      lowestLevel: isDevelopment ? 'debug' : 'info',
     },
   ],
 })

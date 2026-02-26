@@ -86,6 +86,11 @@ DATABASE / EXTERNAL APIs
 
 2. **Set up environment:**
 
+   This template follows the pattern from [Next.js Boilerplate](https://github.com/ixartz/Next-js-Boilerplate):
+   - **`.env`** files contain non-sensitive, template/example values (committed to git)
+   - **`.env.local`** files contain sensitive values (git-ignored, never committed)
+   - Sensitive variables like API keys, secrets, and database URLs should always go in `.local` files
+
    Create a `.env.local` file (git-ignored) with your development values:
 
    ```bash

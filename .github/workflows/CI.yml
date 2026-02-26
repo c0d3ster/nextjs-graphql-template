@@ -54,7 +54,7 @@ jobs:
         with:
           path: |
             .next
-          key: nextjs-build-${{ matrix.node-version }}-${{ github.sha }}
+          key: nextjs-build-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
 
   static:
     strategy:
@@ -155,13 +155,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           restore-nextjs-cache: true
 
-      - name: Restore Next.js build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next
-          key: nextjs-build-${{ matrix.node-version }}-${{ github.sha }}
-
       - name: Build Next.js for E2E tests
         run: npm run build:ci
         env:
@@ -181,7 +174,7 @@ jobs:
       - name: Run E2E tests
         uses: docker://mcr.microsoft.com/playwright:v1.54.0
         with:
-          args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firebox
+          args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firefox
         env:
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
