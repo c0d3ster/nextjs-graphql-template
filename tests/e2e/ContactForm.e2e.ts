@@ -57,13 +57,10 @@ test.describe('Contact Form', () => {
     // Try to submit empty form
     await page.getByRole('button', { name: 'Send Message' }).click()
 
-    // Check for validation errors in toast (these appear at the top-right)
-    // The form validation shows errors via toast notifications
-    await expect(page.getByText('Name is required')).toBeVisible()
-    await expect(page.getByText('Subject is required')).toBeVisible()
-    await expect(
-      page.getByText('Message must be at least 10 characters')
-    ).toBeVisible()
+    // Inline field errors appear beneath each input
+    await expect(page.locator('#name-error')).toBeVisible()
+    await expect(page.locator('#subject-error')).toBeVisible()
+    await expect(page.locator('#message-error')).toBeVisible()
   })
 
   test('should successfully submit form with valid data', async ({ page }) => {
@@ -74,7 +71,7 @@ test.describe('Contact Form', () => {
     await page.getByLabel('Email').fill('john@example.com')
     await page.getByLabel('Subject').fill('Website Project')
     await page
-      .getByLabel('MESSAGE')
+      .getByLabel('Message')
       .fill(
         'This is a test message for a website project that needs to be at least 10 characters long.'
       )
@@ -98,15 +95,15 @@ test.describe('Contact Form', () => {
     await page.getByLabel('Email').fill('invalid-email')
     await page.getByLabel('Subject').fill('Test Project')
     await page
-      .getByLabel('MESSAGE')
+      .getByLabel('Message')
       .fill(
         'This is a test message that is long enough to meet the minimum requirement.'
       )
 
     await page.getByRole('button', { name: 'Send Message' }).click()
 
-    // Check for email validation error in toast
-    await expect(page.getByText('Invalid email address')).toBeVisible()
+    // Inline field error appears beneath the email input
+    await expect(page.locator('#email-error')).toBeVisible()
   })
 
   test('should handle message too short', async ({ page }) => {
@@ -120,9 +117,7 @@ test.describe('Contact Form', () => {
 
     await page.getByRole('button', { name: 'Send Message' }).click()
 
-    // Check for message length validation error in toast
-    await expect(
-      page.getByText('Message must be at least 10 characters')
-    ).toBeVisible()
+    // Inline field error appears beneath the message textarea
+    await expect(page.locator('#message-error')).toBeVisible()
   })
 })
