@@ -9,6 +9,11 @@ export default async function middleware(
   request: NextRequest,
   event: NextFetchEvent
 ) {
+  // Skip Clerk middleware when secret key is not configured
+  if (!process.env.CLERK_SECRET_KEY) {
+    return NextResponse.next()
+  }
+
   // Run Clerk middleware for ALL routes to enable auth() in API routes
   return clerkMiddleware(async (auth, req) => {
     // Only protect profile routes

@@ -4,6 +4,7 @@ const config: KnipConfig = {
   // Files to exclude from Knip analysis
   ignore: [
     'tests/**/*.ts',
+    'drizzle.config.ts', // Config file — evaluated at runtime, not a source module
     'src/apiClients/**/*.ts', // Ignore API clients - used by GraphQL codegen
     'src/graphql/**/*.ts', // Ignore GraphQL files - used by codegen
   ],
