@@ -4,11 +4,11 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 
 import { schemas } from '@/models'
 
-import { Env, requireEnv } from './Env'
+import { requireEnv } from './Env'
 
 // Stores the db connection in the global scope to prevent multiple instances due to hot reloading with Next.js
 const globalForDb = globalThis as unknown as {
-  drizzle: NodePgDatabase<typeof schemas>
+  drizzle: NodePgDatabase<typeof schemas> | undefined
 }
 
 // Need a database for production? Check out https://www.prisma.io/?via=nextjsboilerplate
@@ -26,11 +26,20 @@ const createDbConnection = () => {
   })
 }
 
-const db = globalForDb.drizzle || createDbConnection()
-
-// Only store in global during development to prevent hot reload issues
-if (Env.NODE_ENV !== 'production') {
-  globalForDb.drizzle = db
+// Lazy initialization: only create connection when actually accessed
+// This prevents errors during Next.js build when DATABASE_URL might not be available
+const getDb = () => {
+  if (!globalForDb.drizzle) {
+    globalForDb.drizzle = createDbConnection()
+  }
+  return globalForDb.drizzle
 }
 
-export { db }
+// Export a proxy that lazily initializes the connection
+// This defers connection creation until the db is actually used at runtime
+// During Next.js build, code is analyzed but not executed, so this won't trigger
+export const db = new Proxy({} as NodePgDatabase<typeof schemas>, {
+  get(_target, prop) {
+    return getDb()[prop as keyof NodePgDatabase<typeof schemas>]
+  },
+}) as NodePgDatabase<typeof schemas>
