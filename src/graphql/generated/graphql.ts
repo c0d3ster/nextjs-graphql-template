@@ -65,31 +65,21 @@ export type QueryUserArgs = {
 };
 
 export type UpdateUserInput = {
-  readonly availability?: InputMaybe<Scalars['String']['input']>;
   readonly avatarUrl?: InputMaybe<Scalars['String']['input']>;
-  readonly bio?: InputMaybe<Scalars['String']['input']>;
   readonly firstName?: InputMaybe<Scalars['String']['input']>;
-  readonly hourlyRate?: InputMaybe<Scalars['Float']['input']>;
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
-  readonly portfolio?: InputMaybe<Scalars['String']['input']>;
-  readonly skills?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 export type User = {
   readonly __typename?: 'User';
-  readonly availability?: Maybe<Scalars['String']['output']>;
   readonly avatarUrl?: Maybe<Scalars['String']['output']>;
-  readonly bio?: Maybe<Scalars['String']['output']>;
   readonly clerkId?: Maybe<Scalars['String']['output']>;
   readonly createdAt?: Maybe<Scalars['String']['output']>;
   readonly email: Scalars['String']['output'];
   readonly firstName?: Maybe<Scalars['String']['output']>;
-  readonly hourlyRate?: Maybe<Scalars['Float']['output']>;
   readonly id: Scalars['ID']['output'];
   readonly lastName?: Maybe<Scalars['String']['output']>;
-  readonly portfolio?: Maybe<Scalars['String']['output']>;
   readonly role?: Maybe<UserRole>;
-  readonly skills?: Maybe<ReadonlyArray<Scalars['String']['output']>>;
   readonly updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
@@ -113,14 +103,14 @@ export type UserDisplayFragment = { readonly __typename?: 'User', readonly id: s
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMeQuery = { readonly __typename?: 'Query', readonly me?: { readonly __typename?: 'User', readonly id: string, readonly clerkId?: string | null, readonly email: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly role?: UserRole | null, readonly bio?: string | null, readonly skills?: ReadonlyArray<string> | null, readonly portfolio?: string | null, readonly hourlyRate?: number | null, readonly availability?: string | null, readonly avatarUrl?: string | null, readonly createdAt?: string | null, readonly updatedAt?: string | null } | null };
+export type GetMeQuery = { readonly __typename?: 'Query', readonly me?: { readonly __typename?: 'User', readonly id: string, readonly clerkId?: string | null, readonly email: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly role?: UserRole | null, readonly avatarUrl?: string | null, readonly createdAt?: string | null, readonly updatedAt?: string | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetUserQuery = { readonly __typename?: 'Query', readonly user?: { readonly __typename?: 'User', readonly id: string, readonly clerkId?: string | null, readonly email: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly role?: UserRole | null, readonly bio?: string | null, readonly skills?: ReadonlyArray<string> | null, readonly portfolio?: string | null, readonly hourlyRate?: number | null, readonly availability?: string | null, readonly avatarUrl?: string | null, readonly createdAt?: string | null, readonly updatedAt?: string | null } | null };
+export type GetUserQuery = { readonly __typename?: 'Query', readonly user?: { readonly __typename?: 'User', readonly id: string, readonly clerkId?: string | null, readonly email: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly role?: UserRole | null, readonly avatarUrl?: string | null, readonly createdAt?: string | null, readonly updatedAt?: string | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -128,7 +118,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { readonly __typename?: 'Mutation', readonly updateUser: { readonly __typename?: 'User', readonly id: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly bio?: string | null, readonly skills?: ReadonlyArray<string> | null, readonly portfolio?: string | null, readonly hourlyRate?: number | null, readonly availability?: string | null, readonly updatedAt?: string | null } };
+export type UpdateUserMutation = { readonly __typename?: 'Mutation', readonly updateUser: { readonly __typename?: 'User', readonly id: string, readonly firstName?: string | null, readonly lastName?: string | null, readonly avatarUrl?: string | null, readonly updatedAt?: string | null } };
 
 export const UserDisplayFragmentDoc = gql`
     fragment UserDisplay on User {
@@ -182,11 +172,6 @@ export const GetMeDocument = gql`
     firstName
     lastName
     role
-    bio
-    skills
-    portfolio
-    hourlyRate
-    availability
     avatarUrl
     createdAt
     updatedAt
@@ -228,11 +213,6 @@ export const GetUserDocument = gql`
     firstName
     lastName
     role
-    bio
-    skills
-    portfolio
-    hourlyRate
-    availability
     avatarUrl
     createdAt
     updatedAt
@@ -272,11 +252,7 @@ export const UpdateUserDocument = gql`
     id
     firstName
     lastName
-    bio
-    skills
-    portfolio
-    hourlyRate
-    availability
+    avatarUrl
     updatedAt
   }
 }

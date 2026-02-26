@@ -68,11 +68,6 @@ describe('User API Client', () => {
           firstName: 'John',
           lastName: 'Doe',
           role: 'DEVELOPER',
-          bio: 'Test bio',
-          skills: ['React', 'TypeScript'],
-          portfolio: 'https://portfolio.com',
-          hourlyRate: 75,
-          availability: 'FULL_TIME',
           avatarUrl: 'https://avatar.com/image.jpg',
           createdAt: '2024-01-01T00:00:00Z',
           updatedAt: '2024-01-01T00:00:00Z',
@@ -120,11 +115,6 @@ describe('User API Client', () => {
           firstName: 'John',
           lastName: 'Doe',
           role: 'DEVELOPER',
-          bio: 'Test bio',
-          skills: ['React', 'TypeScript'],
-          portfolio: 'https://portfolio.com',
-          hourlyRate: 75,
-          availability: 'FULL_TIME',
           avatarUrl: 'https://avatar.com/image.jpg',
           createdAt: '2024-01-01T00:00:00Z',
           updatedAt: '2024-01-01T00:00:00Z',
@@ -173,22 +163,14 @@ describe('User API Client', () => {
         const mockInput = {
           firstName: 'Jane',
           lastName: 'Smith',
-          bio: 'Updated bio',
-          skills: ['React', 'TypeScript', 'Node.js'],
-          portfolio: 'https://newportfolio.com',
-          hourlyRate: 85,
-          availability: 'PART_TIME',
+          avatarUrl: 'https://avatar.com/new-image.jpg',
         }
 
         const mockUpdatedUser = {
           id: 'user-1',
           firstName: 'Jane',
           lastName: 'Smith',
-          bio: 'Updated bio',
-          skills: ['React', 'TypeScript', 'Node.js'],
-          portfolio: 'https://newportfolio.com',
-          hourlyRate: 85,
-          availability: 'PART_TIME',
+          avatarUrl: 'https://avatar.com/new-image.jpg',
           updatedAt: '2024-01-02T00:00:00Z',
         }
 

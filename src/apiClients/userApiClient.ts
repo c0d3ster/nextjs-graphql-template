@@ -25,11 +25,6 @@ export const GET_ME = gql`
       firstName
       lastName
       role
-      bio
-      skills
-      portfolio
-      hourlyRate
-      availability
       avatarUrl
       createdAt
       updatedAt
@@ -46,11 +41,6 @@ export const GET_USER = gql`
       firstName
       lastName
       role
-      bio
-      skills
-      portfolio
-      hourlyRate
-      availability
       avatarUrl
       createdAt
       updatedAt
@@ -64,11 +54,7 @@ export const UPDATE_USER = gql`
       id
       firstName
       lastName
-      bio
-      skills
-      portfolio
-      hourlyRate
-      availability
+      avatarUrl
       updatedAt
     }
   }
