@@ -15,6 +15,7 @@ export const ClerkProvider = ({
   children,
   locale = 'en',
 }: ClerkProviderProps) => {
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   const localization = locale === 'fr' ? frFR : undefined
 
   const appearance = useMemo(
@@ -96,8 +97,20 @@ export const ClerkProvider = ({
     []
   )
 
+  // During Next.js build/SSG, Clerk publishable key might not be available
+  // Skip ClerkProvider during build to prevent errors
+  // Check if we're in a build context (server-side without publishable key)
+  const isBuildTime =
+    typeof window === 'undefined' && !publishableKey
+
+  // During build without publishable key, render children without Clerk
+  if (isBuildTime) {
+    return <>{children}</>
+  }
+
   return (
     <BaseClerkProvider
+      publishableKey={publishableKey}
       localization={localization}
       appearance={appearance}
       signInUrl='/'
