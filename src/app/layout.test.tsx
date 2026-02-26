@@ -24,10 +24,7 @@ vi.mock('@/providers', () => ({
     <div>{children}</div>
   ),
   ProvidersWrapper: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid='providers-wrapper'>
-      <div className='Toastify'></div>
-      {children}
-    </div>
+    <div data-testid='providers-wrapper'>{children}</div>
   ),
 }))
 
@@ -41,8 +38,6 @@ describe('RootLayout', () => {
 
     // Check that children are rendered (which confirms providers are working)
     expect(screen.getByTestId('page-content')).toBeInTheDocument()
-    // Check that ToastContainer is rendered (part of ProvidersWrapper)
-    expect(document.querySelector('.Toastify')).toBeInTheDocument()
   })
 
   it('should have correct HTML structure', () => {

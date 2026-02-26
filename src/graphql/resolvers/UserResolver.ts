@@ -1,5 +1,5 @@
-import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
 import { GraphQLError } from 'graphql'
+import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
 
 import type { UserService } from '@/services'
 
