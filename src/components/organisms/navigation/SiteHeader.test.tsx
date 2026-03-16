@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -13,10 +12,7 @@ vi.mock('next/navigation', () => ({
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  __esModule: true,
-  default: ({ src, alt, priority, ...props }: any) => (
-    <img src={src} alt={alt} {...props} />
-  ),
+  default: vi.fn(),
 }))
 
 // Mock Clerk
@@ -25,8 +21,8 @@ vi.mock('@clerk/nextjs', () => ({
     user: null,
     isLoaded: true,
   })),
-  SignInButton: ({ children }: any) => <div>{children}</div>,
-  SignOutButton: ({ children }: any) => <div>{children}</div>,
+  SignInButton: vi.fn(({ children }: any) => children),
+  SignOutButton: vi.fn(({ children }: any) => children),
 }))
 
 // Mock window properties to prevent hanging

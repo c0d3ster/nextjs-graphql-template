@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 
 const isProtectedRoute = createRouteMatcher(['/profile(.*)'])
 
-export default async function middleware(
+export default async function proxy(
   request: NextRequest,
   event: NextFetchEvent
 ) {

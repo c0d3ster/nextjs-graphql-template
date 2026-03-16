@@ -12,9 +12,6 @@ const R2_PUBLIC_HOST =
 
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
-  eslint: {
-    dirs: ['.'],
-  },
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
