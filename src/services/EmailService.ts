@@ -1,6 +1,6 @@
 import type { Resend } from 'resend'
 
-import { SUPPORT_EMAIL } from '@/constants'
+import { Env } from '@/libs/Env'
 import { logger } from '@/libs/Logger'
 
 const AMP_RE = /&/g
@@ -44,7 +44,7 @@ export class EmailService {
     try {
       await this.resend.emails.send({
         from: 'Contact Form <onboarding@resend.dev>', // Replace with your verified domain
-        to: SUPPORT_EMAIL,
+        to: Env.SUPPORT_EMAIL,
         replyTo: data.email,
         subject: `Contact Form: ${this.escapeHtml(data.subject)}`,
         html: `
