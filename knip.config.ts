@@ -7,6 +7,7 @@ const config: KnipConfig = {
     'drizzle.config.ts', // Config file — evaluated at runtime, not a source module
     'src/apiClients/**/*.ts', // Ignore API clients - used by GraphQL codegen
     'src/graphql/**/*.ts', // Ignore GraphQL files - used by codegen
+    'src/proxy.ts', // Next.js middleware — convention-based entry point, not imported
   ],
   // Dependencies to ignore during analysis
   ignoreDependencies: [

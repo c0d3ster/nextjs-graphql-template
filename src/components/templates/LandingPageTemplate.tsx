@@ -10,6 +10,7 @@ import { SiteHeader } from '@/components/organisms'
 
 type LandingPageTemplateProps = {
   children: ReactNode
+  logoUrl?: string
 }
 
 const menuItems: NavItem[] = [
@@ -17,7 +18,7 @@ const menuItems: NavItem[] = [
   { label: 'Contact', href: '/#contact' },
 ]
 
-export const LandingPageTemplate = ({ children }: LandingPageTemplateProps) => {
+export const LandingPageTemplate = ({ children, logoUrl }: LandingPageTemplateProps) => {
   const [activeItem, setActiveItem] = useState('home')
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export const LandingPageTemplate = ({ children }: LandingPageTemplateProps) => {
 
   return (
     <div className='min-h-screen scroll-smooth bg-background'>
-      <SiteHeader menuItems={menuItems} activeItem={activeItem} />
+      <SiteHeader menuItems={menuItems} activeItem={activeItem} logoUrl={logoUrl} />
       <div className='pt-16'>{children}</div>
     </div>
   )

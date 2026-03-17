@@ -55,6 +55,8 @@ export default antfu(
       'test/padding-around-all': 'error', // Add padding in test files
       'test/prefer-lowercase-title': 'off', // Allow using uppercase titles in test titles
       'react-hooks-extra/no-unnecessary-use-prefix': 'off', // Disable the annoying use prefix rule
+      'e18e/prefer-static-regex': 'off', // Regex perf micro-optimization, not worth the noise
+      'next/no-img-element': 'off', // Allow <img> for dynamic URLs (e.g. presigned R2 URLs)
       'perfectionist/sort-imports': [
         'error',
         {
