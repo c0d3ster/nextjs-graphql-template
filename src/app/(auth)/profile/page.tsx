@@ -4,10 +4,10 @@ import { UserButton } from '@clerk/nextjs'
 
 import { Button } from '@/components/atoms'
 import { CleanPageTemplate } from '@/components/templates'
-import { BRAND_NAME } from '@/constants'
+import { Env } from '@/libs/Env'
 
 export const metadata: Metadata = {
-  title: `Profile - ${BRAND_NAME}`,
+  title: `Profile - ${Env.NEXT_PUBLIC_BRAND_NAME}`,
   description: 'User profile page',
 }
 
@@ -79,7 +79,7 @@ export default function ProfilePage() {
 
   return (
     <CleanPageTemplate
-      title={`Welcome to ${BRAND_NAME}`}
+      title={`Welcome to ${Env.NEXT_PUBLIC_BRAND_NAME}`}
       subtitle='You are successfully authenticated!'
       header={header}
     >

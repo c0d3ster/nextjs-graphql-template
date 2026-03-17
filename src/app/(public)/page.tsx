@@ -4,13 +4,13 @@ import Link from 'next/link'
 
 import { ContactForm } from '@/components/molecules'
 import { LandingPageTemplate } from '@/components/templates'
-import { BRAND_NAME } from '@/constants'
+import { Env } from '@/libs/Env'
 import { getLogoUrl } from '@/utils/logo'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: `${BRAND_NAME} - Modern Web Application`,
+  title: `${Env.NEXT_PUBLIC_BRAND_NAME} - Modern Web Application`,
   description:
     'A modern web application built with Next.js, GraphQL, and TypeScript',
 }
@@ -29,7 +29,7 @@ export default async function Index() {
             </div>
           )}
           <h2 className='mb-4 text-4xl font-bold text-text'>
-            Welcome to {BRAND_NAME}
+            Welcome to {Env.NEXT_PUBLIC_BRAND_NAME}
           </h2>
           <p className='mb-8 text-lg text-text-muted'>
             A modern web application template with authentication
