@@ -3,6 +3,13 @@ import type { Resend } from 'resend'
 import { SUPPORT_EMAIL } from '@/constants'
 import { logger } from '@/libs/Logger'
 
+const AMP_RE = /&/g
+const LT_RE = /</g
+const GT_RE = />/g
+const QUOT_RE = /"/g
+const APOS_RE = /'/g
+const NL_RE = /\n/g
+
 export class EmailService {
   constructor(private resend: Resend | null) {}
 
@@ -11,11 +18,11 @@ export class EmailService {
    */
   private escapeHtml(text: string): string {
     return text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;')
+      .replace(AMP_RE, '&amp;')
+      .replace(LT_RE, '&lt;')
+      .replace(GT_RE, '&gt;')
+      .replace(QUOT_RE, '&quot;')
+      .replace(APOS_RE, '&#039;')
   }
 
   /**
@@ -45,7 +52,7 @@ export class EmailService {
           <p><strong>From:</strong> ${this.escapeHtml(data.name)} (${this.escapeHtml(data.email)})</p>
           <p><strong>Subject:</strong> ${this.escapeHtml(data.subject)}</p>
           <p><strong>Message:</strong></p>
-          <p>${this.escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
+          <p>${this.escapeHtml(data.message).replace(NL_RE, '<br>')}</p>
         `,
       })
 

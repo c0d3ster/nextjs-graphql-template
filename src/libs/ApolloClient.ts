@@ -32,7 +32,7 @@ const authLink = setContext(async (_, { headers }) => {
 // Each call creates a fresh instance to prevent cache pollution between requests
 export const createApolloClient = () =>
   new ApolloClient({
-    link: authLink.concat(createHttpLink()),
+    link: [...authLink, ...createHttpLink()],
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {
