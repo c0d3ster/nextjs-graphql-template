@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ContactForm } from '@/components/molecules'
 import { LandingPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
+import { getLogoUrl } from '@/utils/logo'
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} - Modern Web Application`,
@@ -12,12 +13,19 @@ export const metadata: Metadata = {
     'A modern web application built with Next.js, GraphQL, and TypeScript',
 }
 
-export default function Index() {
+export default async function Index() {
+  const logoUrl = await getLogoUrl()
+
   return (
-    <LandingPageTemplate>
+    <LandingPageTemplate logoUrl={logoUrl}>
       {/* Main Content */}
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
+          {logoUrl && (
+            <div className='mb-16 flex justify-center'>
+              <img src={logoUrl} alt='Logo' className='h-32 w-auto' />
+            </div>
+          )}
           <h2 className='mb-4 text-4xl font-bold text-text'>
             Welcome to {BRAND_NAME}
           </h2>

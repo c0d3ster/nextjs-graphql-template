@@ -8,11 +8,13 @@ export type NavItem = { label: string; href: string }
 type SiteHeaderProps = {
   menuItems: NavItem[]
   activeItem?: string
+  logoUrl?: string
 }
 
 export const SiteHeader = ({
   menuItems,
   activeItem = 'home',
+  logoUrl,
 }: SiteHeaderProps) => {
   const { user, isLoaded } = useUser()
 
@@ -22,8 +24,14 @@ export const SiteHeader = ({
         <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
           <div className='flex items-center'>
-            <Link href='/' className='text-lg font-semibold text-text'>
-              LOGO
+            <Link href='/'>
+              {logoUrl
+                ? (
+                    <img src={logoUrl} alt='Logo' className='h-8 w-auto' />
+                  )
+                : (
+                    <span className='text-lg font-semibold text-text'>LOGO</span>
+                  )}
             </Link>
           </div>
 
