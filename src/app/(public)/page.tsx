@@ -7,6 +7,8 @@ import { LandingPageTemplate } from '@/components/templates'
 import { BRAND_NAME } from '@/constants'
 import { getLogoUrl } from '@/utils/logo'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: `${BRAND_NAME} - Modern Web Application`,
   description:
