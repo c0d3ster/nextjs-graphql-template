@@ -56,7 +56,6 @@ export default antfu(
       'test/prefer-lowercase-title': 'off', // Allow using uppercase titles in test titles
       'react-hooks-extra/no-unnecessary-use-prefix': 'off', // Disable the annoying use prefix rule
       'e18e/prefer-static-regex': 'off', // Regex perf micro-optimization, not worth the noise
-      'e18e/prefer-spread-syntax': 'off', // .concat() is required for non-iterable objects like ApolloLink
       'next/no-img-element': 'off', // Allow <img> for dynamic URLs (e.g. presigned R2 URLs)
       'perfectionist/sort-imports': [
         'error',

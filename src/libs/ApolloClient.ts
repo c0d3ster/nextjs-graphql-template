@@ -32,6 +32,7 @@ const authLink = setContext(async (_, { headers }) => {
 // Each call creates a fresh instance to prevent cache pollution between requests
 export const createApolloClient = () =>
   new ApolloClient({
+    // eslint-disable-next-line e18e/prefer-spread-syntax -- ApolloLink is not iterable, .concat() is required
     link: authLink.concat(createHttpLink()),
     cache: new InMemoryCache(),
     defaultOptions: {
