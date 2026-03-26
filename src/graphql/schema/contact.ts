@@ -1,37 +1,37 @@
 import { Field, InputType, ObjectType } from 'type-graphql'
 
-@InputType()
+@InputType('ContactFormInput')
 export class ContactFormInput {
-  @Field()
+  @Field(() => String)
   name!: string
 
-  @Field()
+  @Field(() => String)
   email!: string
 
-  @Field()
+  @Field(() => String)
   subject!: string
 
-  @Field()
+  @Field(() => String)
   message!: string
 }
 
-@ObjectType()
+@ObjectType('ContactSubmission')
 export class ContactSubmission {
-  @Field()
+  @Field(() => String)
   id!: string
 
-  @Field()
+  @Field(() => String)
   name!: string
 
-  @Field()
+  @Field(() => String)
   email!: string
 
-  @Field()
+  @Field(() => String)
   subject!: string
 
-  @Field()
+  @Field(() => String)
   message!: string
 
-  @Field()
+  @Field(() => String)
   submittedAt!: string
 }

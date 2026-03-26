@@ -14,8 +14,8 @@ type LandingPageTemplateProps = {
 }
 
 const menuItems: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Contact', href: '/#contact' },
+  { id: 'home', label: 'Home', href: '/' },
+  { id: 'contact', label: 'Contact', href: '/#contact' },
 ]
 
 export const LandingPageTemplate = ({ children, logoUrl }: LandingPageTemplateProps) => {

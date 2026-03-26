@@ -30,8 +30,8 @@ Object.defineProperty(window, 'scrollY', { value: 0, writable: true })
 
 // Menu items matching the actual template
 const sampleMenuItems: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Contact', href: '/#contact' },
+  { id: 'home', label: 'Home', href: '/' },
+  { id: 'contact', label: 'Contact', href: '/#contact' },
 ]
 
 describe('SiteHeader', () => {
@@ -68,9 +68,12 @@ describe('SiteHeader', () => {
   })
 
   it('renders Sign In button when user is not logged in', () => {
+    vi.stubEnv('NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', 'pk_test_stub')
     render(<SiteHeader menuItems={sampleMenuItems} />)
 
     expect(screen.getByText('Sign In')).toBeInTheDocument()
+
+    vi.unstubAllEnvs()
   })
 
   it('renders correct href attributes for menu items', () => {
