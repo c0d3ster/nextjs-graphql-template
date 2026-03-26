@@ -16,6 +16,10 @@ export type GraphQLContext = {
 }
 
 export async function createContext(req: NextRequest): Promise<GraphQLContext> {
+  if (!process.env.CLERK_SECRET_KEY) {
+    return { db, schemas, req }
+  }
+
   try {
     const { userId } = await auth()
 
