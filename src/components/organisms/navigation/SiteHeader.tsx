@@ -52,12 +52,12 @@ export const SiteHeader = ({
   return (
     <header className='fixed top-0 right-0 left-0 z-50 border-b border-gray-200 bg-surface shadow-lg'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-        <div className='flex h-20 items-center justify-between'>
+        <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
           <div className='flex flex-1 items-center'>
             <Link href='/'>
               {logoUrl ? (
-                <img src={logoUrl} alt='Logo' className='h-15 w-auto' />
+                <img src={logoUrl} alt='Logo' className='h-12 w-auto' />
               ) : (
                 <span className='text-lg font-semibold text-text'>LOGO</span>
               )}
