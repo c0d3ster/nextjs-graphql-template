@@ -30,8 +30,8 @@ Object.defineProperty(window, 'scrollY', { value: 0, writable: true })
 
 // Menu items matching the actual template
 const sampleMenuItems: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Contact', href: '/#contact' },
+  { id: 'home', label: 'Home', href: '/' },
+  { id: 'contact', label: 'Contact', href: '/#contact' },
 ]
 
 describe('SiteHeader', () => {
