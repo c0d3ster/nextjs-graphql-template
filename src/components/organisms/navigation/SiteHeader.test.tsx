@@ -72,6 +72,7 @@ describe('SiteHeader', () => {
     render(<SiteHeader menuItems={sampleMenuItems} />)
 
     expect(screen.getByText('Sign In')).toBeInTheDocument()
+
     vi.unstubAllEnvs()
   })
 
