@@ -14,6 +14,16 @@ const R2_PUBLIC_HOST =
 const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // type-graphql + reflect-metadata break when bundled/minified (invalid GraphQL names like "$").
+  serverExternalPackages: [
+    '@apollo/server',
+    '@as-integrations/next',
+    'graphql',
+    'graphql-scalars',
+    'graphql-query-complexity',
+    'reflect-metadata',
+    'type-graphql',
+  ],
   images: {
     remotePatterns: [
       {
