@@ -71,7 +71,7 @@
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.1",
-    "@graphql-codegen/typescript-react-apollo": "^3.2.2",
+    "@graphql-codegen/typescript-react-apollo": "^4.4.1",
     "@next/bundle-analyzer": "^16.1.6",
     "@next/eslint-plugin-next": "^16.1.6",
     "@parcel/watcher": "^2.5.1",
@@ -111,6 +111,10 @@
     "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "effect": ">=3.20.0",
+    "esbuild": ">=0.24.3"
   },
   "release": {
     "branches": [
