@@ -71,7 +71,7 @@
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.1",
-    "@graphql-codegen/typescript-react-apollo": "^4.4.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.2",
     "@next/bundle-analyzer": "^16.1.6",
     "@next/eslint-plugin-next": "^16.1.6",
     "@parcel/watcher": "^2.5.1",
@@ -114,7 +114,8 @@
   },
   "overrides": {
     "effect": ">=3.20.0",
-    "esbuild": ">=0.24.3"
+    "esbuild": ">=0.24.3",
+    "immutable": ">=3.8.3"
   },
   "release": {
     "branches": [
