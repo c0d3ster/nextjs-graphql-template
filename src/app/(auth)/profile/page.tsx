@@ -25,15 +25,15 @@ export default function ProfilePage() {
           </h2>
           <div className='space-y-3'>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-accent'></div>
+              <div className='size-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>Signed in successfully</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-accent'></div>
+              <div className='size-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>Protected route accessed</span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='h-2 w-2 rounded-full bg-accent'></div>
+              <div className='size-2 rounded-full bg-accent'></div>
               <span className='text-text-muted'>User session active</span>
             </div>
           </div>

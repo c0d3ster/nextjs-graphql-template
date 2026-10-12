@@ -114,7 +114,7 @@ export const ContactForm = () => {
               }`}
               placeholder='Your name'
             />
-            <div className='min-h-[20px]'>
+            <div className='min-h-5'>
               {errors.name && (
                 <p id='name-error' className='mt-1 text-sm text-red-500'>
                   {errors.name.message}
@@ -142,7 +142,7 @@ export const ContactForm = () => {
               }`}
               placeholder='your@email.com'
             />
-            <div className='min-h-[20px]'>
+            <div className='min-h-5'>
               {errors.email && (
                 <p id='email-error' className='mt-1 text-sm text-red-500'>
                   {errors.email.message}
@@ -172,7 +172,7 @@ export const ContactForm = () => {
             }`}
             placeholder="What's this about?"
           />
-          <div className='min-h-[20px]'>
+          <div className='min-h-5'>
             {errors.subject && (
               <p id='subject-error' className='mt-1 text-sm text-red-500'>
                 {errors.subject.message}
@@ -201,7 +201,7 @@ export const ContactForm = () => {
             }`}
             placeholder='Tell us about your project...'
           />
-          <div className='min-h-[20px]'>
+          <div className='min-h-5'>
             {errors.message && (
               <p id='message-error' className='mt-1 text-sm text-red-500'>
                 {errors.message.message}
