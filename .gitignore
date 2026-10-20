@@ -55,3 +55,5 @@ build-archive.log
 /test-results/
 /playwright-report/
 /playwright/.cache/
+# drizzle-kit pull output
+.drizzle

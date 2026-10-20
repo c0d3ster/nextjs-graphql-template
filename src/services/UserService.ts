@@ -1,23 +1,23 @@
-import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
 import { GraphQLError } from 'graphql'
 
 import type { UpdateUserInput } from '@/graphql/schema'
 
 import { db } from '@/libs/DB'
+import { getAuthId } from '@/libs/supabase/server'
 import { schemas } from '@/models'
 
 export class UserService {
   async getCurrentUserWithAuth() {
-    const { userId } = await auth()
-    if (!userId) {
+    const authId = await getAuthId()
+    if (!authId) {
       throw new GraphQLError('Unauthorized', {
         extensions: { code: 'UNAUTHORIZED' },
       })
     }
 
     const user = await db.query.users.findFirst({
-      where: eq(schemas.users.clerkId, userId),
+      where: eq(schemas.users.authId, authId),
     })
 
     if (!user) {
@@ -44,8 +44,8 @@ export class UserService {
   }
 
   async updateUser(id: string, input: UpdateUserInput) {
-    const { userId } = await auth()
-    if (!userId) {
+    const authId = await getAuthId()
+    if (!authId) {
       throw new GraphQLError('Unauthorized', {
         extensions: { code: 'UNAUTHORIZED' },
       })
@@ -53,7 +53,7 @@ export class UserService {
 
     // Get the authenticated user
     const authUser = await db.query.users.findFirst({
-      where: eq(schemas.users.clerkId, userId),
+      where: eq(schemas.users.authId, authId),
     })
 
     if (!authUser) {

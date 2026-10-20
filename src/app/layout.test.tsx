@@ -8,16 +8,9 @@ vi.mock('next/font/google', () => ({
   Inter: () => ({ className: 'inter-font' }),
 }))
 
-// Mock Clerk
-vi.mock('@clerk/nextjs', () => ({
-  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-}))
-
 // Mock providers
 vi.mock('@/providers', () => ({
-  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
   ),
   QueryProvider: ({ children }: { children: React.ReactNode }) => (

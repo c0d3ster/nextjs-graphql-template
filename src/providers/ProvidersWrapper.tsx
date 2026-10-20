@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 import { ToastContainer } from '@/components/atoms'
 import { createApolloClient } from '@/libs/ApolloClient'
-import { ClerkProvider, QueryProvider } from '@/providers'
+import { AuthProvider, QueryProvider } from '@/providers'
 
 type ProvidersWrapperProps = {
   children: ReactNode
@@ -18,13 +18,13 @@ export const ProvidersWrapper = ({ children }: ProvidersWrapperProps) => {
   const [apolloClient] = useState(() => createApolloClient())
 
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <ApolloProvider client={apolloClient}>
         <QueryProvider>
           {children}
           <ToastContainer />
         </QueryProvider>
       </ApolloProvider>
-    </ClerkProvider>
+    </AuthProvider>
   )
 }

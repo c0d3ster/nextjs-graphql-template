@@ -1,7 +1,10 @@
 'use client'
 
-import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
+
+import { SignOutButton } from '@/components/molecules'
+import { isSupabaseConfigured } from '@/libs/supabase/client'
+import { useAuth } from '@/providers'
 
 export type NavItem = {
   label: string
@@ -17,28 +20,16 @@ type SiteHeaderProps = {
 }
 
 const NavAuthSection = () => {
-  const { user, isLoaded } = useUser()
+  const { user, isLoaded } = useAuth()
 
   if (!isLoaded) return null
 
   return user ? (
-    <SignOutButton>
-      <button
-        type='button'
-        className='text-sm text-text-muted hover:text-primary'
-      >
-        Sign Out
-      </button>
-    </SignOutButton>
+    <SignOutButton />
   ) : (
-    <SignInButton mode='modal'>
-      <button
-        type='button'
-        className='text-sm text-text-muted hover:text-primary'
-      >
-        Sign In
-      </button>
-    </SignInButton>
+    <Link href='/login' className='text-sm text-text-muted hover:text-primary'>
+      Sign In
+    </Link>
   )
 }
 
@@ -47,7 +38,7 @@ export const SiteHeader = ({
   activeItem = 'home',
   logoUrl,
 }: SiteHeaderProps) => {
-  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+  const authEnabled = isSupabaseConfigured()
 
   return (
     <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-surface shadow-lg'>
@@ -82,7 +73,7 @@ export const SiteHeader = ({
 
           {/* Auth */}
           <div className='flex flex-1 items-center justify-end'>
-            {clerkEnabled && <NavAuthSection />}
+            {authEnabled && <NavAuthSection />}
           </div>
         </div>
       </div>

@@ -1,50 +1,53 @@
 import type { NextRequest } from 'next/server'
 
-import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/libs/DB'
 import { logger } from '@/libs/Logger'
+import { isSupabaseConfigured } from '@/libs/supabase/client'
+import { getAuthId } from '@/libs/supabase/server'
 import { schemas } from '@/models'
 
 export type GraphQLContext = {
-  userId?: string
+  authId?: string
   user?: typeof schemas.users.$inferSelect | null
   db: typeof db
   schemas: typeof schemas
   req: NextRequest
 }
 
-export async function createContext(req: NextRequest): Promise<GraphQLContext> {
-  if (!process.env.CLERK_SECRET_KEY) {
+export const createContext = async (
+  req: NextRequest
+): Promise<GraphQLContext> => {
+  if (!isSupabaseConfigured()) {
     return { db, schemas, req }
   }
 
   try {
-    const { userId } = await auth()
+    const authId = await getAuthId()
 
-    if (!userId) {
+    if (!authId) {
       return { db, schemas, req }
     }
 
     // Get user from database
     try {
       const user = await db.query.users.findFirst({
-        where: eq(schemas.users.clerkId, userId),
+        where: eq(schemas.users.authId, authId),
       })
 
       if (!user) {
-        return { userId, db, schemas, req }
+        return { authId, db, schemas, req }
       }
 
-      return { userId, user, db, schemas, req }
+      return { authId, user, db, schemas, req }
     } catch (error) {
-      // Preserve userId even if DB query fails
+      // Preserve authId even if DB query fails
       logger.error('Database query failed in GraphQL context', {
         error: String(error),
-        userId,
+        authId,
       })
-      return { userId, db, schemas, req }
+      return { authId, db, schemas, req }
     }
   } catch (error) {
     // Auth failed, return empty context

@@ -6,12 +6,13 @@ A minimal, production-ready template for modern web applications built with Next
 
 - **Modern Frontend**: Next.js 15 with App Router, React 19, TypeScript, Tailwind CSS
 - **GraphQL API**: Apollo Server with type-graphql for schema-first development
-- **Authentication**: Clerk integration with modal-based sign-in/sign-up
+- **Authentication**: Supabase Auth with email/password sign-in and sign-up
 - **Atomic Design**: Organized component structure (atoms, molecules, organisms, templates)
 - **Type Safety**: Full TypeScript coverage with automatic GraphQL type generation
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
 - **Developer Experience**: ESLint, Prettier, automated workflows
-- **Database**: PostgreSQL with Drizzle ORM
+- **Database**: Supabase Postgres with Drizzle ORM for queries, Supabase CLI for migrations
+- **Realtime**: Supabase Realtime (Postgres changes, broadcast)
 - **Code Quality**: Commitlint, semantic release, dependency checking
 
 ## 🛠️ Tech Stack
@@ -62,7 +63,7 @@ SERVICE LAYER
    │
    ▼
 DATABASE / EXTERNAL APIs
-   - Drizzle ORM / Clerk / PostgreSQL
+   - Drizzle ORM / Supabase Auth / Supabase Postgres
 ```
 
 ### Key Features
@@ -71,7 +72,7 @@ DATABASE / EXTERNAL APIs
 - **API Layer**: GraphQL with Apollo Client and automatic code generation
 - **Business Logic**: Service layer with authentication and permission handling
 - **Data Layer**: PostgreSQL with Drizzle ORM
-- **Authentication**: Clerk for user management with modal-based auth
+- **Authentication**: Supabase Auth with cookie sessions (`@supabase/ssr`)
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
 
 ## ⚙️ Quick Start
@@ -94,32 +95,39 @@ DATABASE / EXTERNAL APIs
    Create a `.env.local` file (git-ignored) with your values:
 
    ```bash
-   # Clerk authentication — https://clerk.com → Dashboard → API Keys
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-   CLERK_SECRET_KEY=sk_test_...
+   # Supabase — Dashboard → Project Settings → API Keys
+   NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 
-   # PostgreSQL connection string
-   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+   # Supabase Postgres — Dashboard → Connect
+   # Runtime: transaction pooler (port 6543). Migrations and db:pull: direct/session connection (port 5432)
+   DATABASE_URL=postgresql://postgres.<project-ref>:<password>@<region>.pooler.supabase.com:6543/postgres
 
    # Optional
    NEXT_PUBLIC_APP_URL=http://localhost:3000
-   CLERK_WEBHOOK_SECRET=whsec_...
+   SUPABASE_SECRET_KEY=sb_secret_...
    RESEND_API_KEY=re_...
    PORTFOLIO_SECRET_TOKEN=your-secret-token
    ```
 
    **For production**, create `.env.production.local` with production values.
 
-   **For CI/CD**, the pipeline spins up its own PostgreSQL service container automatically — no `DATABASE_URL` secret needed. The only secret required is:
-   - Navigate to: Repository → Settings → Secrets and variables → Actions
-   - Add: `CLERK_SECRET_KEY`
+   **For CI/CD**, no secrets are required. Auth and database access are skipped when Supabase is not configured.
 
 3. **Set up database:**
 
    ```bash
-   npm run db:generate
-   npm run db:migrate
+   npx supabase login
+   npx supabase link --project-ref <project-ref>
+   npm run db:push
    ```
+
+   Migrations are plain SQL in `supabase/migrations`. Create one with `npm run db:new <name>`.
+   Drizzle is used for queries only. After changing the schema, run `npm run db:pull` (introspects the database
+   into `.drizzle/`) and port the result into `src/models`.
+
+   In the Supabase dashboard, set Authentication → URL Configuration → Redirect URLs to include
+   `http://localhost:3000/auth/callback` (and your production URL).
 
 4. **Start development:**
    ```bash
@@ -133,12 +141,12 @@ This template includes a complete authentication demonstration:
 - **Public Pages**: Homepage with contact form
 - **Protected Pages**: `/profile` (requires authentication)
 - **Authentication Flow**:
-  - Sign in/up via Clerk modals
+  - Sign in/up on the `/login` page (email and password)
   - Automatic redirects for protected routes
   - User session management
   - Sign out functionality
 
-Try accessing `/profile` without signing in - you'll be redirected to the sign-in modal.
+Try accessing `/profile` without signing in - you'll be redirected to `/login`.
 
 ## 🎨 Theming
 
@@ -169,9 +177,30 @@ src/components/
 - `npm run test` - Run unit tests with Vitest
 - `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Run ESLint
-- `npm run db:studio` - Open database studio
+- `npm run db:new <name>` - Create a new SQL migration
+- `npm run db:push` - Apply migrations to the linked Supabase project
+- `npm run db:reset` - Reset the local Supabase database (needs Docker)
+- `npm run db:pull` - Introspect the database into Drizzle schema files
 - `npm run codegen` - Generate GraphQL types
 - `npm run codegen:watch` - Watch and regenerate GraphQL types
+
+## ⚡ Realtime
+
+Use `useRealtimeTable` from `@/hooks` to react to Postgres changes in the browser. A table only emits events when it is
+in the realtime publication and has an RLS `select` policy for the signed-in user. Add both in a migration:
+
+```sql
+alter publication supabase_realtime add table public.messages;
+
+create policy "Users can read their messages" on public.messages
+  for select to authenticated using ((select auth.uid()) = author_auth_id);
+```
+
+Pair it with Apollo by refetching the matching query on each event:
+
+```ts
+useRealtimeTable({ table: 'messages', onChange: () => refetch() })
+```
 
 ## 🧪 Testing
 
