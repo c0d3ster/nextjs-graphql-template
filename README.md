@@ -126,6 +126,10 @@ DATABASE / EXTERNAL APIs
    Drizzle is used for queries only. After changing the schema, run `npm run db:pull` (introspects the database
    into `.drizzle/`) and port the result into `src/models`.
 
+   **Google sign-in:** create an OAuth client in Google Cloud Console (Web application) with the authorized
+   redirect URI `https://<project-ref>.supabase.co/auth/v1/callback`, then enable Authentication → Providers → Google
+   in Supabase and paste the client ID and secret. Each environment (dev, prod) needs its own setup.
+
    In the Supabase dashboard, set Authentication → URL Configuration → Redirect URLs to include
    `http://localhost:3000/auth/callback` (and your production URL).
 

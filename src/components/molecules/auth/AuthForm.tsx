@@ -86,11 +86,36 @@ export const AuthForm = ({ next }: AuthFormProps) => {
     }
   }
 
+  const signInWithGoogle = async (): Promise<void> => {
+    const { error } = await createClient().auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectPath)}`,
+      },
+    })
+    // On success the browser navigates to Google, so only errors land here
+    if (error) Toast.error(error.message)
+  }
+
   return (
     <div className='mx-auto max-w-md'>
       <h1 className='mb-6 text-center text-2xl font-bold text-text'>
         {isSignUp ? 'Create your account' : 'Sign in'}
       </h1>
+
+      <button
+        type='button'
+        onClick={signInWithGoogle}
+        className='w-full rounded border border-gray-600 bg-gray-700 px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-gray-600'
+      >
+        Continue with Google
+      </button>
+
+      <div className='my-6 flex items-center gap-3'>
+        <div className='h-px flex-1 bg-gray-600' />
+        <span className='text-sm font-medium text-text-muted'>or</span>
+        <div className='h-px flex-1 bg-gray-600' />
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
