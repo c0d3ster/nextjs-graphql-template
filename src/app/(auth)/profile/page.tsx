@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { Button } from '@/components/atoms'
-import { SignOutButton } from '@/components/molecules'
+import { LiveProfileCard, SignOutButton } from '@/components/molecules'
 import { CleanPageTemplate } from '@/components/templates'
 import { Env } from '@/libs/Env'
 
@@ -37,6 +37,8 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        <LiveProfileCard />
 
         {/* Quick Actions Card */}
         <div className='rounded-lg bg-surface p-6'>
