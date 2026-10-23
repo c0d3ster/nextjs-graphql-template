@@ -1,6 +1,6 @@
 'use client'
 
-import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs'
+import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs' // @module:auth
 import Link from 'next/link'
 
 export type NavItem = {
@@ -16,6 +16,7 @@ type SiteHeaderProps = {
   logoUrl?: string
 }
 
+// #region @module:auth
 const NavAuthSection = () => {
   const { user, isLoaded } = useUser()
 
@@ -41,13 +42,14 @@ const NavAuthSection = () => {
     </SignInButton>
   )
 }
+// #endregion @module:auth
 
 export const SiteHeader = ({
   menuItems,
   activeItem = 'home',
   logoUrl,
 }: SiteHeaderProps) => {
-  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) // @module:auth
 
   return (
     <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-surface shadow-lg'>
@@ -82,7 +84,9 @@ export const SiteHeader = ({
 
           {/* Auth */}
           <div className='flex flex-1 items-center justify-end'>
+            {/* #region @module:auth */}
             {clerkEnabled && <NavAuthSection />}
+            {/* #endregion @module:auth */}
           </div>
         </div>
       </div>

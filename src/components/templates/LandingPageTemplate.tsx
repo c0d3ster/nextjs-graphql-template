@@ -2,11 +2,11 @@
 
 import type { ReactNode } from 'react'
 
-import { useEffect, useState } from 'react'
-
 import type { NavItem } from '@/components/organisms'
 
 import { SiteHeader } from '@/components/organisms'
+
+import { useActiveNavItem } from './useActiveNavItem' // @module:email
 
 type LandingPageTemplateProps = {
   children: ReactNode
@@ -15,38 +15,19 @@ type LandingPageTemplateProps = {
 
 const menuItems: NavItem[] = [
   { id: 'home', label: 'Home', href: '/' },
-  { id: 'contact', label: 'Contact', href: '/#contact' },
+  { id: 'contact', label: 'Contact', href: '/#contact' }, // @module:email
 ]
 
 export const LandingPageTemplate = ({ children, logoUrl }: LandingPageTemplateProps) => {
-  const [activeItem, setActiveItem] = useState('home')
-
-  useEffect(() => {
-    const contactSection = document.getElementById('contact')
-    if (!contactSection) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setActiveItem('contact')
-        } else {
-          setActiveItem('home')
-        }
-      },
-      {
-        root: null,
-        threshold: 0.25, // trigger as soon as 25% of #contact is visible
-      }
-    )
-
-    observer.observe(contactSection)
-
-    return () => observer.disconnect()
-  }, [])
+  const activeItem = useActiveNavItem() // @module:email
 
   return (
     <div className='min-h-screen scroll-smooth bg-background'>
-      <SiteHeader menuItems={menuItems} activeItem={activeItem} logoUrl={logoUrl} />
+      <SiteHeader
+        menuItems={menuItems}
+        activeItem={activeItem} // @module:email
+        logoUrl={logoUrl}
+      />
       <div className='pt-16'>{children}</div>
     </div>
   )

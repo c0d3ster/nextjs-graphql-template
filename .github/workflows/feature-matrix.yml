@@ -1,0 +1,59 @@
+name: Feature matrix
+
+# Proves every supported feature combination still produces a healthy project:
+# run the init script, reinstall from the pruned lockfile, then type check,
+# lint, test, check for unused files/dependencies, and build.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  matrix:
+    name: ${{ matrix.preset.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          - {name: full, features: 'database,auth,email'}
+          - {name: webapp, features: 'database,auth'}
+          - {name: website, features: email}
+          - {name: email-with-database, features: 'database,email'}
+          - {name: database-only, features: database}
+          - {name: bare, features: ''}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Node.js environment
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: 22.x
+
+      - name: Apply features
+        run: npm run init -- --features="${{ matrix.preset.features }}"
+
+      # Fails if the pruned package.json and package-lock.json disagree
+      - name: Reinstall from the pruned lockfile
+        run: npm ci
+
+      - name: Type checking
+        run: npm run check:types
+
+      - name: Linter
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test -- --run --project=unit
+
+      - name: Check dependencies
+        run: npm run check:deps
+
+      - name: Build
+        run: npm run build:ci
+        env:
+          NODE_ENV: production

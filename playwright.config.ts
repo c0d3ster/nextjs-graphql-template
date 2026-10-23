@@ -47,9 +47,9 @@ export default defineConfig({
       ...pickEnv(
         [
           'NODE_ENV',
-          'DATABASE_URL',
-          'CLERK_SECRET_KEY',
-          'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+          'DATABASE_URL', // @module:database
+          'CLERK_SECRET_KEY', // @module:auth
+          'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', // @module:auth
           'PORT',
           'VERCEL_URL',
         ],

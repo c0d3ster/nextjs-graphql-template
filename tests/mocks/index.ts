@@ -1,2 +1,2 @@
-export * from './auth'
-export * from './services'
+export * from './auth' // @module:auth
+export * from './services' // @module:graphql

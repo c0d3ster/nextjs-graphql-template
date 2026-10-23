@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata' // @module:graphql
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { Buffer } from 'node:buffer'
@@ -82,6 +82,7 @@ vi.mock('next/link', () => ({
     React.createElement('a', { href, ...props }, children),
 }))
 
+// #region @module:database
 // =============================================================================
 // DATABASE MOCKS
 // =============================================================================
@@ -163,6 +164,7 @@ vi.mock('@/libs/DB', () => ({
     execute: vi.fn(),
   },
 }))
+// #endregion @module:database
 
 // =============================================================================
 // BROWSER API MOCKS

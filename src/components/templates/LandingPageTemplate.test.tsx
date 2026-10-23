@@ -55,7 +55,7 @@ describe('LandingPageTemplate', () => {
     )
 
     expect(screen.getByTestId('nav-home')).toBeInTheDocument()
-    expect(screen.getByTestId('nav-contact')).toBeInTheDocument()
+    expect(screen.getByTestId('nav-contact')).toBeInTheDocument() // @module:email
   })
 
   it('renders SiteHeader before content', () => {

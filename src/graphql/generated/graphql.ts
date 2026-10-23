@@ -55,6 +55,8 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   readonly __typename?: 'Query';
+  /** Liveness check */
+  readonly health: Scalars['Boolean']['output'];
   readonly me?: Maybe<User>;
   readonly user?: Maybe<User>;
 };
