@@ -1,6 +1,5 @@
-import { execSync } from 'node:child_process'
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join, relative } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 import type { ModuleId } from './modules'
@@ -83,17 +82,23 @@ variantIds.forEach((variantId) => {
   })
 })
 
+const TEXT_FILE = /\.(?:ts|tsx|js|mjs|cjs|mts|css|md|yml|yaml|json|toml|sql)$/
+const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out', 'test-results'])
+
+// Plain file walk: this suite also runs in containers where git refuses the directory
+const walk = (dir: string): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) return SKIP_DIRS.has(entry.name) ? [] : walk(full)
+    return [relative(root, full).split('\\').join('/')]
+  })
+
 describe('markers', () => {
   it('only reference known modules or variant flags', () => {
     const known = new Set<string>([...Object.keys(getModules('clerk-neon')), 'clerk', 'supabase'])
-    const files = execSync('git ls-files --cached --others --exclude-standard', {
-      cwd: root,
-      encoding: 'utf8',
-      maxBuffer: 32 * 1024 * 1024,
-    })
-      .split('\n')
-      .filter((file) => file !== '' && !file.startsWith('scripts/init/') && existsSync(join(root, file)))
-      .filter((file) => !/\.(?:png|jpe?g|gif|ico|svg|woff2?|lock)$/.test(file) && file !== 'package-lock.json')
+    const files = walk(root)
+      .filter((file) => !file.startsWith('scripts/init/'))
+      .filter((file) => TEXT_FILE.test(file) || /(?:^|\/)\.(?:env|env\.production|gitignore)$/.test(file))
 
     const unknown: string[] = []
     files.forEach((file) => {
