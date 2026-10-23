@@ -3,20 +3,20 @@ import { z } from 'zod'
 
 export const Env = createEnv({
   server: {
-    CLERK_SECRET_KEY: z.string().optional(),
-    CLERK_WEBHOOK_SECRET: z.string().optional(),
-    DATABASE_URL: z.string().optional(),
-    RESEND_API_KEY: z.string().optional(),
+    CLERK_SECRET_KEY: z.string().optional(), // @module:auth
+    CLERK_WEBHOOK_SECRET: z.string().optional(), // @module:auth
+    DATABASE_URL: z.string().optional(), // @module:database
+    RESEND_API_KEY: z.string().optional(), // @module:email
     PROJECT_LOGO_KEY: z.string().optional(),
     R2_ACCOUNT_ID: z.string().optional(),
     R2_ACCESS_KEY_ID: z.string().optional(),
     R2_SECRET_ACCESS_KEY: z.string().optional(),
     R2_BUCKET_NAME: z.string().optional(),
-    SUPPORT_EMAIL: z.string().default('support@example.com'),
+    SUPPORT_EMAIL: z.string().default('support@example.com'), // @module:email
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(), // @module:auth
     NEXT_PUBLIC_BRAND_NAME: z.string().default('MyApp'),
   },
   shared: {
@@ -24,38 +24,44 @@ export const Env = createEnv({
   },
   // You need to destructure all the keys manually
   runtimeEnv: {
-    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-    CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY, // @module:auth
+    CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET, // @module:auth
+    DATABASE_URL: process.env.DATABASE_URL, // @module:database
+    RESEND_API_KEY: process.env.RESEND_API_KEY, // @module:email
     PROJECT_LOGO_KEY: process.env.PROJECT_LOGO_KEY,
     R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
     R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
     R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
     R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
-    SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
+    SUPPORT_EMAIL: process.env.SUPPORT_EMAIL, // @module:email
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    // #region @module:auth
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    // #endregion @module:auth
     NEXT_PUBLIC_BRAND_NAME: process.env.NEXT_PUBLIC_BRAND_NAME,
     NODE_ENV: process.env.NODE_ENV,
   },
 })
 
+// #region @module:database
 // Runtime validation helpers - use these when you actually need the variables
 export const requireEnv = {
+  // #region @module:auth
   CLERK_SECRET_KEY: () => {
     if (!Env.CLERK_SECRET_KEY) {
       throw new Error('CLERK_SECRET_KEY is required but not set')
     }
     return Env.CLERK_SECRET_KEY
   },
+  // #endregion @module:auth
   DATABASE_URL: () => {
     if (!Env.DATABASE_URL) {
       throw new Error('DATABASE_URL is required but not set')
     }
     return Env.DATABASE_URL
   },
+  // #region @module:auth
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: () => {
     if (!Env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
       throw new Error(
@@ -64,4 +70,6 @@ export const requireEnv = {
     }
     return Env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   },
+  // #endregion @module:auth
 }
+// #endregion @module:database

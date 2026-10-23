@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
-import Link from 'next/link'
+import Link from 'next/link' // @module:auth
 
-import { ContactForm } from '@/components/molecules'
+import { ContactForm } from '@/components/molecules' // @module:email
 import { LandingPageTemplate } from '@/components/templates'
 import { Env } from '@/libs/Env'
 import { getLogoUrl } from '@/utils/logo'
@@ -32,9 +32,11 @@ export default async function Index() {
             Welcome to {Env.NEXT_PUBLIC_BRAND_NAME}
           </h2>
           <p className='mb-8 text-lg text-text-muted'>
-            A modern web application template with authentication
+            A modern web application template
+            {' with authentication'} {/* @module:auth */}
           </p>
 
+          {/* #region @module:auth */}
           {/* Auth Demo Section */}
           <div className='mb-8 rounded-lg bg-surface p-6'>
             <h3 className='mb-4 text-xl font-semibold text-text'>
@@ -59,13 +61,16 @@ export default async function Index() {
               </ul>
             </div>
           </div>
+          {/* #endregion @module:auth */}
         </div>
       </div>
 
+      {/* #region @module:email */}
       {/* Contact Form Section */}
       <div id='contact' className='bg-surface py-16'>
         <ContactForm />
       </div>
+      {/* #endregion @module:email */}
     </LandingPageTemplate>
   )
 }

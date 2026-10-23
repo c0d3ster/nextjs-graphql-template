@@ -4,11 +4,17 @@ const config: KnipConfig = {
   // Files to exclude from Knip analysis
   ignore: [
     'tests/**/*.ts',
-    'drizzle.config.ts', // Config file — evaluated at runtime, not a source module
-    'src/apiClients/**/*.ts', // Ignore API clients - used by GraphQL codegen
-    'src/graphql/**/*.ts', // Ignore GraphQL files - used by codegen
-    'src/proxy.ts', // Next.js middleware — convention-based entry point, not imported
+    'drizzle.config.ts', // Config file — evaluated at runtime, not a source module @module:database
+    'src/apiClients/**/*.ts', // Ignore API clients - used by GraphQL codegen @module:graphql
+    'src/graphql/**/*.ts', // Ignore GraphQL files - used by codegen @module:graphql
+    'src/proxy.ts', // Next.js middleware — convention-based entry point, not imported @module:auth
   ],
+  // #region @module:database+!graphql
+  // With no GraphQL layer, nothing imports the Postgres client yet; it is a ready-to-use helper
+  entry: ['src/libs/DB.ts'],
+  // #endregion @module:database+!graphql
+  // Atoms are the shared UI kit, so exports that no page uses yet are expected
+  ignoreIssues: { 'src/components/atoms/**': ['exports', 'types'] },
   // Dependencies to ignore during analysis
   ignoreDependencies: [
     '@commitlint/types',

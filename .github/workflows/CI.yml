@@ -35,9 +35,11 @@ jobs:
       - name: Build Next.js
         run: npm run build:ci
         env:
+          # #region @module:auth
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           # NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is in .env.local — not needed for build
+          # #endregion @module:auth
           # Build environment
           NODE_ENV: production
 
@@ -77,9 +79,11 @@ jobs:
       - name: Type checking
         run: npm run check:types
         env:
+          # #region @module:auth
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           # NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is committed in .env — no secret needed
+          # #endregion @module:auth
           # Build environment
           NODE_ENV: production
 
@@ -108,8 +112,10 @@ jobs:
         with:
           args: npm run test -- --run --project=unit --coverage
         env:
+          # #region @module:auth
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          # #endregion @module:auth
           # Test environment
           NODE_ENV: test
 
@@ -127,6 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
 
+    # #region @module:database
     services:
       postgres:
         image: postgres:16
@@ -141,6 +148,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    # #endregion @module:database
 
     steps:
       - uses: actions/checkout@v7
@@ -151,17 +159,21 @@ jobs:
           node-version: ${{ matrix.node-version }}
           restore-nextjs-cache: true
 
+      # #region @module:database
       - name: Run database migrations
         run: npm run db:migrate
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+      # #endregion @module:database
 
       - name: Build Next.js for E2E tests
         run: npm run build:ci
         env:
+          # #region @module:auth
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           # NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is in .env.local — not needed for build
+          # #endregion @module:auth
           # Build environment
           NODE_ENV: production
 
@@ -170,11 +182,15 @@ jobs:
         with:
           args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firefox
         env:
+          # #region @module:auth
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           # NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is committed in .env — no secret needed
+          # #endregion @module:auth
+          # #region @module:database
           # Database
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+          # #endregion @module:database
           # Test environment
           NODE_ENV: test
 

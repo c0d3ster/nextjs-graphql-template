@@ -14,6 +14,7 @@ const R2_PUBLIC_HOST =
 const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // #region @module:graphql
   // type-graphql + reflect-metadata break when bundled/minified (invalid GraphQL names like "$").
   serverExternalPackages: [
     '@apollo/server',
@@ -24,8 +25,10 @@ const baseConfig: NextConfig = {
     'reflect-metadata',
     'type-graphql',
   ],
+  // #endregion @module:graphql
   images: {
     remotePatterns: [
+      // #region @module:auth
       {
         protocol: 'https',
         hostname: 'img.clerk.com',
@@ -38,6 +41,7 @@ const baseConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // #endregion @module:auth
       // Add R2 public host if R2 is configured
       ...(R2_PUBLIC_HOST
         ? [
