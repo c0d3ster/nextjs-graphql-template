@@ -1,16 +1,26 @@
 import { execSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  cpSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 
-import type { ModuleId } from './modules'
+import type { ModuleDef, ModuleId } from './modules'
 import type { Selection } from './select'
+import type { VariantDef } from './variants'
 
-import { modules } from './modules'
 import { hasMarkers, stripText } from './strip'
 
 type ApplyOptions = {
   root: string
   selection: Selection
+  variant: VariantDef
+  // Module definitions for the chosen variant (see getModules)
+  defs: Record<ModuleId, ModuleDef>
   dryRun?: boolean
   // Leave package-lock.json alone (local verification runs)
   skipInstall?: boolean
@@ -40,7 +50,19 @@ const TEXT_EXTENSIONS = new Set([
   '.json',
   '.toml',
 ])
-const PRETTIER_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.mjs', '.cjs', '.mts', '.css', '.md', '.yml', '.yaml', '.json'])
+const PRETTIER_EXTENSIONS = new Set([
+  '.ts',
+  '.tsx',
+  '.js',
+  '.mjs',
+  '.cjs',
+  '.mts',
+  '.css',
+  '.md',
+  '.yml',
+  '.yaml',
+  '.json',
+])
 const TEXT_FILENAMES = new Set(['.env', '.env.production', '.gitignore'])
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out'])
 const SKIP_FILES = new Set(['package-lock.json'])
@@ -63,13 +85,11 @@ const walk = (dir: string, root: string, skip: ReadonlySet<string>): string[] =>
     return [full]
   })
 
-// Modules that are off: every module not in the selection
-const disabledModules = (enabled: ReadonlySet<ModuleId>): ModuleId[] =>
-  (Object.keys(modules) as ModuleId[]).filter((id) => !enabled.has(id))
-
 export const applySelection = ({
   root,
   selection,
+  variant,
+  defs,
   dryRun = false,
   skipInstall = false,
   skipFormat = false,
@@ -79,30 +99,46 @@ export const applySelection = ({
   // The init module is tooling: it is "off" after a run unless asked to stay
   const enabled = new Set<ModuleId>(selection.enabled)
   if (keepTooling) enabled.add('init')
-  const disabled = disabledModules(enabled)
+  const allIds = Object.keys(defs) as ModuleId[]
+  const disabled = allIds.filter((id) => !enabled.has(id))
+  // Marker ids that are on: kept modules plus the chosen variant's flag
+  const flags = new Set<string>([...enabled, variant.flag])
   const touched: string[] = []
 
-  // 1. Delete files and folders that belong to switched-off modules
+  // Deletes a path unless it is already gone, directly or because a parent folder went first
   const deleted = new Set<string>()
   const isCovered = (path: string): boolean =>
     Array.from(deleted).some((gone) => path === gone || path.startsWith(`${gone}/`))
+  const remove = (path: string, owner: string): void => {
+    if (isCovered(path)) return
+    const full = join(root, path)
+    if (!existsSync(full)) {
+      throw new Error(`Manifest drift: ${owner} lists "${path}" but it does not exist`)
+    }
+    log(`remove ${path}`)
+    if (!dryRun) rmSync(full, { recursive: true, force: true })
+    deleted.add(path)
+  }
+
+  // 0. Variant: drop the other variant's files, then copy this variant's overlay over the project
+  variant.removePaths.forEach((path) => remove(path, `variant ${variant.id}`))
+  if (variant.overlay) {
+    const overlayDir = join(root, variant.overlay)
+    if (!existsSync(overlayDir)) {
+      throw new Error(`Variant ${variant.id}: overlay folder "${variant.overlay}" does not exist`)
+    }
+    log(`overlay ${variant.overlay}`)
+    if (!dryRun) cpSync(overlayDir, root, { recursive: true, force: true })
+  }
+
+  // 1. Delete files and folders that belong to switched-off modules
   disabled.forEach((id) => {
-    modules[id].paths.forEach((path) => {
-      // Already removed, directly or because a parent folder went first
-      if (isCovered(path)) return
-      const full = join(root, path)
-      if (!existsSync(full)) {
-        throw new Error(`Manifest drift: ${id} lists "${path}" but it does not exist`)
-      }
-      log(`remove ${path}`)
-      if (!dryRun) rmSync(full, { recursive: true, force: true })
-      deleted.add(path)
-    })
+    defs[id].paths.forEach((path) => remove(path, id))
   })
 
   // 1b. Rewrite files whose content depends on the module being off
   disabled.forEach((id) => {
-    Object.entries(modules[id].writes).forEach(([path, content]) => {
+    Object.entries(defs[id].writes).forEach(([path, content]) => {
       const full = join(root, path)
       if (!existsSync(dirname(full))) return
       log(`rewrite ${path}`)
@@ -111,14 +147,14 @@ export const applySelection = ({
   })
 
   // 2. Strip marked lines and regions from the files that remain
-  // Marker syntax appears inside the engine's own sources and tests, so never scan them
-  const skip = new Set(['scripts/init'])
+  // Marker syntax appears inside the engine's own sources and the unapplied overlays
+  const skip = new Set(['scripts/init', 'variants'])
   if (!dryRun) {
     walk(root, root, skip).forEach((file) => {
       const original = readFileSync(file, 'utf8')
       if (!hasMarkers(original)) return
       const label = relative(root, file).split('\\').join('/')
-      const next = stripText(original, enabled, label)
+      const next = stripText(original, flags, label)
       if (next === original) return
       writeFileSync(file, next)
       touched.push(file)
@@ -126,37 +162,48 @@ export const applySelection = ({
     })
   }
 
-  // 3. package.json: scripts, replacements and unused packages
+  // 3. package.json: variant changes first, then scripts and packages of switched-off modules
   const packagePath = join(root, 'package.json')
   const pkg = JSON.parse(readFileSync(packagePath, 'utf8')) as PackageJson
-  const keepPackages = new Set(
-    (Object.keys(modules) as ModuleId[])
-      .filter((id) => enabled.has(id))
-      .flatMap((id) => modules[id].packages)
-  )
+  const dropPackage = (name: string): void => {
+    ;[pkg.dependencies, pkg.devDependencies].forEach((group) => {
+      if (group && name in group) {
+        log(`package - ${name}`)
+        delete group[name]
+      }
+    })
+  }
 
+  variant.removePackages.forEach(dropPackage)
+  variant.scripts.remove.forEach((name) => {
+    if (pkg.scripts && name in pkg.scripts) {
+      log(`script  - ${name}`)
+      delete pkg.scripts[name]
+    }
+  })
+  Object.entries(variant.scripts.set).forEach(([name, command]) => {
+    if (!pkg.scripts) return
+    log(`script  + ${name}`)
+    pkg.scripts[name] = command
+  })
+
+  const keepPackages = new Set(
+    allIds.filter((id) => enabled.has(id)).flatMap((id) => defs[id].packages)
+  )
   disabled.forEach((id) => {
-    modules[id].scripts.forEach((name) => {
+    defs[id].scripts.forEach((name) => {
       if (pkg.scripts && name in pkg.scripts) {
         log(`script  - ${name}`)
         delete pkg.scripts[name]
       }
     })
-    Object.entries(modules[id].scriptReplacements).forEach(([name, command]) => {
+    Object.entries(defs[id].scriptReplacements).forEach(([name, command]) => {
       if (!pkg.scripts) return
       log(`script  ~ ${name}`)
       pkg.scripts[name] = command
     })
-    modules[id].packages.forEach((name) => {
-      if (keepPackages.has(name)) return
-      if (pkg.dependencies && name in pkg.dependencies) {
-        log(`package - ${name}`)
-        delete pkg.dependencies[name]
-      }
-      if (pkg.devDependencies && name in pkg.devDependencies) {
-        log(`package - ${name}`)
-        delete pkg.devDependencies[name]
-      }
+    defs[id].packages.forEach((name) => {
+      if (!keepPackages.has(name)) dropPackage(name)
     })
   })
 
