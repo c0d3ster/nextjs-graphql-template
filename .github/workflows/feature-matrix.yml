@@ -1,7 +1,7 @@
 name: Feature matrix
 
 # Proves every supported feature combination still produces a healthy project:
-# run the init script, reinstall from the pruned lockfile, then type check,
+# install, run the init script, reinstall from the pruned lockfile, then type check,
 # lint, test, check for unused files/dependencies, and build.
 
 on:
@@ -9,6 +9,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   matrix:
@@ -33,13 +34,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up Node.js environment
-        uses: ./.github/actions/setup-project
+      # Not the shared setup-project action: it caches node_modules under a key every other
+      # job restores, and this job prunes node_modules, which would poison that cache.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: npm
+
+      - name: Install the full template
+        run: npm ci
 
       - name: Apply features
-        run: npm run init -- --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
+        run: npm run init -- --strict --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
 
       # Fails if the pruned package.json and package-lock.json disagree
       - name: Reinstall from the pruned lockfile
@@ -61,3 +68,18 @@ jobs:
         run: npm run build:ci
         env:
           NODE_ENV: production
+
+  # One stable name for the branch ruleset to require, whatever the presets are called
+  matrix-result:
+    name: Feature matrix result
+    runs-on: ubuntu-latest
+    needs: [matrix]
+    if: always()
+
+    steps:
+      - name: Fail unless every preset passed
+        run: |
+          if [ "${{ needs.matrix.result }}" != "success" ]; then
+            echo "Feature matrix result: ${{ needs.matrix.result }}"
+            exit 1
+          fi
