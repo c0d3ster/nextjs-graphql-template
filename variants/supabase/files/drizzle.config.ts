@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata' // @module:graphql
 import { config } from 'dotenv'
 import { defineConfig } from 'drizzle-kit'
 
