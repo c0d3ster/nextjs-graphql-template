@@ -1,6 +1,6 @@
-import type { ModuleId } from './modules'
+import type { ModuleDef, ModuleId, VariantId } from './modules'
 
-import { modules, selectableIds } from './modules'
+import { selectableIds } from './modules'
 
 export type Selection = {
   enabled: ReadonlySet<ModuleId>
@@ -14,15 +14,27 @@ const isSelectable = (id: string): id is ModuleId =>
   (selectableIds as readonly string[]).includes(id)
 
 // Turns a requested feature list into the full set of modules to keep:
-// drops unknown ids, pulls in required modules, then applies derived modules.
-export const resolveSelection = (requested: readonly string[]): Selection => {
+// drops unknown ids, rejects modules the variant does not have, pulls in required
+// modules, then applies derived modules.
+export const resolveSelection = (
+  requested: readonly string[],
+  defs: Record<ModuleId, ModuleDef>,
+  variant: VariantId
+): Selection => {
   const enabled = new Set<ModuleId>()
   const added: ModuleId[] = []
   const ignored: string[] = []
 
   requested.forEach((id) => {
-    if (isSelectable(id)) enabled.add(id)
-    else ignored.push(id)
+    if (!isSelectable(id)) {
+      ignored.push(id)
+      return
+    }
+    const availableIn = defs[id].availableIn
+    if (availableIn && !availableIn.includes(variant)) {
+      throw new Error(`"${id}" is only available with --variant=${availableIn.join(' or ')}`)
+    }
+    enabled.add(id)
   })
 
   // Pull in requirements until nothing changes (handles chains)
@@ -30,7 +42,7 @@ export const resolveSelection = (requested: readonly string[]): Selection => {
   while (changed) {
     changed = false
     Array.from(enabled).forEach((id) => {
-      modules[id].requires.forEach((required) => {
+      defs[id].requires.forEach((required) => {
         if (enabled.has(required)) return
         enabled.add(required)
         added.push(required)
@@ -39,7 +51,7 @@ export const resolveSelection = (requested: readonly string[]): Selection => {
     })
   }
 
-  Object.values(modules).forEach((definition) => {
+  Object.values(defs).forEach((definition) => {
     if (definition.derivedFrom?.some((source) => enabled.has(source))) {
       enabled.add(definition.id)
     }

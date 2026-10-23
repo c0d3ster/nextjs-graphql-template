@@ -6,13 +6,17 @@
 // Code that belongs to a module but lives inside a shared file is marked with
 // `@module:<id>` tags and `#region` blocks instead (see strip.ts).
 
-export type ModuleId = 'init' | 'database' | 'auth' | 'email' | 'graphql'
+export type VariantId = 'clerk-neon' | 'supabase'
 
-type ModuleDef = {
+export type ModuleId = 'init' | 'database' | 'auth' | 'email' | 'graphql' | 'realtime'
+
+export type ModuleDef = {
   id: ModuleId
   label: string
   // Modules that must be kept whenever this one is
   requires: ModuleId[]
+  // Variants this module exists in (all of them when omitted)
+  availableIn?: VariantId[]
   // Kept automatically when any of these modules is kept
   derivedFrom?: ModuleId[]
   // Files and folders deleted when the module is off, relative to the project root
@@ -30,14 +34,14 @@ type ModuleDef = {
 // What drizzle-kit expects when a database has no migrations yet
 const EMPTY_JOURNAL = `${JSON.stringify({ version: '7', dialect: 'postgresql', entries: [] }, null, 2)}\n`
 
-export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email']
+export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'realtime']
 
 export const modules: Record<ModuleId, ModuleDef> = {
   init: {
     id: 'init',
     label: 'Template setup tooling',
     requires: [],
-    paths: ['scripts/init', '.github/workflows/feature-matrix.yml'],
+    paths: ['scripts/init', 'variants', '.github/workflows/feature-matrix.yml'],
     packages: ['tsx'],
     scripts: ['init'],
     scriptReplacements: {},
@@ -102,6 +106,19 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'tests/e2e/ContactForm.e2e.ts',
     ],
     packages: ['resend', '@react-email/render', 'react-hook-form', '@hookform/resolvers'],
+    scripts: [],
+    scriptReplacements: {},
+    writes: {},
+  },
+
+  // Live updates through Supabase Realtime. Its code ships with the supabase variant overlay.
+  realtime: {
+    id: 'realtime',
+    label: 'Realtime updates (Supabase)',
+    requires: ['auth'],
+    availableIn: ['supabase'],
+    paths: [],
+    packages: [],
     scripts: [],
     scriptReplacements: {},
     writes: {},
