@@ -130,6 +130,14 @@ DATABASE / EXTERNAL APIs
    redirect URI `https://<project-ref>.supabase.co/auth/v1/callback`, then enable Authentication → Providers → Google
    in Supabase and paste the client ID and secret. Each environment (dev, prod) needs its own setup.
 
+   **Local Google sign-in:** use `http://127.0.0.1:54321/auth/v1/callback` as the redirect URI, then create
+   `supabase/.env` (git-ignored) and restart with `npx supabase stop && npx supabase start`:
+
+   ```bash
+   SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=<client id>
+   SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=<client secret>
+   ```
+
    In the Supabase dashboard, set Authentication → URL Configuration → Redirect URLs to include
    `http://localhost:3000/auth/callback` (and your production URL).
 
