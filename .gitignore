@@ -55,3 +55,7 @@ build-archive.log
 /test-results/
 /playwright-report/
 /playwright/.cache/
+# Supabase CLI local state and OAuth credentials (never commit)
+supabase/.env
+supabase/.temp/
+supabase/.branches/
