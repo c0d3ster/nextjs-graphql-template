@@ -22,6 +22,7 @@
     "check:types": "tsc --noEmit --pretty",
     "check:deps": "knip",
     "commit": "commit",
+    "init": "tsx scripts/init/cli.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
@@ -107,6 +108,7 @@
     "rimraf": "^6.1.3",
     "semantic-release": "^24.2.7",
     "tailwindcss": "^4.1.11",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
