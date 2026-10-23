@@ -9,10 +9,12 @@ import {
 } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 
+import type { UnlistedImport } from './imports'
 import type { ModuleDef, ModuleId } from './modules'
 import type { Selection } from './select'
 import type { VariantDef } from './variants'
 
+import { findUnlistedImports } from './imports'
 import { hasMarkers, stripText } from './strip'
 
 type ApplyOptions = {
@@ -95,7 +97,7 @@ export const applySelection = ({
   skipFormat = false,
   keepTooling = false,
   log = (): void => {},
-}: ApplyOptions): void => {
+}: ApplyOptions): UnlistedImport[] => {
   // The init module is tooling: it is "off" after a run unless asked to stay
   const enabled = new Set<ModuleId>(selection.enabled)
   if (keepTooling) enabled.add('init')
@@ -212,6 +214,9 @@ export const applySelection = ({
     touched.push(packagePath)
   }
 
+  // Catch shared files that still import a package this run pruned
+  const unlisted = dryRun ? [] : findUnlistedImports(root)
+
   // 4. Keep the lockfile in step with package.json
   if (!dryRun && !skipInstall) {
     log('sync package-lock.json')
@@ -234,4 +239,6 @@ export const applySelection = ({
       log('prettier failed, run `npm run format` manually')
     }
   }
+
+  return unlisted
 }

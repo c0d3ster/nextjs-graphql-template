@@ -77,6 +77,7 @@ export const variants: Record<VariantId, VariantDef> = {
       auth: {
         paths: [
           'src/proxy.ts',
+          'src/proxy.test.ts',
           'src/app/(auth)',
           'src/app/(public)/login',
           'src/app/auth',

@@ -65,6 +65,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
     requires: ['database'],
     paths: [
       'src/proxy.ts',
+      'src/proxy.test.ts',
       'src/app/api/webhook',
       'src/app/(auth)',
       'src/providers/ClerkProvider.tsx',

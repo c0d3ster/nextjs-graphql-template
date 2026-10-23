@@ -82,7 +82,7 @@ afterEach(() => {
   rmSync(root, { recursive: true, force: true })
 })
 
-const run = (selection: ReturnType<typeof select>, options: { dryRun?: boolean } = {}): void =>
+const run = (selection: ReturnType<typeof select>, options: { dryRun?: boolean } = {}) =>
   applySelection({ root, selection, variant, defs, skipInstall: true, skipFormat: true, ...options })
 
 describe('applySelection', () => {
@@ -174,6 +174,14 @@ describe('applySelection', () => {
     rmSync(join(root, 'mail'), { recursive: true })
 
     expect(() => run(select('database'))).toThrow('Manifest drift: email lists "mail"')
+  })
+
+  it('returns imports of packages that were pruned', () => {
+    write('src/uses-old.ts', "import 'old-sdk'\nimport 'resend'\n")
+
+    const unlisted = run(select('email'))
+
+    expect(unlisted).toEqual([{ file: 'src/uses-old.ts', pkg: 'old-sdk' }])
   })
 
   it('changes nothing on a dry run', () => {

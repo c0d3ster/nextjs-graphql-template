@@ -15,6 +15,7 @@ type Args = {
   skipInstall: boolean
   skipFormat: boolean
   keepTooling: boolean
+  strict: boolean
   root: string
 }
 
@@ -30,6 +31,7 @@ const USAGE = `Usage: npm run init -- --features=<list> [options]
   --skip-install     Do not refresh package-lock.json
   --skip-format      Do not run prettier on changed files
   --keep-tooling     Keep the init scripts (for working on the template itself)
+  --strict           Exit with an error if a kept file imports a package that was pruned
   --root=<dir>       Project root (defaults to the current directory)
 `
 
@@ -62,6 +64,7 @@ const parseArgs = (argv: string[]): Args => {
     skipInstall: false,
     skipFormat: false,
     keepTooling: false,
+    strict: false,
     root: process.cwd(),
   }
 
@@ -79,6 +82,7 @@ const parseArgs = (argv: string[]): Args => {
     else if (flag === '--skip-install') args.skipInstall = true
     else if (flag === '--skip-format') args.skipFormat = true
     else if (flag === '--keep-tooling') args.keepTooling = true
+    else if (flag === '--strict') args.strict = true
     else throw new Error(`Unknown option: ${arg}\n\n${USAGE}`)
   })
 
@@ -115,7 +119,7 @@ const main = (): void => {
   say(`Variant: ${variant.label}`)
   say(`Keeping: ${kept || 'nothing (base template only)'}\n`)
 
-  applySelection({
+  const unlisted = applySelection({
     root: args.root,
     selection,
     variant,
@@ -128,6 +132,12 @@ const main = (): void => {
   })
 
   say(args.dryRun ? '\nDry run, nothing changed.' : '\nDone. Run `npm install` to refresh node_modules.')
+
+  if (unlisted.length > 0) {
+    say('\nThese files import packages that are no longer in package.json:')
+    unlisted.forEach(({ file, pkg }) => say(`  ${file}: ${pkg}`))
+    if (args.strict) process.exit(1)
+  }
 }
 
 try {
