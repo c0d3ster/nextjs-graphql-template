@@ -22,7 +22,7 @@ export default antfu(
     },
 
     // Ignored paths
-    ignores: ['migrations/**/*', '**/*.md'],
+    ignores: ['migrations/**/*', 'supabase/**/*', 'variants/**/*', '**/*.md'],
   },
   // --- Accessibility Rules ---
   jsxA11y.flatConfigs.recommended,

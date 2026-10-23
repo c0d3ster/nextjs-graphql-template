@@ -4,6 +4,7 @@ const config: KnipConfig = {
   // Files to exclude from Knip analysis
   ignore: [
     'tests/**/*.ts',
+    'variants/**', // Variant overlays are only checked after init applies them @module:init
     'drizzle.config.ts', // Config file — evaluated at runtime, not a source module @module:database
     'src/apiClients/**/*.ts', // Ignore API clients - used by GraphQL codegen @module:graphql
     'src/graphql/**/*.ts', // Ignore GraphQL files - used by codegen @module:graphql
@@ -21,6 +22,9 @@ const config: KnipConfig = {
     'conventional-changelog-conventionalcommits',
     'lefthook', // Git hooks manager — used as a CLI tool, not imported
     'vite',
+    '@supabase/ssr', // Used by the supabase variant @module:init
+    '@supabase/supabase-js', // Used by the supabase variant @module:init
+    'supabase', // CLI for the supabase variant @module:init
   ],
   // Binaries to ignore during analysis
   ignoreBinaries: [],

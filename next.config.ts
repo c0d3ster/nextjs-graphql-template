@@ -10,6 +10,13 @@ const R2_PUBLIC_HOST =
     ? `${R2_BUCKET_NAME}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
     : null
 
+// #region @module:auth+supabase
+// Supabase configuration constants
+const SUPABASE_HOST = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : null
+// #endregion @module:auth+supabase
+
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
   poweredByHeader: false,
@@ -28,7 +35,7 @@ const baseConfig: NextConfig = {
   // #endregion @module:graphql
   images: {
     remotePatterns: [
-      // #region @module:auth
+      // #region @module:auth+clerk
       {
         protocol: 'https',
         hostname: 'img.clerk.com',
@@ -41,7 +48,20 @@ const baseConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-      // #endregion @module:auth
+      // #endregion @module:auth+clerk
+      // #region @module:auth+supabase
+      // Supabase Storage public objects
+      ...(SUPABASE_HOST
+        ? [
+            {
+              protocol: 'https' as const,
+              hostname: SUPABASE_HOST,
+              port: '',
+              pathname: '/storage/v1/object/public/**',
+            },
+          ]
+        : []),
+      // #endregion @module:auth+supabase
       // Add R2 public host if R2 is configured
       ...(R2_PUBLIC_HOST
         ? [

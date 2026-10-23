@@ -19,12 +19,16 @@ jobs:
       fail-fast: false
       matrix:
         preset:
-          - {name: full, features: 'database,auth,email'}
-          - {name: webapp, features: 'database,auth'}
-          - {name: website, features: email}
-          - {name: email-with-database, features: 'database,email'}
-          - {name: database-only, features: database}
-          - {name: bare, features: ''}
+          - {name: full, features: 'database,auth,email', variant: clerk-neon}
+          - {name: webapp, features: 'database,auth', variant: clerk-neon}
+          - {name: website, features: email, variant: clerk-neon}
+          - {name: email-with-database, features: 'database,email', variant: clerk-neon}
+          - {name: database-only, features: database, variant: clerk-neon}
+          - {name: bare, features: '', variant: clerk-neon}
+          - {name: supabase-full, features: 'database,auth,email,realtime', variant: supabase}
+          - {name: supabase-webapp, features: 'database,auth', variant: supabase}
+          - {name: supabase-email-with-database, features: 'database,email', variant: supabase}
+          - {name: supabase-database-only, features: database, variant: supabase}
 
     steps:
       - uses: actions/checkout@v7
@@ -35,7 +39,7 @@ jobs:
           node-version: 22.x
 
       - name: Apply features
-        run: npm run init -- --features="${{ matrix.preset.features }}"
+        run: npm run init -- --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
 
       # Fails if the pruned package.json and package-lock.json disagree
       - name: Reinstall from the pruned lockfile
