@@ -48,8 +48,9 @@ export default defineConfig({
         [
           'NODE_ENV',
           'DATABASE_URL', // @module:database
-          'CLERK_SECRET_KEY', // @module:auth
-          'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', // @module:auth
+          'CLERK_SECRET_KEY', // @module:auth+clerk
+          'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', // @module:auth+clerk
+          'SUPABASE_SECRET_KEY', // @module:auth+supabase
           'PORT',
           'VERCEL_URL',
         ],

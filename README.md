@@ -12,13 +12,28 @@ removes itself.
 ```bash
 npm install
 npm run init -- --features=database,auth,email
+npm run init -- --features=database,auth,email,realtime --variant=supabase
 ```
 
-| Feature    | Keeps                                                           | Needs      |
-| ---------- | --------------------------------------------------------------- | ---------- |
-| `database` | Drizzle ORM, Postgres connection, migrations                    |            |
-| `auth`     | Clerk sign-in, protected routes, user profiles and the webhook  | `database` |
-| `email`    | Resend, the contact form and its GraphQL mutation               |            |
+| Feature    | Keeps                                                                 | Needs      |
+| ---------- | --------------------------------------------------------------------- | ---------- |
+| `database` | Drizzle ORM, Postgres connection, migrations                          |            |
+| `auth`     | Sign-in, protected routes and user profiles                           | `database` |
+| `email`    | Resend, the contact form and its GraphQL mutation                     |            |
+| `realtime` | Live updates to the browser (supabase variant only)                   | `auth`     |
+
+### Variants
+
+`auth` and `database` come in two flavors, chosen with `--variant`:
+
+| Variant      | Auth                                      | Migrations                                   | Notes                              |
+| ------------ | ----------------------------------------- | -------------------------------------------- | ---------------------------------- |
+| `clerk-neon` | Clerk sessions, user sync by webhook      | Drizzle (`db:generate`, `db:migrate`)         | The default                        |
+| `supabase`   | Supabase Auth (email/password and Google) | SQL files through the Supabase CLI (`db:push`) | Includes Realtime. Needs `supabase/.env` for Google locally |
+
+Asking for `realtime` selects `supabase` for you; combining it with `--variant=clerk-neon` is an error.
+The variant only matters when `auth` or `database` is kept. Its code lives in `variants/<name>/files`
+and is copied over the project during setup, then removed.
 
 - GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth` or `email` is.
 - Features that are required by another are added for you, and the script says so.
