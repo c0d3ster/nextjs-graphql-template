@@ -11,6 +11,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Nothing here writes to the repository
+permissions:
+  contents: read
+
 jobs:
   matrix:
     name: ${{ matrix.preset.name }}
@@ -35,6 +39,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       # Not the shared setup-project action: it caches node_modules under a key every other
       # job restores, and this job prunes node_modules, which would poison that cache.

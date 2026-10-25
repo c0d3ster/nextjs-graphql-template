@@ -61,6 +61,12 @@ describe('findUnlistedImports', () => {
     expect(findUnlistedImports(root)).toEqual([])
   })
 
+  it('scans .jsx files too', () => {
+    write('src/legacy.jsx', ["import gone from 'gone'", ''].join('\n'))
+
+    expect(findUnlistedImports(root)).toEqual([{ file: 'src/legacy.jsx', pkg: 'gone' }])
+  })
+
   it('skips node_modules and unapplied variant overlays', () => {
     write('node_modules/pkg/index.js', "require('nope')\n")
     write('variants/supabase/files/a.ts', "import 'nope'\n")

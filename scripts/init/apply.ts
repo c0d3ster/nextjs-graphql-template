@@ -137,7 +137,9 @@ export const applySelection = ({
   const remove = (path: string, owner: string): void => {
     if (isCovered(path)) return
     const full = join(root, path)
-    if (!existsSync(full)) {
+    // A dry run does not copy the overlay, so paths that only the overlay has are still real
+    const inOverlay = dryRun && variant.overlay !== undefined && existsSync(join(root, variant.overlay, path))
+    if (!existsSync(full) && !inOverlay) {
       throw new Error(`Manifest drift: ${owner} lists "${path}" but it does not exist`)
     }
     log(`remove ${path}`)

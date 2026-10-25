@@ -4,7 +4,7 @@ import { join, relative } from 'node:path'
 
 export type UnlistedImport = { file: string; pkg: string }
 
-const SOURCE_FILE = /\.(?:ts|tsx|js|mjs|cjs|mts)$/
+const SOURCE_FILE = /\.(?:ts|tsx|js|jsx|mjs|cjs|mts)$/
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out', 'supabase', 'variants'])
 // Resolved through another package rather than listed (vitest brings in vite,
 // the commitlint CLI brings in its types)

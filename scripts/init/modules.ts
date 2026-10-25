@@ -78,6 +78,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'src/providers/ClerkProvider.tsx',
       'src/providers/ClerkProvider.test.tsx',
       'src/services/UserService.ts',
+      'src/services/UserService.test.ts',
       'src/graphql/resolvers/UserResolver.ts',
       'src/graphql/schema/user.ts',
       'src/apiClients/userApiClient.ts',
