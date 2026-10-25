@@ -26,9 +26,11 @@ jobs:
           - {name: email-with-database, features: 'database,email', variant: clerk-neon}
           - {name: database-only, features: database, variant: clerk-neon}
           - {name: bare, features: '', variant: clerk-neon}
+          - {name: file-uploads-only, features: file_uploads, variant: clerk-neon}
           - {name: supabase-full, features: 'database,auth,email,file_uploads,realtime', variant: supabase}
           - {name: supabase-webapp, features: 'database,auth', variant: supabase}
           - {name: supabase-email-with-database, features: 'database,email', variant: supabase}
+          - {name: supabase-bare, features: '', variant: supabase}
           - {name: supabase-database-only, features: database, variant: supabase}
 
     steps:

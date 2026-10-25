@@ -193,3 +193,48 @@ describe('applySelection', () => {
     expect(read('src/shared.ts')).toContain('@module:email')
   })
 })
+
+describe('slot replacements', () => {
+  const withReplace: VariantDef = { ...variant, replace: 'replace' }
+  const apply = (target: VariantDef): void => {
+    applySelection({
+      root,
+      selection: select('database'),
+      variant: target,
+      defs,
+      skipInstall: true,
+      skipFormat: true,
+    })
+  }
+
+  beforeEach(() => {
+    write('README.md', 'top\n<!-- #slot auth -->\nclerk text\n<!-- #endslot auth -->\nbottom\n')
+    write('replace/README.md', '<!-- #slot auth -->\nsupabase text // @module:database\n<!-- #endslot auth -->\n')
+  })
+
+  it('swaps the slot content for the variant replacement and then strips its markers', () => {
+    apply(withReplace)
+
+    expect(read('README.md')).toBe('top\nsupabase text\nbottom\n')
+  })
+
+  it('keeps the default content when the variant has no replacements', () => {
+    apply(variant)
+
+    expect(read('README.md')).toBe('top\nclerk text\nbottom\n')
+  })
+
+  it('reads replacements before the variants folder is deleted', () => {
+    write('variants/supabase/replace/README.md', '<!-- #slot auth -->\nfrom variants\n<!-- #endslot auth -->\n')
+
+    apply({ ...variant, replace: 'variants/supabase/replace' })
+
+    expect(read('README.md')).toBe('top\nfrom variants\nbottom\n')
+  })
+
+  it('fails when a replacement names a slot the file does not have', () => {
+    write('replace/README.md', '<!-- #slot gone -->\nx\n<!-- #endslot gone -->\n')
+
+    expect(() => apply(withReplace)).toThrow(/README.md has no slot named gone/)
+  })
+})
