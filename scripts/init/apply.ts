@@ -173,8 +173,8 @@ export const applySelection = ({
   })
 
   // 2. Strip marked lines and regions from the files that remain
-  // Marker syntax appears inside the engine's own sources and the unapplied overlays
-  const skip = new Set(['scripts/init', 'variants'])
+  // Marker and slot syntax appears inside the engine's own sources, its docs and the unapplied overlays
+  const skip = new Set(['scripts/init', 'variants', 'docs/TEMPLATING.md'])
   if (!dryRun) {
     const slotted = new Map<string, Set<string>>()
     walk(root, root, skip).forEach((file) => {
