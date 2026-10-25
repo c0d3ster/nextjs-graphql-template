@@ -3,7 +3,7 @@
 This is for people changing the template itself. To just pick features, see
 [Choosing Features](../README.md#-choosing-features) in the README.
 
-Nothing is generated from scratch. The repo is a complete app, and `npm run init` subtracts from it
+Nothing is generated from scratch. The repo is a complete app, and `pnpm run init` subtracts from it
 (`scripts/init/apply.ts`). A run goes in this order:
 
 1. **Resolve the selection.** Requested ids are filtered to the selectable features, required ones are
@@ -17,7 +17,7 @@ Nothing is generated from scratch. The repo is a complete app, and `npm run init
 5. **Strip markers** from the files that remain (see below).
 6. **Update `package.json`.** Remove the scripts and npm packages of switched-off features, unless a kept
    feature also lists the package. The script then flags any kept file that still imports a pruned package.
-7. **Sync and tidy.** Refresh `package-lock.json`, then run Prettier on the files that changed.
+7. **Sync and tidy.** Refresh `pnpm-lock.yaml`, then run Prettier on the files that changed.
 
 The manifest checks itself: if a feature lists a path that no longer exists, the run fails with
 "Manifest drift" instead of silently skipping it.

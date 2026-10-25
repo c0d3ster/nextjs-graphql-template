@@ -68,7 +68,7 @@ export const variants: Record<VariantId, VariantDef> = {
         'db:reset': 'supabase db reset',
         'db:pull': 'drizzle-kit pull',
         // Migrations are applied with `supabase db push`, not during the build
-        'build': 'npm run build:next',
+        'build': 'pnpm run build:next',
       },
       remove: ['db:generate', 'db:migrate', 'db:studio'],
     },

@@ -6,9 +6,6 @@ export type UnlistedImport = { file: string; pkg: string }
 
 const SOURCE_FILE = /\.(?:ts|tsx|js|jsx|mjs|cjs|mts)$/
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out', 'supabase', 'variants'])
-// Resolved through another package rather than listed (vitest brings in vite,
-// the commitlint CLI brings in its types)
-const TRANSITIVE = new Set(['vite', '@commitlint/types'])
 // The engine's own sources and tests contain import-like text in fixtures
 const SKIP_PATHS = new Set(['scripts/init'])
 const IMPORT = /(?:\bfrom\s+|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)['"]([^'"\n]+)['"]/g
@@ -44,7 +41,6 @@ export const findUnlistedImports = (root: string): UnlistedImport[] => {
   const listed = new Set([
     ...Object.keys(pkg.dependencies ?? {}),
     ...Object.keys(pkg.devDependencies ?? {}),
-    ...TRANSITIVE,
   ])
 
   const found = new Map<string, UnlistedImport>()

@@ -44,36 +44,39 @@ jobs:
 
       # Not the shared setup-project action: it caches node_modules under a key every other
       # job restores, and this job prunes node_modules, which would poison that cache.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: npm
+          cache: pnpm
 
       - name: Install the full template
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Apply features
-        run: npm run init -- --strict --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
+        run: pnpm run init --strict --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
 
-      # Fails if the pruned package.json and package-lock.json disagree
+      # Fails if the pruned package.json and pnpm-lock.yaml disagree
       - name: Reinstall from the pruned lockfile
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Type checking
-        run: npm run check:types
+        run: pnpm run check:types
 
       - name: Linter
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Unit tests
-        run: npm run test -- --run --project=unit
+        run: pnpm run test --run --project=unit
 
       - name: Check dependencies
-        run: npm run check:deps
+        run: pnpm run check:deps
 
       - name: Build
-        run: npm run build:ci
+        run: pnpm run build:ci
         env:
           NODE_ENV: production
 

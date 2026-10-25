@@ -18,10 +18,8 @@ const config: KnipConfig = {
   ignoreIssues: { 'src/components/atoms/**': ['exports', 'types'] },
   // Dependencies to ignore during analysis
   ignoreDependencies: [
-    '@commitlint/types',
     'conventional-changelog-conventionalcommits',
     'lefthook', // Git hooks manager — used as a CLI tool, not imported
-    'vite',
     '@supabase/ssr', // Used by the supabase variant @module:init
     '@supabase/supabase-js', // Used by the supabase variant @module:init
     'supabase', // CLI for the supabase variant @module:init
