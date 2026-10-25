@@ -29,18 +29,18 @@ export class UserService {
     return user
   }
 
+  // Drizzle connects with the database owner's credentials, so every query here must check
+  // access itself. Until there is admin logic, a user can only read their own row.
   async getUserById(id: string) {
-    const user = await db.query.users.findFirst({
-      where: eq(schemas.users.id, id),
-    })
+    const currentUser = await this.getCurrentUserWithAuth()
 
-    if (!user) {
-      throw new GraphQLError('User not found', {
-        extensions: { code: 'USER_NOT_FOUND' },
+    if (currentUser.id !== id) {
+      throw new GraphQLError('Forbidden', {
+        extensions: { code: 'FORBIDDEN' },
       })
     }
 
-    return user
+    return currentUser
   }
 
   async updateUser(id: string, input: UpdateUserInput) {

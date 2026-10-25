@@ -50,6 +50,12 @@
    `npm run db:reset`. Drizzle is used for queries only. After changing the schema, run `npm run db:pull`
    (introspects the database into `.drizzle/`) and port the result into `src/models`.
 
+   **Security model:** enable row level security on every table you add. Once enabled it denies everything until a
+   policy allows it, which is how `users` is set up. RLS protects the Supabase API and Realtime, which run as the
+   signed-in user, so a table only emits Realtime events once it has a `select` policy. Drizzle connects as `postgres`
+   and bypasses RLS, so every query in `src/services` must check access itself, as `getUserById` and `updateUser` do.
+   Treat RLS as a backstop, not as the app's access control.
+
    **Hosted project (production):** create a project at [supabase.com](https://supabase.com), then link it and push
    the migrations:
 
@@ -65,9 +71,11 @@
 
    <!-- #region @module:auth -->
 
-   **Google sign-in (local):** create an OAuth client in Google Cloud Console (Web application) with the authorized
-   redirect URI `http://127.0.0.1:54321/auth/v1/callback`, then create `supabase/.env` (git-ignored) and restart with
-   `npm run db:stop && npm run db:start`. Email and password sign-in works locally with no extra setup.
+   **Google sign-in (local):** it is off by default so the stack starts without credentials. Create an OAuth client in
+   Google Cloud Console (Web application) with the authorized redirect URI `http://127.0.0.1:54321/auth/v1/callback`,
+   set `enabled = true` under `[auth.external.google]` in `supabase/config.toml`, then create `supabase/.env`
+   (git-ignored) and restart with `npm run db:stop && npm run db:start`. Email and password sign-in works locally
+   with no extra setup.
 
    ```bash
    SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=<client id>

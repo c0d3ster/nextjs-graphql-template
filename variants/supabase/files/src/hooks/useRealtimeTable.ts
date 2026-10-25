@@ -2,7 +2,7 @@
 
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 
 import { createClient, isSupabaseConfigured } from '@/libs/supabase/client'
 
@@ -28,6 +28,9 @@ export const useRealtimeTable = <T extends RealtimeRow>({
   filter,
   onChange,
 }: UseRealtimeTableOptions<T>): void => {
+  // The client hands back an existing channel for the same topic, and a channel that is
+  // already subscribed cannot take new listeners, so each hook instance needs its own name
+  const instanceId = useId()
   // Keep the latest callback without resubscribing on every render
   const onChangeRef = useRef(onChange)
 
@@ -40,7 +43,7 @@ export const useRealtimeTable = <T extends RealtimeRow>({
 
     const supabase = createClient()
     const channel = supabase
-      .channel(`realtime:${schema}:${table}:${filter ?? 'all'}`)
+      .channel(`realtime:${schema}:${table}:${filter ?? 'all'}:${instanceId}`)
       .on<T>(
         'postgres_changes',
         { event, schema, table, ...(filter ? { filter } : {}) },
@@ -51,5 +54,5 @@ export const useRealtimeTable = <T extends RealtimeRow>({
     return (): void => {
       void supabase.removeChannel(channel)
     }
-  }, [table, schema, event, filter])
+  }, [table, schema, event, filter, instanceId])
 }

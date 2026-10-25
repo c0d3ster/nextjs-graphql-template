@@ -29,18 +29,19 @@ export class UserService {
     return user
   }
 
+  // RLS only protects the Supabase API and Realtime, which connect as the signed-in user.
+  // Drizzle connects as `postgres` and bypasses RLS, so every query here must check
+  // access itself. Until there is admin logic, a user can only read their own row.
   async getUserById(id: string) {
-    const user = await db.query.users.findFirst({
-      where: eq(schemas.users.id, id),
-    })
+    const currentUser = await this.getCurrentUserWithAuth()
 
-    if (!user) {
-      throw new GraphQLError('User not found', {
-        extensions: { code: 'USER_NOT_FOUND' },
+    if (currentUser.id !== id) {
+      throw new GraphQLError('Forbidden', {
+        extensions: { code: 'FORBIDDEN' },
       })
     }
 
-    return user
+    return currentUser
   }
 
   async updateUser(id: string, input: UpdateUserInput) {

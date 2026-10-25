@@ -90,6 +90,7 @@ export const variants: Record<VariantId, VariantDef> = {
           'src/providers/AuthProvider.tsx',
           'src/providers/AuthContext.ts',
           'src/services/UserService.ts',
+          'src/services/UserService.test.ts',
           'src/graphql/resolvers/UserResolver.ts',
           'src/graphql/schema/user.ts',
           'src/apiClients/userApiClient.ts',

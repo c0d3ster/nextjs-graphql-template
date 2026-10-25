@@ -263,3 +263,44 @@ describe('keeping the tooling', () => {
     expect(read('docs/TEMPLATING.md')).toBe(docs)
   })
 })
+
+describe('dry run', () => {
+  it('accepts a disabled module path that only the overlay has', () => {
+    const overlayOnly: Record<ModuleId, ModuleDef> = {
+      ...defs,
+      email: { ...defs.email, paths: [...defs.email.paths, 'src/extra.ts'] },
+    }
+
+    expect(() =>
+      applySelection({
+        root,
+        selection: select('database'),
+        variant,
+        defs: overlayOnly,
+        dryRun: true,
+        skipInstall: true,
+        skipFormat: true,
+      })
+    ).not.toThrow()
+    expect(existsSync(join(root, 'src/extra.ts'))).toBe(false)
+  })
+
+  it('still reports a path that exists nowhere', () => {
+    const drifted: Record<ModuleId, ModuleDef> = {
+      ...defs,
+      email: { ...defs.email, paths: ['nowhere.ts'] },
+    }
+
+    expect(() =>
+      applySelection({
+        root,
+        selection: select('database'),
+        variant,
+        defs: drifted,
+        dryRun: true,
+        skipInstall: true,
+        skipFormat: true,
+      })
+    ).toThrow(/Manifest drift/)
+  })
+})
