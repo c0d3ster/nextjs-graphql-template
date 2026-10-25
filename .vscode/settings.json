@@ -2,7 +2,7 @@
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
   "search.exclude": {
-    "package-lock.json": true
+    "pnpm-lock.yaml": true
   },
 
   // TypeScript

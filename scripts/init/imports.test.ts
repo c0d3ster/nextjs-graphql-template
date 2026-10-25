@@ -55,10 +55,10 @@ describe('findUnlistedImports', () => {
     ])
   })
 
-  it('allows vite, which arrives through vitest', () => {
+  it('does not let a package through just because another one brings it in', () => {
     write('vitest.config.mts', "import { loadEnv } from 'vite'\n")
 
-    expect(findUnlistedImports(root)).toEqual([])
+    expect(findUnlistedImports(root)).toEqual([{ file: 'vitest.config.mts', pkg: 'vite' }])
   })
 
   it('scans .jsx files too', () => {

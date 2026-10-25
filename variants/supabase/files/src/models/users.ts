@@ -6,7 +6,7 @@ import { userRoleEnum } from './enums'
 
 // App-level profile for a Supabase Auth user.
 // The SQL migration in supabase/migrations is the source of truth: change it there, then run
-// `npm run db:pull` and port the result into this file.
+// `pnpm run db:pull` and port the result into this file.
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   authId: uuid('auth_id').notNull().unique(), // auth.users.id, FK enforced in SQL

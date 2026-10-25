@@ -25,7 +25,7 @@ type ApplyOptions = {
   // Module definitions for the chosen variant (see getModules)
   defs: Record<ModuleId, ModuleDef>
   dryRun?: boolean
-  // Leave package-lock.json alone (local verification runs)
+  // Leave pnpm-lock.yaml alone (local verification runs)
   skipInstall?: boolean
   skipFormat?: boolean
   // Keep the init tooling after running (for developing the template itself)
@@ -68,7 +68,7 @@ const PRETTIER_EXTENSIONS = new Set([
 ])
 const TEXT_FILENAMES = new Set(['.env', '.env.production', '.gitignore'])
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out'])
-const SKIP_FILES = new Set(['package-lock.json'])
+const SKIP_FILES = new Set(['pnpm-lock.yaml'])
 
 const extensionOf = (name: string): string => {
   const dot = name.lastIndexOf('.')
@@ -265,8 +265,8 @@ export const applySelection = ({
 
   // 4. Keep the lockfile in step with package.json
   if (!dryRun && !skipInstall) {
-    log('sync package-lock.json')
-    execSync('npm install --package-lock-only --ignore-scripts', {
+    log('sync pnpm-lock.yaml')
+    execSync('pnpm install --lockfile-only --ignore-scripts', {
       cwd: root,
       stdio: 'ignore',
     })
@@ -277,12 +277,12 @@ export const applySelection = ({
   if (!dryRun && !skipFormat && formattable.length > 0) {
     log('format changed files')
     try {
-      execSync(`npx prettier --write ${formattable.map((file) => `"${file}"`).join(' ')}`, {
+      execSync(`pnpm exec prettier --write ${formattable.map((file) => `"${file}"`).join(' ')}`, {
         cwd: root,
         stdio: 'ignore',
       })
     } catch {
-      log('prettier failed, run `npm run format` manually')
+      log('prettier failed, run `pnpm run format` manually')
     }
   }
 

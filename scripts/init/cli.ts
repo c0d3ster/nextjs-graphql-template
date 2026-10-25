@@ -19,7 +19,7 @@ type Args = {
   root: string
 }
 
-const USAGE = `Usage: npm run init -- --features=<list> [options]
+const USAGE = `Usage: pnpm run init --features=<list> [options]
 
   --features=a,b,c   Features to keep (${selectableIds.join(', ')}).
                      Unknown ids (design, seo, ...) are ignored.
@@ -28,7 +28,7 @@ const USAGE = `Usage: npm run init -- --features=<list> [options]
                      Defaults to clerk-neon, or supabase when a feature needs it (realtime).
   --config=<file>    JSON file: { "features": ["database", "auth"], "variant": "supabase" }
   --dry-run          Print what would change without touching anything
-  --skip-install     Do not refresh package-lock.json
+  --skip-install     Do not refresh pnpm-lock.yaml
   --skip-format      Do not run prettier on changed files
   --keep-tooling     Keep the init scripts (for working on the template itself)
   --strict           Exit with an error if a kept file imports a package that was pruned
@@ -69,6 +69,8 @@ const parseArgs = (argv: string[]): Args => {
   }
 
   argv.forEach((arg) => {
+    // npm-style `-- --flag` still works
+    if (arg === '--') return
     const [flag, ...rest] = arg.split('=')
     const value = rest.join('=')
     if (flag === '--features') args.features = parseFeatures(value)
@@ -131,7 +133,7 @@ const main = (): void => {
     log: (message) => say(`  ${message}`),
   })
 
-  say(args.dryRun ? '\nDry run, nothing changed.' : '\nDone. Run `npm install` to refresh node_modules.')
+  say(args.dryRun ? '\nDry run, nothing changed.' : '\nDone. Run `pnpm install` to refresh node_modules.')
 
   if (unlisted.length > 0) {
     say('\nThese files import packages that are no longer in package.json:')

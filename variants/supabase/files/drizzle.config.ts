@@ -2,7 +2,7 @@ import 'reflect-metadata' // @module:graphql
 import { config } from 'dotenv'
 import { defineConfig } from 'drizzle-kit'
 
-// Used only by `npm run db:pull` to introspect the database into Drizzle schema files.
+// Used only by `pnpm run db:pull` to introspect the database into Drizzle schema files.
 // Migrations are owned by the Supabase CLI (see supabase/migrations).
 config({ path: '.env.local' })
 config({ path: '.env' }) // Fallback for any missing vars

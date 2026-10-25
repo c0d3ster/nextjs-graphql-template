@@ -100,13 +100,13 @@ DATABASE / EXTERNAL APIs
 
 ## ⚙️ Quick Start
 
-1. **Clone and install:**
+1. **Clone and install:** (needs Node 20+ and pnpm; run `corepack enable` if you do not have pnpm)
 
    ```bash
    git clone <this-template-repo>
    cd <project-name>
-   npm install
-   npm run init -- --features=database,auth,email # @module:init
+   pnpm install
+   pnpm run init --features=database,auth,email # @module:init
    ```
 
    Run `init` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:init -->
@@ -163,8 +163,8 @@ DATABASE / EXTERNAL APIs
 3. **Set up database:**
 
    ```bash
-   npm run db:generate
-   npm run db:migrate
+   pnpm run db:generate
+   pnpm run db:migrate
    ```
 
 <!-- #endslot database-setup -->
@@ -173,19 +173,19 @@ DATABASE / EXTERNAL APIs
 
 4. **Start development:**
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 <!-- #region @module:init -->
 
 ## 🧩 Choosing Features
 
-The template ships with every feature switched on. `npm run init` deletes the unused code, dependencies,
+The template ships with every feature switched on. `pnpm run init` deletes the unused code, dependencies,
 scripts, env vars and CI steps, then removes itself.
 
 ```bash
-npm run init -- --features=database,auth,email
-npm run init -- --features=database,auth,email,realtime --variant=supabase
+pnpm run init --features=database,auth,email
+pnpm run init --features=database,auth,email,realtime --variant=supabase
 ```
 
 | Feature        | Keeps                                                             | Needs      |
@@ -205,16 +205,16 @@ npm run init -- --features=database,auth,email,realtime --variant=supabase
 
 `auth` and `database` come in two flavors, chosen with `--variant`. Pick one before you commit to it:
 
-|              | `clerk-neon` (default)                                       | `supabase`                                                                                                    |
-| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Auth         | Clerk: hosted sign-in modals, sessions, user sync by webhook | Supabase Auth: email/password and Google on a `/login` page, cookie sessions                                  |
-| Database     | Any Postgres (Neon works well)                               | Supabase Postgres                                                                                             |
-| Migrations   | Drizzle (`db:generate`, `db:migrate`)                        | SQL files through the Supabase CLI (`db:push`)                                                                |
-| Local dev    | Point `DATABASE_URL` at any Postgres                         | Docker stack with `npm run db:start`: Postgres, auth and Studio. Google sign-in locally needs `supabase/.env` |
-| Realtime     | Not included                                                 | Included (the `realtime` feature)                                                                             |
-| Vendors      | Clerk plus a Postgres host                                   | One                                                                                                           |
-| Pick it when | You want polished prebuilt auth UI and a portable database   | You want auth, database and live updates in one place and are fine running Docker locally                     |
-| Trade-offs   | A second vendor, and a webhook to keep user rows in sync     | Auth is tied to Supabase, and the sign-in form is yours to style                                              |
+|              | `clerk-neon` (default)                                       | `supabase`                                                                                                     |
+| ------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Auth         | Clerk: hosted sign-in modals, sessions, user sync by webhook | Supabase Auth: email/password and Google on a `/login` page, cookie sessions                                   |
+| Database     | Any Postgres (Neon works well)                               | Supabase Postgres                                                                                              |
+| Migrations   | Drizzle (`db:generate`, `db:migrate`)                        | SQL files through the Supabase CLI (`db:push`)                                                                 |
+| Local dev    | Point `DATABASE_URL` at any Postgres                         | Docker stack with `pnpm run db:start`: Postgres, auth and Studio. Google sign-in locally needs `supabase/.env` |
+| Realtime     | Not included                                                 | Included (the `realtime` feature)                                                                              |
+| Vendors      | Clerk plus a Postgres host                                   | One                                                                                                            |
+| Pick it when | You want polished prebuilt auth UI and a portable database   | You want auth, database and live updates in one place and are fine running Docker locally                      |
+| Trade-offs   | A second vendor, and a webhook to keep user rows in sync     | Auth is tied to Supabase, and the sign-in form is yours to style                                               |
 
 Asking for `realtime` selects `supabase` for you; combining it with `--variant=clerk-neon` is an error.
 The variant only matters when `auth` or `database` is kept.
@@ -227,7 +227,7 @@ The variant only matters when `auth` or `database` is kept.
 | `--variant=name` | `clerk-neon` or `supabase`. Defaults to `clerk-neon`, or `supabase` for `realtime` |
 | `--config=file`  | JSON file: `{ "features": ["database", "auth"], "variant": "supabase" }`           |
 | `--dry-run`      | Print what would change without touching anything                                  |
-| `--skip-install` | Do not refresh `package-lock.json`                                                 |
+| `--skip-install` | Do not refresh `pnpm-lock.yaml`                                                    |
 | `--skip-format`  | Do not run Prettier on changed files                                               |
 | `--keep-tooling` | Keep `scripts/init`, `variants` and the feature matrix workflow                    |
 | `--strict`       | Fail if a kept file imports a package that was pruned                              |
@@ -285,20 +285,20 @@ src/components/
 
 ## 📦 Available Scripts
 
-- `npm run dev` - Start development server with GraphQL codegen watch
-- `npm run build` - Build for production
-- `npm run test` - Run unit tests with Vitest
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run lint` - Run ESLint
+- `pnpm run dev` - Start development server with GraphQL codegen watch
+- `pnpm run build` - Build for production
+- `pnpm run test` - Run unit tests with Vitest
+- `pnpm run test:e2e` - Run E2E tests with Playwright
+- `pnpm run lint` - Run ESLint
 
 <!-- #slot scripts-database -->
 
-- `npm run db:studio` - Open database studio <!-- @module:database -->
+- `pnpm run db:studio` - Open database studio <!-- @module:database -->
 
 <!-- #endslot scripts-database -->
 
-- `npm run codegen` - Generate GraphQL types <!-- @module:graphql -->
-- `npm run codegen:watch` - Watch and regenerate GraphQL types <!-- @module:graphql -->
+- `pnpm run codegen` - Generate GraphQL types <!-- @module:graphql -->
+- `pnpm run codegen:watch` - Watch and regenerate GraphQL types <!-- @module:graphql -->
 
 <!-- #slot realtime-docs -->
 <!-- #endslot realtime-docs -->

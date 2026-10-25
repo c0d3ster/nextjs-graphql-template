@@ -30,10 +30,10 @@ jobs:
           path: |
             .next/cache
           # Generate a new cache whenever packages or source files change.
-          key: nextjs-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**') }}
+          key: nextjs-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('src/**') }}
 
       - name: Build Next.js
-        run: npm run build:ci
+        run: pnpm run build:ci
         env:
           # #region @module:auth+clerk
           # Required Clerk variables
@@ -49,7 +49,7 @@ jobs:
         with:
           path: |
             .next
-          key: nextjs-build-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+          key: nextjs-build-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}
 
   static:
     strategy:
@@ -71,13 +71,13 @@ jobs:
 
       - if: github.event_name == 'pull_request'
         name: Validate all commits from PR
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
       - name: Linter
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Type checking
-        run: npm run check:types
+        run: pnpm run check:types
         env:
           # #region @module:auth+clerk
           # Required Clerk variables
@@ -88,7 +88,7 @@ jobs:
           NODE_ENV: production
 
       - name: Check dependencies
-        run: npm run check:deps
+        run: pnpm run check:deps
 
   unit:
     strategy:
@@ -110,8 +110,9 @@ jobs:
       - name: Run unit tests
         uses: docker://mcr.microsoft.com/playwright:v1.63.0-noble
         with:
-          args: npm run test -- --run --project=unit --coverage
+          args: sh -c "corepack enable pnpm && pnpm run test --run --project=unit --coverage"
         env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
           # #region @module:auth+clerk
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
@@ -161,13 +162,13 @@ jobs:
 
       # #region @module:database+clerk
       - name: Run database migrations
-        run: npm run db:migrate
+        run: pnpm run db:migrate
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
       # #endregion @module:database+clerk
 
       - name: Build Next.js for E2E tests
-        run: npm run build:ci
+        run: pnpm run build:ci
         env:
           # #region @module:auth+clerk
           # Required Clerk variables
@@ -180,8 +181,9 @@ jobs:
       - name: Run E2E tests
         uses: docker://mcr.microsoft.com/playwright:v1.63.0-noble
         with:
-          args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firefox
+          args: sh -c "corepack enable pnpm && HOME=/root pnpm run test:e2e" # Set HOME to /root to avoid Playwright error with Firefox
         env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
           # #region @module:auth+clerk
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}

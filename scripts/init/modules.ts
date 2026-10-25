@@ -62,7 +62,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
     paths: ['src/libs/DB.ts', 'src/models', 'drizzle.config.ts', 'scripts/build.js', 'migrations'],
     packages: ['drizzle-orm', 'drizzle-kit', 'pg', '@types/pg', 'dotenv'],
     scripts: ['db:generate', 'db:migrate', 'db:studio'],
-    scriptReplacements: { build: 'npm run build:next' },
+    scriptReplacements: { build: 'pnpm run build:next' },
     writes: {},
   },
 
@@ -178,7 +178,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'npm-run-all',
     ],
     scripts: ['codegen', 'codegen:watch'],
-    scriptReplacements: { dev: 'npm run dev:next' },
+    scriptReplacements: { dev: 'pnpm run dev:next' },
     writes: {},
   },
 }

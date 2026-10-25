@@ -1,19 +1,20 @@
 {
   "name": "nextjs-graphql-template",
+  "packageManager": "pnpm@10.14.0",
   "author": "codyd",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "dev:spotlight": "npx @spotlightjs/spotlight",
+    "dev:spotlight": "pnpm dlx @spotlightjs/spotlight",
     "dev:next": "next dev --turbopack",
     "dev": "run-p dev:next codegen:watch",
     "build:next": "next build",
     "build": "node scripts/build.js",
-    "build:ci": "npm run build:next",
-    "build:prod": "cross-env NODE_ENV=production npm run build",
+    "build:ci": "pnpm run build:next",
+    "build:prod": "cross-env NODE_ENV=production pnpm run build",
     "start": "next start",
-    "build-stats": "cross-env ANALYZE=true npm run build",
+    "build-stats": "cross-env ANALYZE=true pnpm run build",
     "clean": "rimraf .next out coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -70,6 +71,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/prompt-cli": "^19.8.1",
+    "@commitlint/types": "^19.8.1",
     "@eslint-react/eslint-plugin": "^2.11.0",
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
@@ -113,13 +115,16 @@
     "tailwindcss": "^4.1.11",
     "tsx": "^4.23.15",
     "typescript": "^5.9.2",
+    "vite": "^7.3.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
-  "overrides": {
-    "effect": ">=3.20.0",
-    "esbuild": ">=0.24.3",
-    "immutable": ">=3.8.3"
+  "pnpm": {
+    "overrides": {
+      "effect": ">=3.20.0",
+      "esbuild": ">=0.24.3",
+      "immutable": ">=3.8.3"
+    }
   },
   "release": {
     "branches": [
