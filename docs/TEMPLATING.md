@@ -3,7 +3,7 @@
 This is for people changing the template itself. To just pick features, see
 [Choosing Features](../README.md#-choosing-features) in the README.
 
-Nothing is generated from scratch. The repo is a complete app, and `pnpm run init` subtracts from it
+Nothing is generated from scratch. The repo is a complete app, and `pnpm bootstrap` subtracts from it
 (`scripts/init/apply.ts`). A run goes in this order:
 
 1. **Resolve the selection.** Requested ids are filtered to the selectable features, required ones are

@@ -57,7 +57,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Apply features
-        run: pnpm run init --strict --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
+        run: pnpm bootstrap --strict --features="${{ matrix.preset.features }}" --variant="${{ matrix.preset.variant }}"
 
       # Fails if the pruned package.json and pnpm-lock.yaml disagree
       - name: Reinstall from the pruned lockfile

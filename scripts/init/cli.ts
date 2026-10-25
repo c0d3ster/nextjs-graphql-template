@@ -19,7 +19,7 @@ type Args = {
   root: string
 }
 
-const USAGE = `Usage: pnpm run init --features=<list> [options]
+const USAGE = `Usage: pnpm bootstrap --features=<list> [options]
 
   --features=a,b,c   Features to keep (${selectableIds.join(', ')}).
                      Unknown ids (design, seo, ...) are ignored.

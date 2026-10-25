@@ -106,10 +106,10 @@ DATABASE / EXTERNAL APIs
    git clone <this-template-repo>
    cd <project-name>
    pnpm install
-   pnpm run init --features=database,auth,email # @module:init
+   pnpm bootstrap --features=database,auth,email # @module:init
    ```
 
-   Run `init` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:init -->
+   Run `bootstrap` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:init -->
 
 2. **Set up environment:**
 
@@ -180,12 +180,12 @@ DATABASE / EXTERNAL APIs
 
 ## 🧩 Choosing Features
 
-The template ships with every feature switched on. `pnpm run init` deletes the unused code, dependencies,
+The template ships with every feature switched on. `pnpm bootstrap` deletes the unused code, dependencies,
 scripts, env vars and CI steps, then removes itself.
 
 ```bash
-pnpm run init --features=database,auth,email
-pnpm run init --features=database,auth,email,realtime --variant=supabase
+pnpm bootstrap --features=database,auth,email
+pnpm bootstrap --features=database,auth,email,realtime --variant=supabase
 ```
 
 | Feature        | Keeps                                                             | Needs      |
