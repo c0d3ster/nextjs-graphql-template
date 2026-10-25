@@ -2,47 +2,6 @@
 
 A minimal, production-ready template for modern web applications built with Next.js, GraphQL, and TypeScript.
 
-<!-- #region @module:init -->
-## 🧩 Choosing Features
-
-The template ships with every feature switched on. Run the setup script once, right after cloning, to keep
-only what the project needs. It deletes the unused code, dependencies, scripts, env vars and CI steps, then
-removes itself.
-
-```bash
-npm install
-npm run init -- --features=database,auth,email
-npm run init -- --features=database,auth,email,realtime --variant=supabase
-```
-
-| Feature    | Keeps                                                                 | Needs      |
-| ---------- | --------------------------------------------------------------------- | ---------- |
-| `database` | Drizzle ORM, Postgres connection, migrations                          |            |
-| `auth`     | Sign-in, protected routes and user profiles                           | `database` |
-| `email`    | Resend, the contact form and its GraphQL mutation                     |            |
-| `realtime` | Live updates to the browser (supabase variant only)                   | `auth`     |
-
-### Variants
-
-`auth` and `database` come in two flavors, chosen with `--variant`:
-
-| Variant      | Auth                                      | Migrations                                   | Notes                              |
-| ------------ | ----------------------------------------- | -------------------------------------------- | ---------------------------------- |
-| `clerk-neon` | Clerk sessions, user sync by webhook      | Drizzle (`db:generate`, `db:migrate`)         | The default                        |
-| `supabase`   | Supabase Auth (email/password and Google) | SQL files through the Supabase CLI (`db:push`) | Includes Realtime. Needs `supabase/.env` for Google locally |
-
-Asking for `realtime` selects `supabase` for you; combining it with `--variant=clerk-neon` is an error.
-The variant only matters when `auth` or `database` is kept. Its code lives in `variants/<name>/files`
-and is copied over the project during setup, then removed.
-
-- GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth` or `email` is.
-- Features that are required by another are added for you, and the script says so.
-- Other feature names (`seo`, `custom_design`, ...) are ignored.
-- Use `--features=` to keep none, `--dry-run` to preview, and `--config=features.json` for automation.
-
-Developing the template itself? Add `--keep-tooling` or just skip this step.
-<!-- #endregion @module:init -->
-
 ## 🎯 What This Template Provides
 
 - **Modern Frontend**: Next.js 15 with App Router, React 19, TypeScript, Tailwind CSS
@@ -65,6 +24,7 @@ Developing the template itself? Add `--keep-tooling` or just skip this step.
 ![GraphQL](https://img.shields.io/badge/-GraphQL-E10098?logo=graphql&logoColor=white&style=flat) <!-- @module:graphql -->
 
 <!-- #region @module:graphql -->
+
 ## 🏗️ Architecture
 
 Clean, layered architecture designed for scalability:
@@ -126,7 +86,10 @@ DATABASE / EXTERNAL APIs
    git clone <this-template-repo>
    cd <project-name>
    npm install
+   npm run init -- --features=database,auth,email # @module:init
    ```
+
+   Run `init` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:init -->
 
 2. **Set up environment:**
 
@@ -158,13 +121,13 @@ DATABASE / EXTERNAL APIs
 
    **For production**, create `.env.production.local` with production values.
 
-   <!-- #region @module:auth -->
-   **For CI/CD**, the only secret required is:
-   - Navigate to: Repository → Settings → Secrets and variables → Actions
-   - Add: `CLERK_SECRET_KEY`
-   <!-- #endregion @module:auth -->
+   **For CI/CD**, add secrets under Repository → Settings → Secrets and variables → Actions:
+
+   - `CLERK_SECRET_KEY` (required) <!-- @module:auth+clerk -->
+   - `CODECOV_TOKEN` (optional, uploads coverage reports)
 
 <!-- #region @module:database -->
+
 3. **Set up database:**
 
    ```bash
@@ -179,7 +142,63 @@ DATABASE / EXTERNAL APIs
    npm run dev
    ```
 
+<!-- #region @module:init -->
+
+## 🧩 Choosing Features
+
+The template ships with every feature switched on. `npm run init` deletes the unused code, dependencies,
+scripts, env vars and CI steps, then removes itself.
+
+```bash
+npm run init -- --features=database,auth,email
+npm run init -- --features=database,auth,email,realtime --variant=supabase
+```
+
+| Feature    | Keeps                                               | Needs      |
+| ---------- | --------------------------------------------------- | ---------- |
+| `database` | Drizzle ORM, Postgres connection, migrations        |            |
+| `auth`     | Sign-in, protected routes and user profiles         | `database` |
+| `email`    | Resend, the contact form and its GraphQL mutation   |            |
+| `realtime` | Live updates to the browser (supabase variant only) | `auth`     |
+
+- GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth` or `email` is.
+- Features that are required by another are added for you, and the script says so.
+- Other feature names (`seo`, `custom_design`, ...) are ignored.
+- `--features=` keeps none, and `--dry-run` previews the changes.
+
+### Variants
+
+`auth` and `database` come in two flavors, chosen with `--variant`:
+
+| Variant      | Auth                                      | Migrations                                     | Notes                                                       |
+| ------------ | ----------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
+| `clerk-neon` | Clerk sessions, user sync by webhook      | Drizzle (`db:generate`, `db:migrate`)          | The default                                                 |
+| `supabase`   | Supabase Auth (email/password and Google) | SQL files through the Supabase CLI (`db:push`) | Includes Realtime. Needs `supabase/.env` for Google locally |
+
+Asking for `realtime` selects `supabase` for you; combining it with `--variant=clerk-neon` is an error.
+The variant only matters when `auth` or `database` is kept.
+
+### Options
+
+| Flag             | Effect                                                                             |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `--features=a,b` | Features to keep. `--features=` keeps none                                         |
+| `--variant=name` | `clerk-neon` or `supabase`. Defaults to `clerk-neon`, or `supabase` for `realtime` |
+| `--config=file`  | JSON file: `{ "features": ["database", "auth"], "variant": "supabase" }`           |
+| `--dry-run`      | Print what would change without touching anything                                  |
+| `--skip-install` | Do not refresh `package-lock.json`                                                 |
+| `--skip-format`  | Do not run Prettier on changed files                                               |
+| `--keep-tooling` | Keep `scripts/init`, `variants` and the feature matrix workflow                    |
+| `--strict`       | Fail if a kept file imports a package that was pruned                              |
+| `--root=dir`     | Project root (defaults to the current directory)                                   |
+
+Developing the template itself? Add `--keep-tooling`, and read [docs/TEMPLATING.md](docs/TEMPLATING.md)
+for how the markers, variants and pruning work.
+
+<!-- #endregion @module:init -->
+
 <!-- #region @module:auth -->
+
 ## 🔐 Authentication Demo
 
 This template includes a complete authentication demonstration:
