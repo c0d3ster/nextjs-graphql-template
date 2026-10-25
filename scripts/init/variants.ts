@@ -21,6 +21,8 @@ export type VariantDef = {
   impliedBy: string[]
   // Folder whose contents are copied over the project root, relative to the project
   overlay?: string
+  // Folder of slot replacements for shared files, mirroring their paths (see slots.ts)
+  replace?: string
   // Deleted before the overlay is copied: files only the other variant uses
   removePaths: string[]
   // npm packages only the other variant uses
@@ -48,6 +50,7 @@ export const variants: Record<VariantId, VariantDef> = {
     flag: 'supabase',
     impliedBy: ['realtime'],
     overlay: 'variants/supabase/files',
+    replace: 'variants/supabase/replace',
     removePaths: [
       'src/app/api/webhook',
       'src/providers/ClerkProvider.tsx',
@@ -58,6 +61,8 @@ export const variants: Record<VariantId, VariantDef> = {
     removePackages: ['@clerk/nextjs', '@clerk/localizations', 'svix'],
     scripts: {
       set: {
+        'db:start': 'supabase start',
+        'db:stop': 'supabase stop',
         'db:new': 'supabase migration new',
         'db:push': 'supabase db push',
         'db:reset': 'supabase db reset',
@@ -71,7 +76,7 @@ export const variants: Record<VariantId, VariantDef> = {
       database: {
         paths: ['src/libs/DB.ts', 'src/models', 'drizzle.config.ts', 'supabase'],
         packages: ['drizzle-orm', 'drizzle-kit', 'pg', '@types/pg', 'dotenv', 'supabase'],
-        scripts: ['db:new', 'db:push', 'db:reset', 'db:pull'],
+        scripts: ['db:start', 'db:stop', 'db:new', 'db:push', 'db:reset', 'db:pull'],
         scriptReplacements: {},
       },
       auth: {

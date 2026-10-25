@@ -11,7 +11,7 @@ Nothing is generated from scratch. The repo is a complete app, and `npm run init
    `email` is). A feature the chosen variant does not have is an error.
 2. **Apply the variant.** Delete the other variant's files, then copy `variants/<name>/files` over the
    project root. Overlay files replace the originals, so `README.md`, `drizzle.config.ts` and others are
-   swapped for their variant versions.
+   swapped for their variant versions. Slot replacements are read at this point too.
 3. **Delete files.** Every switched-off feature lists the paths it owns in `scripts/init/modules.ts`.
 4. **Rewrite files** that must differ when a feature is off (for example an empty migration journal).
 5. **Strip markers** from the files that remain (see below).
@@ -54,10 +54,35 @@ The README is templated the same way, so the docs a project ships with only desc
 A variant is an overlay defined in `scripts/init/variants.ts`:
 
 - `overlay`: the folder copied over the project (`variants/supabase/files`)
+- `replace`: slot replacements for shared files (`variants/supabase/replace`, see Slots below)
 - `removePaths` and `removePackages`: what only the other variant uses
 - `scripts`: package scripts to add and remove (`db:push` instead of `db:migrate`)
 - `modules`: per-feature overrides of the paths and packages a feature owns under that variant
 - `impliedBy`: features that choose the variant when `--variant` is not given
+
+The root `README.md` reads for the default `clerk-neon` variant and compares the two stacks. The supabase
+overlay ships its own `README.md`, which replaces it at init. `scripts/init/readme.test.ts` keeps the shared
+sections (Choosing Features, the init lines, the optional env vars) identical, so edit both when you change one.
+
+### Slots
+
+The README reads for the default `clerk-neon` variant. Where the supabase variant differs, the README marks
+that block as a slot, and the variant supplies only the replacement:
+
+```md
+<!-- #slot database-setup -->
+
+...the Clerk + Neon default...
+<!-- #endslot database-setup -->
+```
+
+`variants/supabase/replace/README.md` holds `#slot database-setup ... #endslot database-setup` blocks with the
+supabase content, and nothing else. At init the slot's content is swapped (or kept, if the variant has no
+replacement for it) and the markers are removed, before module markers are stripped. So the replacement can
+use `@module:` tags itself. Replacement files mirror the path of the file they apply to, and the engine
+(`scripts/init/slots.ts`) fails the run if a replacement names a slot the file no longer has.
+
+Do not copy shared content into the replace folder. If it is the same in both variants, it belongs outside the slot.
 
 Both variants' packages stay in `package.json` while this is a template, so Dependabot keeps them current.
 Each run prunes the other's.

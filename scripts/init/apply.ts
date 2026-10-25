@@ -15,6 +15,7 @@ import type { Selection } from './select'
 import type { VariantDef } from './variants'
 
 import { findUnlistedImports } from './imports'
+import { applySlots, hasSlots, parseSlots } from './slots'
 import { hasMarkers, stripText } from './strip'
 
 type ApplyOptions = {
@@ -87,6 +88,28 @@ const walk = (dir: string, root: string, skip: ReadonlySet<string>): string[] =>
     return [full]
   })
 
+// Slot replacements the variant supplies, keyed by the path of the file they apply to.
+// Read before the init tooling (and with it the variants folder) is deleted.
+const loadReplacements = (root: string, variant: VariantDef): Map<string, Map<string, string[]>> => {
+  const result = new Map<string, Map<string, string[]>>()
+  if (!variant.replace) return result
+
+  const dir = join(root, variant.replace)
+  if (!existsSync(dir)) {
+    throw new Error(`Variant ${variant.id}: replace folder "${variant.replace}" does not exist`)
+  }
+  walk(dir, dir, new Set()).forEach((file) => {
+    const path = relative(dir, file).split('\\').join('/')
+    const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
+    result.set(path, parseSlots(text, `${variant.replace}/${path}`))
+  })
+  return result
+}
+
+// Replacement lines are written with LF; match the file they are going into
+const withEol = (lines: string[], crlf: boolean): string[] =>
+  lines.map((line) => (crlf ? `${line}\r` : line))
+
 export const applySelection = ({
   root,
   selection,
@@ -123,6 +146,7 @@ export const applySelection = ({
   }
 
   // 0. Variant: drop the other variant's files, then copy this variant's overlay over the project
+  const replacements = loadReplacements(root, variant)
   variant.removePaths.forEach((path) => remove(path, `variant ${variant.id}`))
   if (variant.overlay) {
     const overlayDir = join(root, variant.overlay)
@@ -152,15 +176,35 @@ export const applySelection = ({
   // Marker syntax appears inside the engine's own sources and the unapplied overlays
   const skip = new Set(['scripts/init', 'variants'])
   if (!dryRun) {
+    const slotted = new Map<string, Set<string>>()
     walk(root, root, skip).forEach((file) => {
       const original = readFileSync(file, 'utf8')
-      if (!hasMarkers(original)) return
+      if (!hasSlots(original) && !hasMarkers(original)) return
       const label = relative(root, file).split('\\').join('/')
-      const next = stripText(original, flags, label)
+      let next = original
+      if (hasSlots(next)) {
+        const crlf = next.includes('\r\n')
+        const mine = new Map(
+          Array.from(replacements.get(label) ?? []).map(([name, lines]) => [name, withEol(lines, crlf)])
+        )
+        const result = applySlots(next, mine, label)
+        slotted.set(label, result.used)
+        next = result.text
+      }
+      if (hasMarkers(next)) next = stripText(next, flags, label)
       if (next === original) return
       writeFileSync(file, next)
       touched.push(file)
       log(`update ${label}`)
+    })
+
+    // A replacement for a slot the shared file no longer has means the two drifted apart
+    replacements.forEach((slots, path) => {
+      if (!existsSync(join(root, path))) return
+      const missing = Array.from(slots.keys()).filter((name) => !slotted.get(path)?.has(name))
+      if (missing.length > 0) {
+        throw new Error(`Variant ${variant.id}: ${path} has no slot named ${missing.join(', ')}`)
+      }
     })
   }
 

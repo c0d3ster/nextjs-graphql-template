@@ -6,12 +6,24 @@ A minimal, production-ready template for modern web applications built with Next
 
 - **Modern Frontend**: Next.js 15 with App Router, React 19, TypeScript, Tailwind CSS
 - **GraphQL API**: Apollo Server with type-graphql for schema-first development <!-- @module:graphql -->
+
+<!-- #slot provides-auth -->
+
 - **Authentication**: Clerk integration with modal-based sign-in/sign-up <!-- @module:auth -->
+
+<!-- #endslot provides-auth -->
+
 - **Atomic Design**: Organized component structure (atoms, molecules, organisms, templates)
 - **Type Safety**: Full TypeScript coverage with automatic GraphQL type generation
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
 - **Developer Experience**: ESLint, Prettier, automated workflows
+
+<!-- #slot provides-database -->
+
 - **Database**: PostgreSQL with Drizzle ORM <!-- @module:database -->
+
+<!-- #endslot provides-database -->
+
 - **Code Quality**: Commitlint, semantic release, dependency checking
 
 ## 🛠️ Tech Stack
@@ -64,7 +76,9 @@ SERVICE LAYER
    │
    ▼
 DATABASE / EXTERNAL APIs
-   - Drizzle ORM / Clerk / PostgreSQL
+   # #slot architecture-stack
+   - Drizzle ORM / Clerk / PostgreSQL # @module:database
+   # #endslot architecture-stack
 ```
 
 ### Key Features
@@ -72,8 +86,14 @@ DATABASE / EXTERNAL APIs
 - **Frontend**: React components with TypeScript and Tailwind CSS
 - **API Layer**: GraphQL with Apollo Client and automatic code generation
 - **Business Logic**: Service layer with authentication and permission handling
+
+<!-- #slot key-features-data -->
+
 - **Data Layer**: PostgreSQL with Drizzle ORM <!-- @module:database -->
 - **Authentication**: Clerk for user management with modal-based auth <!-- @module:auth -->
+
+<!-- #endslot key-features-data -->
+
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
 
 <!-- #endregion @module:graphql -->
@@ -101,20 +121,22 @@ DATABASE / EXTERNAL APIs
    Create a `.env.local` file (git-ignored) with your values:
 
    ```bash
+   # #slot env-provider
    # #region @module:auth
    # Clerk authentication — https://clerk.com → Dashboard → API Keys
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
    CLERK_SECRET_KEY=sk_test_...
+   CLERK_WEBHOOK_SECRET=whsec_...
    # #endregion @module:auth
 
    # #region @module:database
    # PostgreSQL connection string
    DATABASE_URL=postgresql://user:password@localhost:5432/dbname
    # #endregion @module:database
+   # #endslot env-provider
 
    # Optional
    NEXT_PUBLIC_APP_URL=http://localhost:3000
-   CLERK_WEBHOOK_SECRET=whsec_... # @module:auth
    RESEND_API_KEY=re_... # @module:email
    PORTFOLIO_SECRET_TOKEN=your-secret-token
    PROJECT_LOGO_KEY=logo.png # @module:file_uploads
@@ -128,10 +150,15 @@ DATABASE / EXTERNAL APIs
 
    **For CI/CD**, add secrets under Repository → Settings → Secrets and variables → Actions:
 
-   - `CLERK_SECRET_KEY` (required) <!-- @module:auth+clerk -->
+   <!-- #slot ci-secret -->
+   - `CLERK_SECRET_KEY` (required) <!-- @module:auth -->
+
+   <!-- #endslot ci-secret -->
    - `CODECOV_TOKEN` (optional, uploads coverage reports)
 
 <!-- #region @module:database -->
+
+<!-- #slot database-setup -->
 
 3. **Set up database:**
 
@@ -139,6 +166,8 @@ DATABASE / EXTERNAL APIs
    npm run db:generate
    npm run db:migrate
    ```
+
+<!-- #endslot database-setup -->
 
 <!-- #endregion @module:database -->
 
@@ -174,12 +203,18 @@ npm run init -- --features=database,auth,email,realtime --variant=supabase
 
 ### Variants
 
-`auth` and `database` come in two flavors, chosen with `--variant`:
+`auth` and `database` come in two flavors, chosen with `--variant`. Pick one before you commit to it:
 
-| Variant      | Auth                                      | Migrations                                     | Notes                                                       |
-| ------------ | ----------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
-| `clerk-neon` | Clerk sessions, user sync by webhook      | Drizzle (`db:generate`, `db:migrate`)          | The default                                                 |
-| `supabase`   | Supabase Auth (email/password and Google) | SQL files through the Supabase CLI (`db:push`) | Includes Realtime. Needs `supabase/.env` for Google locally |
+|              | `clerk-neon` (default)                                       | `supabase`                                                                                                    |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Auth         | Clerk: hosted sign-in modals, sessions, user sync by webhook | Supabase Auth: email/password and Google on a `/login` page, cookie sessions                                  |
+| Database     | Any Postgres (Neon works well)                               | Supabase Postgres                                                                                             |
+| Migrations   | Drizzle (`db:generate`, `db:migrate`)                        | SQL files through the Supabase CLI (`db:push`)                                                                |
+| Local dev    | Point `DATABASE_URL` at any Postgres                         | Docker stack with `npm run db:start`: Postgres, auth and Studio. Google sign-in locally needs `supabase/.env` |
+| Realtime     | Not included                                                 | Included (the `realtime` feature)                                                                             |
+| Vendors      | Clerk plus a Postgres host                                   | One                                                                                                           |
+| Pick it when | You want polished prebuilt auth UI and a portable database   | You want auth, database and live updates in one place and are fine running Docker locally                     |
+| Trade-offs   | A second vendor, and a webhook to keep user rows in sync     | Auth is tied to Supabase, and the sign-in form is yours to style                                              |
 
 Asking for `realtime` selects `supabase` for you; combining it with `--variant=clerk-neon` is an error.
 The variant only matters when `auth` or `database` is kept.
@@ -212,12 +247,17 @@ This template includes a complete authentication demonstration:
 - **Public Pages**: Homepage with contact form
 - **Protected Pages**: `/profile` (requires authentication)
 - **Authentication Flow**:
+  <!-- #slot auth-demo-flow -->
   - Sign in/up via Clerk modals
+  <!-- #endslot auth-demo-flow -->
   - Automatic redirects for protected routes
   - User session management
   - Sign out functionality
 
+<!-- #slot auth-demo-redirect -->
+
 Try accessing `/profile` without signing in - you'll be redirected to the sign-in modal.
+<!-- #endslot auth-demo-redirect -->
 
 <!-- #endregion @module:auth -->
 
@@ -250,9 +290,18 @@ src/components/
 - `npm run test` - Run unit tests with Vitest
 - `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Run ESLint
+
+<!-- #slot scripts-database -->
+
 - `npm run db:studio` - Open database studio <!-- @module:database -->
+
+<!-- #endslot scripts-database -->
+
 - `npm run codegen` - Generate GraphQL types <!-- @module:graphql -->
 - `npm run codegen:watch` - Watch and regenerate GraphQL types <!-- @module:graphql -->
+
+<!-- #slot realtime-docs -->
+<!-- #endslot realtime-docs -->
 
 ## 🧪 Testing
 
