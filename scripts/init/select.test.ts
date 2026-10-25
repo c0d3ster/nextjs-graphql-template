@@ -35,6 +35,15 @@ describe('resolveSelection', () => {
     expect(sorted(enabled)).toEqual(['database'])
   })
 
+  it('keeps file uploads on its own in either variant', () => {
+    ;(['clerk-neon', 'supabase'] as const).forEach((variant) => {
+      const { enabled, added } = resolveSelection(['file_uploads'], getModules(variant), variant)
+
+      expect(sorted(enabled)).toEqual(['file_uploads'])
+      expect(added).toEqual([])
+    })
+  })
+
   it('keeps nothing for an empty request', () => {
     expect(sorted(resolveSelection([], clerk, 'clerk-neon').enabled)).toEqual([])
   })

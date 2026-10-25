@@ -22,6 +22,7 @@ const empty = (id: ModuleId): ModuleDef => ({
 const defs: Record<ModuleId, ModuleDef> = {
   init: empty('init'),
   auth: empty('auth'),
+  file_uploads: empty('file_uploads'),
   graphql: empty('graphql'),
   realtime: empty('realtime'),
   database: {

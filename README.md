@@ -117,6 +117,11 @@ DATABASE / EXTERNAL APIs
    CLERK_WEBHOOK_SECRET=whsec_... # @module:auth
    RESEND_API_KEY=re_... # @module:email
    PORTFOLIO_SECRET_TOKEN=your-secret-token
+   PROJECT_LOGO_KEY=logo.png # @module:file_uploads
+   R2_ACCOUNT_ID=... # @module:file_uploads
+   R2_ACCESS_KEY_ID=... # @module:file_uploads
+   R2_SECRET_ACCESS_KEY=... # @module:file_uploads
+   R2_BUCKET_NAME=... # @module:file_uploads
    ```
 
    **For production**, create `.env.production.local` with production values.
@@ -154,12 +159,13 @@ npm run init -- --features=database,auth,email
 npm run init -- --features=database,auth,email,realtime --variant=supabase
 ```
 
-| Feature    | Keeps                                               | Needs      |
-| ---------- | --------------------------------------------------- | ---------- |
-| `database` | Drizzle ORM, Postgres connection, migrations        |            |
-| `auth`     | Sign-in, protected routes and user profiles         | `database` |
-| `email`    | Resend, the contact form and its GraphQL mutation   |            |
-| `realtime` | Live updates to the browser (supabase variant only) | `auth`     |
+| Feature        | Keeps                                                             | Needs      |
+| -------------- | ----------------------------------------------------------------- | ---------- |
+| `database`     | Drizzle ORM, Postgres connection, migrations                      |            |
+| `auth`         | Sign-in, protected routes and user profiles                       | `database` |
+| `email`        | Resend, the contact form and its GraphQL mutation                 |            |
+| `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo |            |
+| `realtime`     | Live updates to the browser (supabase variant only)               | `auth`     |
 
 - GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth` or `email` is.
 - Features that are required by another are added for you, and the script says so.

@@ -8,11 +8,11 @@ export const Env = createEnv({
     SUPABASE_SECRET_KEY: z.string().optional(), // @module:auth+supabase
     DATABASE_URL: z.string().optional(), // @module:database
     RESEND_API_KEY: z.string().optional(), // @module:email
-    PROJECT_LOGO_KEY: z.string().optional(),
-    R2_ACCOUNT_ID: z.string().optional(),
-    R2_ACCESS_KEY_ID: z.string().optional(),
-    R2_SECRET_ACCESS_KEY: z.string().optional(),
-    R2_BUCKET_NAME: z.string().optional(),
+    PROJECT_LOGO_KEY: z.string().optional(), // @module:file_uploads
+    R2_ACCOUNT_ID: z.string().optional(), // @module:file_uploads
+    R2_ACCESS_KEY_ID: z.string().optional(), // @module:file_uploads
+    R2_SECRET_ACCESS_KEY: z.string().optional(), // @module:file_uploads
+    R2_BUCKET_NAME: z.string().optional(), // @module:file_uploads
     SUPPORT_EMAIL: z.string().default('support@example.com'), // @module:email
   },
   client: {
@@ -32,11 +32,11 @@ export const Env = createEnv({
     SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY, // @module:auth+supabase
     DATABASE_URL: process.env.DATABASE_URL, // @module:database
     RESEND_API_KEY: process.env.RESEND_API_KEY, // @module:email
-    PROJECT_LOGO_KEY: process.env.PROJECT_LOGO_KEY,
-    R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
-    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
-    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
-    R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
+    PROJECT_LOGO_KEY: process.env.PROJECT_LOGO_KEY, // @module:file_uploads
+    R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID, // @module:file_uploads
+    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID, // @module:file_uploads
+    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY, // @module:file_uploads
+    R2_BUCKET_NAME: process.env.R2_BUCKET_NAME, // @module:file_uploads
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL, // @module:email
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // #region @module:auth+clerk
