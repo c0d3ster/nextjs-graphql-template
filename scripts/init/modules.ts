@@ -50,7 +50,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
     requires: [],
     paths: ['scripts/init', 'variants', 'docs/TEMPLATING.md', '.github/workflows/feature-matrix.yml'],
     packages: ['tsx'],
-    scripts: ['init'],
+    scripts: ['bootstrap'],
     scriptReplacements: {},
     writes: {},
   },
