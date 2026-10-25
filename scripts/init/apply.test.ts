@@ -238,3 +238,28 @@ describe('slot replacements', () => {
     expect(() => apply(withReplace)).toThrow(/README.md has no slot named gone/)
   })
 })
+
+describe('keeping the tooling', () => {
+  it('leaves the templating docs alone, though they show marker and slot syntax', () => {
+    const docs = [
+      'inline <!-- #slot x --> text <!-- #endslot x -->',
+      '```',
+      'line // @module:email',
+      '```',
+      '',
+    ].join('\n')
+    write('docs/TEMPLATING.md', docs)
+
+    applySelection({
+      root,
+      selection: select('database'),
+      variant,
+      defs,
+      keepTooling: true,
+      skipInstall: true,
+      skipFormat: true,
+    })
+
+    expect(read('docs/TEMPLATING.md')).toBe(docs)
+  })
+})
