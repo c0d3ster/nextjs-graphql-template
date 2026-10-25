@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 
 import withBundleAnalyzer from '@next/bundle-analyzer'
 
+// #region @module:file_uploads
 // R2 configuration constants
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME
@@ -9,6 +10,7 @@ const R2_PUBLIC_HOST =
   R2_ACCOUNT_ID && R2_BUCKET_NAME
     ? `${R2_BUCKET_NAME}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
     : null
+// #endregion @module:file_uploads
 
 // #region @module:auth+supabase
 // Supabase configuration constants
@@ -62,6 +64,7 @@ const baseConfig: NextConfig = {
           ]
         : []),
       // #endregion @module:auth+supabase
+      // #region @module:file_uploads
       // Add R2 public host if R2 is configured
       ...(R2_PUBLIC_HOST
         ? [
@@ -73,6 +76,7 @@ const baseConfig: NextConfig = {
             },
           ]
         : []),
+      // #endregion @module:file_uploads
     ],
   },
 }

@@ -8,7 +8,14 @@
 
 export type VariantId = 'clerk-neon' | 'supabase'
 
-export type ModuleId = 'init' | 'database' | 'auth' | 'email' | 'graphql' | 'realtime'
+export type ModuleId =
+  | 'init'
+  | 'database'
+  | 'auth'
+  | 'email'
+  | 'file_uploads'
+  | 'graphql'
+  | 'realtime'
 
 export type ModuleDef = {
   id: ModuleId
@@ -34,7 +41,7 @@ export type ModuleDef = {
 // What drizzle-kit expects when a database has no migrations yet
 const EMPTY_JOURNAL = `${JSON.stringify({ version: '7', dialect: 'postgresql', entries: [] }, null, 2)}\n`
 
-export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'realtime']
+export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'file_uploads', 'realtime']
 
 export const modules: Record<ModuleId, ModuleDef> = {
   init: {
@@ -107,6 +114,19 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'tests/e2e/ContactForm.e2e.ts',
     ],
     packages: ['resend', '@react-email/render', 'react-hook-form', '@hookform/resolvers'],
+    scripts: [],
+    scriptReplacements: {},
+    writes: {},
+  },
+
+  // Presigned downloads from a Cloudflare R2 (S3 compatible) bucket. The S3 code in
+  // src/utils/logo.ts, src/libs/Env.ts and next.config.ts is tagged with markers.
+  file_uploads: {
+    id: 'file_uploads',
+    label: 'File storage (Cloudflare R2)',
+    requires: [],
+    paths: [],
+    packages: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
     scripts: [],
     scriptReplacements: {},
     writes: {},
