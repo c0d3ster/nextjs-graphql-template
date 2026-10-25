@@ -41,7 +41,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
     id: 'init',
     label: 'Template setup tooling',
     requires: [],
-    paths: ['scripts/init', 'variants', '.github/workflows/feature-matrix.yml'],
+    paths: ['scripts/init', 'variants', 'docs/TEMPLATING.md', '.github/workflows/feature-matrix.yml'],
     packages: ['tsx'],
     scripts: ['init'],
     scriptReplacements: {},
