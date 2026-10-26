@@ -28,7 +28,7 @@ type ApplyOptions = {
   // Leave pnpm-lock.yaml alone (local verification runs)
   skipInstall?: boolean
   skipFormat?: boolean
-  // Keep the init tooling after running (for developing the template itself)
+  // Keep the bootstrap tooling after running (for developing the template itself)
   keepTooling?: boolean
   log?: (message: string) => void
 }
@@ -89,7 +89,7 @@ const walk = (dir: string, root: string, skip: ReadonlySet<string>): string[] =>
   })
 
 // Slot replacements the variant supplies, keyed by the path of the file they apply to.
-// Read before the init tooling (and with it the variants folder) is deleted.
+// Read before the bootstrap tooling (and with it the variants folder) is deleted.
 const loadReplacements = (root: string, variant: VariantDef): Map<string, Map<string, string[]>> => {
   const result = new Map<string, Map<string, string[]>>()
   if (!variant.replace) return result
@@ -121,9 +121,9 @@ export const applySelection = ({
   keepTooling = false,
   log = (): void => {},
 }: ApplyOptions): UnlistedImport[] => {
-  // The init module is tooling: it is "off" after a run unless asked to stay
+  // The bootstrap module is tooling: it is "off" after a run unless asked to stay
   const enabled = new Set<ModuleId>(selection.enabled)
-  if (keepTooling) enabled.add('init')
+  if (keepTooling) enabled.add('bootstrap')
   const allIds = Object.keys(defs) as ModuleId[]
   const disabled = allIds.filter((id) => !enabled.has(id))
   // Marker ids that are on: kept modules plus the chosen variant's flag
@@ -176,7 +176,7 @@ export const applySelection = ({
 
   // 2. Strip marked lines and regions from the files that remain
   // Marker and slot syntax appears inside the engine's own sources, its docs and the unapplied overlays
-  const skip = new Set(['scripts/init', 'variants', 'docs/TEMPLATING.md'])
+  const skip = new Set(['scripts/bootstrap', 'variants', 'docs/TEMPLATING.md'])
   if (!dryRun) {
     const slotted = new Map<string, Set<string>>()
     walk(root, root, skip).forEach((file) => {

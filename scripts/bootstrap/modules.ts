@@ -1,7 +1,7 @@
 // The feature manifest: what each module owns and what is removed when it is switched off.
 //
 // Ids that users can pick (`selectableIds`) match the platform's ProjectFeature values.
-// `graphql` is derived and `init` is the tooling itself; neither is ever picked directly.
+// `graphql` is derived and `bootstrap` is the tooling itself; neither is ever picked directly.
 //
 // Code that belongs to a module but lives inside a shared file is marked with
 // `@module:<id>` tags and `#region` blocks instead (see strip.ts).
@@ -9,7 +9,7 @@
 export type VariantId = 'clerk-neon' | 'supabase'
 
 export type ModuleId =
-  | 'init'
+  | 'bootstrap'
   | 'database'
   | 'auth'
   | 'email'
@@ -44,11 +44,11 @@ const EMPTY_JOURNAL = `${JSON.stringify({ version: '7', dialect: 'postgresql', e
 export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'file_uploads', 'realtime']
 
 export const modules: Record<ModuleId, ModuleDef> = {
-  init: {
-    id: 'init',
+  bootstrap: {
+    id: 'bootstrap',
     label: 'Template setup tooling',
     requires: [],
-    paths: ['scripts/init', 'variants', 'docs/TEMPLATING.md', '.github/workflows/feature-matrix.yml'],
+    paths: ['scripts/bootstrap', 'variants', 'docs/TEMPLATING.md', '.github/workflows/feature-matrix.yml'],
     packages: ['tsx'],
     scripts: ['bootstrap'],
     scriptReplacements: {},

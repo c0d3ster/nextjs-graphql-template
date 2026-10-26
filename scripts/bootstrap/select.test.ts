@@ -56,10 +56,10 @@ describe('resolveSelection', () => {
   })
 
   it('does not let callers pick derived or tooling modules directly', () => {
-    const { enabled, ignored } = resolveSelection(['graphql', 'init'], clerk, 'clerk-neon')
+    const { enabled, ignored } = resolveSelection(['graphql', 'bootstrap'], clerk, 'clerk-neon')
 
     expect(sorted(enabled)).toEqual([])
-    expect(ignored).toEqual(['graphql', 'init'])
+    expect(ignored).toEqual(['graphql', 'bootstrap'])
   })
 
   describe('realtime', () => {

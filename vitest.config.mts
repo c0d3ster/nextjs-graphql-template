@@ -28,7 +28,7 @@ export default defineConfig({
           name: 'unit',
           include: [
             'src/**/*.test.{js,ts,tsx}',
-            'scripts/**/*.test.ts', // @module:init
+            'scripts/**/*.test.ts', // @module:bootstrap
           ],
           exclude: ['src/hooks/**/*.test.ts'],
           environment: 'jsdom',

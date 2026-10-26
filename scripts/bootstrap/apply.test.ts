@@ -20,7 +20,7 @@ const empty = (id: ModuleId): ModuleDef => ({
 })
 
 const defs: Record<ModuleId, ModuleDef> = {
-  init: empty('init'),
+  bootstrap: empty('bootstrap'),
   auth: empty('auth'),
   file_uploads: empty('file_uploads'),
   graphql: empty('graphql'),
@@ -62,7 +62,7 @@ const select = (...ids: ModuleId[]): { enabled: ReadonlySet<ModuleId>; added: Mo
 })
 
 beforeEach(() => {
-  root = mkdtempSync(join(tmpdir(), 'init-apply-'))
+  root = mkdtempSync(join(tmpdir(), 'bootstrap-apply-'))
   write(
     'package.json',
     JSON.stringify({
@@ -140,10 +140,10 @@ describe('applySelection', () => {
     expect(pkg.dependencies['shared-lib']).toBe('1')
   })
 
-  describe('init tooling', () => {
+  describe('bootstrap tooling', () => {
     const withTooling: Record<ModuleId, ModuleDef> = {
       ...defs,
-      init: { ...defs.init, paths: ['tooling'] },
+      bootstrap: { ...defs.bootstrap, paths: ['tooling'] },
     }
 
     it('is removed by default', () => {

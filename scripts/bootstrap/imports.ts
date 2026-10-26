@@ -7,7 +7,7 @@ export type UnlistedImport = { file: string; pkg: string }
 const SOURCE_FILE = /\.(?:ts|tsx|js|jsx|mjs|cjs|mts)$/
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out', 'supabase', 'variants'])
 // The engine's own sources and tests contain import-like text in fixtures
-const SKIP_PATHS = new Set(['scripts/init'])
+const SKIP_PATHS = new Set(['scripts/bootstrap'])
 const IMPORT = /(?:\bfrom\s+|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)['"]([^'"\n]+)['"]/g
 
 // "@scope/pkg/deep" -> "@scope/pkg", "pkg/deep" -> "pkg", relative paths, aliases
@@ -31,7 +31,7 @@ const walk = (dir: string, root: string): string[] =>
     return SOURCE_FILE.test(entry.name) ? [full] : []
   })
 
-// Imports of packages that package.json no longer lists. Run after init prunes packages:
+// Imports of packages that package.json no longer lists. Run after bootstrap prunes packages:
 // a module's files can be removed while a shared file still imports its package.
 export const findUnlistedImports = (root: string): UnlistedImport[] => {
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {

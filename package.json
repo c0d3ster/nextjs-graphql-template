@@ -23,7 +23,7 @@
     "check:types": "tsc --noEmit --pretty",
     "check:deps": "knip",
     "commit": "commit",
-    "bootstrap": "tsx scripts/init/cli.ts",
+    "bootstrap": "tsx scripts/bootstrap/cli.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
