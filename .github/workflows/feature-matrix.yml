@@ -1,7 +1,7 @@
 name: Feature matrix
 
 # Proves every supported feature combination still produces a healthy project:
-# install, run the init script, reinstall from the pruned lockfile, then type check,
+# install, run the bootstrap script, reinstall from the pruned lockfile, then type check,
 # lint, test, check for unused files/dependencies, and build.
 
 on:

@@ -106,10 +106,10 @@ DATABASE / EXTERNAL APIs
    git clone <this-template-repo>
    cd <project-name>
    pnpm install
-   pnpm bootstrap --features=database,auth,email # @module:init
+   pnpm bootstrap --features=database,auth,email # @module:bootstrap
    ```
 
-   Run `bootstrap` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:init -->
+   Run `bootstrap` once, right after installing, to keep only the features you need. See [Choosing Features](#-choosing-features) for the options. <!-- @module:bootstrap -->
 
 2. **Set up environment:**
 
@@ -176,7 +176,7 @@ DATABASE / EXTERNAL APIs
    pnpm run dev
    ```
 
-<!-- #region @module:init -->
+<!-- #region @module:bootstrap -->
 
 ## 🧩 Choosing Features
 
@@ -229,14 +229,14 @@ The variant only matters when `auth` or `database` is kept.
 | `--dry-run`      | Print what would change without touching anything                                  |
 | `--skip-install` | Do not refresh `pnpm-lock.yaml`                                                    |
 | `--skip-format`  | Do not run Prettier on changed files                                               |
-| `--keep-tooling` | Keep `scripts/init`, `variants` and the feature matrix workflow                    |
+| `--keep-tooling` | Keep `scripts/bootstrap`, `variants` and the feature matrix workflow                    |
 | `--strict`       | Fail if a kept file imports a package that was pruned                              |
 | `--root=dir`     | Project root (defaults to the current directory)                                   |
 
 Developing the template itself? Add `--keep-tooling`, and read [docs/TEMPLATING.md](docs/TEMPLATING.md)
 for how the markers, variants and pruning work.
 
-<!-- #endregion @module:init -->
+<!-- #endregion @module:bootstrap -->
 
 <!-- #region @module:auth -->
 

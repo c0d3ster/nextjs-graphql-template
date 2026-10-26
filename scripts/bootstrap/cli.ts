@@ -30,7 +30,7 @@ const USAGE = `Usage: pnpm bootstrap --features=<list> [options]
   --dry-run          Print what would change without touching anything
   --skip-install     Do not refresh pnpm-lock.yaml
   --skip-format      Do not run prettier on changed files
-  --keep-tooling     Keep the init scripts (for working on the template itself)
+  --keep-tooling     Keep the bootstrap scripts (for working on the template itself)
   --strict           Exit with an error if a kept file imports a package that was pruned
   --root=<dir>       Project root (defaults to the current directory)
 `

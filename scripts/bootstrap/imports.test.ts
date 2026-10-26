@@ -29,7 +29,7 @@ describe('findUnlistedImports', () => {
   }
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), 'init-imports-'))
+    root = mkdtempSync(join(tmpdir(), 'bootstrap-imports-'))
     write('package.json', JSON.stringify({ dependencies: { a: '1', '@s/b': '1' }, devDependencies: { c: '1' } }))
   })
 

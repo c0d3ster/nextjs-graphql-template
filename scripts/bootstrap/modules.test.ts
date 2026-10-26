@@ -97,7 +97,7 @@ describe('markers', () => {
   it('only reference known modules or variant flags', () => {
     const known = new Set<string>([...Object.keys(getModules('clerk-neon')), 'clerk', 'supabase'])
     const files = walk(root)
-      .filter((file) => !file.startsWith('scripts/init/'))
+      .filter((file) => !file.startsWith('scripts/bootstrap/'))
       .filter((file) => TEXT_FILE.test(file) || /(?:^|\/)\.(?:env|env\.production|gitignore)$/.test(file))
 
     const unknown: string[] = []
