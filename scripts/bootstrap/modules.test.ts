@@ -83,7 +83,7 @@ variantIds.forEach((variantId) => {
 })
 
 const TEXT_FILE = /\.(?:ts|tsx|js|mjs|cjs|mts|css|md|yml|yaml|json|toml|sql)$/
-const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'coverage', 'out', 'test-results'])
+const SKIP_DIRS = new Set(['node_modules', '.git', '.claude', '.next', 'coverage', 'out', 'test-results'])
 
 // Plain file walk: this suite also runs in containers where git refuses the directory
 const walk = (dir: string): string[] =>
