@@ -1,0 +1,93 @@
+name: Bootstrap
+
+# Runs `pnpm bootstrap` once on a project generated from this template and opens a pull request with
+# the result, so the project keeps only the features it needs and the PR shows what was removed. The
+# c0d3ster provisioning flow dispatches it right after creating the repo and sets the
+# BOOTSTRAP_TOKEN secret first.
+#
+# GITHUB_TOKEN cannot push changes under .github/workflows, and bootstrap edits CI and removes the
+# feature matrix, so the push and the PR use BOOTSTRAP_TOKEN. The dispatcher sets it to a GitHub App
+# installation token limited to this repo (Contents, Pull requests and Workflows write) that expires
+# after an hour, so there is nothing to clean up afterwards.
+
+on:
+  workflow_dispatch:
+    inputs:
+      features:
+        description: Comma-separated features to keep (database, auth, email, file_uploads, realtime). Blank keeps none.
+        required: false
+        default: ''
+      variant:
+        description: Provider behind auth and database (clerk-neon or supabase). Blank picks from the features.
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    name: Bootstrap features
+    # The template keeps its tooling, only generated projects are bootstrapped
+    if: ${{ !github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+
+    env:
+      BOOTSTRAP_TOKEN: ${{ secrets.BOOTSTRAP_TOKEN }}
+      FEATURES: ${{ inputs.features }}
+      VARIANT: ${{ inputs.variant }}
+
+    steps:
+      - name: Check for the push token
+        run: |
+          if [ -z "$BOOTSTRAP_TOKEN" ]; then
+            echo "BOOTSTRAP_TOKEN is not set, so the bootstrap commit cannot be pushed." >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.BOOTSTRAP_TOKEN }}
+
+      - name: Set up Node.js environment
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: 22.x
+
+      # Inputs go through env, never into the script text
+      - name: Apply features
+        run: |
+          if [ -n "$VARIANT" ]; then
+            pnpm bootstrap --strict --features="$FEATURES" --variant="$VARIANT"
+          else
+            pnpm bootstrap --strict --features="$FEATURES"
+          fi 2>&1 | tee "$RUNNER_TEMP/bootstrap.log"
+        # Explicit bash enables pipefail, so a failed bootstrap is not hidden by tee
+        shell: bash
+
+      - name: Open a pull request
+        env:
+          GH_TOKEN: ${{ secrets.BOOTSTRAP_TOKEN }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b bootstrap/features
+          git add -A
+          git commit -m 'chore: bootstrap project features'
+          git push origin bootstrap/features
+
+          {
+            echo "Bootstraps this project with the features: \`${FEATURES:-none}\`."
+            echo
+            echo 'Everything the project does not need is removed in this PR: code, dependencies, scripts, env vars and CI steps.'
+            echo 'The bootstrap tooling removes itself too. Review the diff, then merge to start from the trimmed project.'
+            echo
+            echo '<details><summary>Bootstrap log</summary>'
+            echo
+            echo '```'
+            head -c 50000 "$RUNNER_TEMP/bootstrap.log"
+            echo '```'
+            echo '</details>'
+          } > "$RUNNER_TEMP/pr-body.md"
+
+          gh pr create --base main --head bootstrap/features --title 'chore: bootstrap project features' --body-file "$RUNNER_TEMP/pr-body.md"
