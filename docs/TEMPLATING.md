@@ -87,6 +87,19 @@ Do not copy shared content into the replace folder. If it is the same in both va
 Both variants' packages stay in `package.json` while this is a template, so Dependabot keeps them current.
 Each run prunes the other's.
 
+## Bootstrapping a generated project from CI
+
+`.github/workflows/bootstrap.yml` runs `pnpm bootstrap` on a project generated from this template and opens a
+pull request with the result, so what was removed is visible from the start. It is for automation (the c0d3ster provisioning flow dispatches it), so a person can
+keep running `pnpm bootstrap` locally instead. It takes `features` and `variant` inputs, skips the template
+itself, and removes itself with the rest of the bootstrap tooling.
+
+The push and the PR use a `BOOTSTRAP_TOKEN` secret instead of `GITHUB_TOKEN`, because bootstrap edits `CI.yml` and
+removes the feature matrix and `GITHUB_TOKEN` is not allowed to change files under `.github/workflows`.
+Whoever dispatches the workflow sets that secret first. Use a GitHub App installation token limited to the new
+repo (Contents, Pull requests and Workflows read/write). It expires after an hour, so a secret that is left
+behind is harmless. Do not store a personal access token there.
+
 ## Adding a feature
 
 1. Add an entry to `modules` in `scripts/bootstrap/modules.ts` with its `paths`, `packages`, `scripts`, and
