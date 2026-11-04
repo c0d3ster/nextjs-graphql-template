@@ -62,6 +62,21 @@ describe('resolveSelection', () => {
     expect(ignored).toEqual(['graphql', 'bootstrap'])
   })
 
+  describe('payments', () => {
+    it('needs auth, the database and GraphQL', () => {
+      const { enabled, added } = resolveSelection(['payments'], clerk, 'clerk-neon')
+
+      expect(sorted(enabled)).toEqual(['auth', 'database', 'graphql', 'payments'])
+      expect(added).toEqual(['auth', 'database'])
+    })
+
+    it('is rejected in the supabase variant', () => {
+      expect(() => resolveSelection(['payments'], supabase, 'supabase')).toThrow(
+        '"payments" is only available with --variant=clerk-neon'
+      )
+    })
+  })
+
   describe('realtime', () => {
     it('needs auth, the database and GraphQL in the supabase variant', () => {
       const { enabled, added } = resolveSelection(['realtime'], supabase, 'supabase')

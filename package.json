@@ -62,6 +62,7 @@
     "react-toastify": "^11.1.0",
     "reflect-metadata": "^0.2.2",
     "resend": "^6.34.1",
+    "stripe": "^23.1.0",
     "svix": "^1.99.1",
     "type-graphql": "2.0.0-rc.3",
     "zod": "^4.6.7"
