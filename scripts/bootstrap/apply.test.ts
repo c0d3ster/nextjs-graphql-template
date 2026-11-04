@@ -24,6 +24,7 @@ const defs: Record<ModuleId, ModuleDef> = {
   auth: empty('auth'),
   file_uploads: empty('file_uploads'),
   graphql: empty('graphql'),
+  payments: empty('payments'),
   realtime: empty('realtime'),
   database: {
     ...empty('database'),

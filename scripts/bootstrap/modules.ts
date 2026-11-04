@@ -15,6 +15,7 @@ export type ModuleId =
   | 'email'
   | 'file_uploads'
   | 'graphql'
+  | 'payments'
   | 'realtime'
 
 export type ModuleDef = {
@@ -41,7 +42,18 @@ export type ModuleDef = {
 // What drizzle-kit expects when a database has no migrations yet
 const EMPTY_JOURNAL = `${JSON.stringify({ version: '7', dialect: 'postgresql', entries: [] }, null, 2)}\n`
 
-export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'file_uploads', 'realtime']
+// The journal when only the users migration is kept (auth on, payments off)
+const USERS_ONLY_JOURNAL = `${JSON.stringify(
+  {
+    version: '7',
+    dialect: 'postgresql',
+    entries: [{ idx: 0, version: '7', when: 1762575694406, tag: '0000_create_users_table', breakpoints: true }],
+  },
+  null,
+  2
+)}\n`
+
+export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'file_uploads', 'payments', 'realtime']
 
 export const modules: Record<ModuleId, ModuleDef> = {
   bootstrap: {
@@ -64,6 +76,36 @@ export const modules: Record<ModuleId, ModuleDef> = {
     scripts: ['db:generate', 'db:migrate', 'db:studio'],
     scriptReplacements: { build: 'pnpm run build:next' },
     writes: {},
+  },
+
+  // Stripe subscriptions: Checkout, the Customer Portal and a webhook that keeps the `subscriptions`
+  // table in sync. Listed before `auth` on purpose: both rewrite the migration journal when off,
+  // and the later write (auth's empty journal) must win when both are off.
+  payments: {
+    id: 'payments',
+    label: 'Payments (Stripe subscriptions)',
+    requires: ['auth'],
+    // The supabase variant needs its own SQL migration and RLS policies for `subscriptions`
+    availableIn: ['clerk-neon'],
+    paths: [
+      'src/libs/Stripe.ts',
+      'src/models/subscriptions.ts',
+      'src/services/BillingService.ts',
+      'src/services/BillingService.test.ts',
+      'src/graphql/resolvers/BillingResolver.ts',
+      'src/graphql/schema/billing.ts',
+      'src/apiClients/billingApiClient.ts',
+      'src/apiClients/billingApiClient.test.ts',
+      'src/components/organisms/billing',
+      'src/app/(auth)/billing',
+      'src/app/api/webhook/stripe',
+      'migrations/0001_create_subscriptions_table.sql',
+      'migrations/meta/0001_snapshot.json',
+    ],
+    packages: ['stripe'],
+    scripts: [],
+    scriptReplacements: {},
+    writes: { 'migrations/meta/_journal.json': USERS_ONLY_JOURNAL },
   },
 
   auth: {

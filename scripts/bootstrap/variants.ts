@@ -73,6 +73,23 @@ export const variants: Record<VariantId, VariantDef> = {
       remove: ['db:generate', 'db:migrate', 'db:studio'],
     },
     modules: {
+      // Never selectable here (clerk-neon only), but its paths are checked against this variant.
+      // The webhook folder and the Drizzle migrations are removed by the variant itself.
+      payments: {
+        paths: [
+          'src/libs/Stripe.ts',
+          'src/models/subscriptions.ts',
+          'src/services/BillingService.ts',
+          'src/services/BillingService.test.ts',
+          'src/graphql/resolvers/BillingResolver.ts',
+          'src/graphql/schema/billing.ts',
+          'src/apiClients/billingApiClient.ts',
+          'src/apiClients/billingApiClient.test.ts',
+          'src/components/organisms/billing',
+          'src/app/(auth)/billing',
+        ],
+        writes: {},
+      },
       database: {
         paths: ['src/libs/DB.ts', 'src/models', 'drizzle.config.ts', 'supabase'],
         packages: ['drizzle-orm', 'drizzle-kit', 'pg', '@types/pg', 'dotenv', 'supabase'],

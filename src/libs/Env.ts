@@ -14,6 +14,9 @@ export const Env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().optional(), // @module:file_uploads
     R2_BUCKET_NAME: z.string().optional(), // @module:file_uploads
     SUPPORT_EMAIL: z.string().default('support@example.com'), // @module:email
+    STRIPE_SECRET_KEY: z.string().optional(), // @module:payments
+    STRIPE_WEBHOOK_SECRET: z.string().optional(), // @module:payments
+    STRIPE_PRICE_ID: z.string().optional(), // @module:payments
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
@@ -38,6 +41,9 @@ export const Env = createEnv({
     R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY, // @module:file_uploads
     R2_BUCKET_NAME: process.env.R2_BUCKET_NAME, // @module:file_uploads
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL, // @module:email
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY, // @module:payments
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET, // @module:payments
+    STRIPE_PRICE_ID: process.env.STRIPE_PRICE_ID, // @module:payments
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // #region @module:auth+clerk
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:

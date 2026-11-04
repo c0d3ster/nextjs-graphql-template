@@ -3,7 +3,10 @@ import type { NextFetchEvent, NextRequest } from 'next/server'
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const isProtectedRoute = createRouteMatcher(['/profile(.*)'])
+const isProtectedRoute = createRouteMatcher([
+  '/profile(.*)',
+  '/billing(.*)', // @module:payments
+])
 
 export default async function proxy(
   request: NextRequest,

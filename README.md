@@ -13,6 +13,7 @@ A minimal, production-ready template for modern web applications built with Next
 
 <!-- #endslot provides-auth -->
 
+- **Payments**: Stripe subscriptions with Checkout, the Customer Portal and a webhook <!-- @module:payments -->
 - **Atomic Design**: Organized component structure (atoms, molecules, organisms, templates)
 - **Type Safety**: Full TypeScript coverage with automatic GraphQL type generation
 - **Testing**: Vitest for unit tests, Playwright for E2E tests
@@ -48,6 +49,7 @@ components/pages/hooks
    │
    ▼
 apiClients/ (GraphQL operations)
+   - BillingApiClient.ts # @module:payments
    - ContactApiClient.ts # @module:email
    - UserApiClient.ts # @module:auth
    │
@@ -65,11 +67,13 @@ APOLLO SERVER (GraphQL API)
    │
    ▼
 GRAPHQL RESOLVERS
+   - BillingResolver.ts # @module:payments
    - ContactResolver.ts # @module:email
    - UserResolver.ts # @module:auth
    │
    ▼
 SERVICE LAYER
+   - BillingService.ts # @module:payments
    - ContactService.ts # @module:email
    - UserService.ts # @module:auth
    - Authentication & permission checking # @module:auth
@@ -79,6 +83,7 @@ DATABASE / EXTERNAL APIs
    # #slot architecture-stack
    - Drizzle ORM / Clerk / PostgreSQL # @module:database
    # #endslot architecture-stack
+   - Stripe # @module:payments
 ```
 
 ### Key Features
@@ -138,6 +143,9 @@ DATABASE / EXTERNAL APIs
    # Optional
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    RESEND_API_KEY=re_... # @module:email
+   STRIPE_SECRET_KEY=sk_test_... # @module:payments
+   STRIPE_WEBHOOK_SECRET=whsec_... # @module:payments
+   STRIPE_PRICE_ID=price_... # @module:payments
    PORTFOLIO_SECRET_TOKEN=your-secret-token
    PROJECT_LOGO_KEY=logo.png # @module:file_uploads
    R2_ACCOUNT_ID=... # @module:file_uploads
@@ -184,19 +192,20 @@ The template ships with every feature switched on. `pnpm bootstrap` deletes the 
 scripts, env vars and CI steps, then removes itself.
 
 ```bash
-pnpm bootstrap --features=database,auth,email
+pnpm bootstrap --features=database,auth,email,payments
 pnpm bootstrap --features=database,auth,email,realtime --variant=supabase
 ```
 
-| Feature        | Keeps                                                             | Needs      |
-| -------------- | ----------------------------------------------------------------- | ---------- |
-| `database`     | Drizzle ORM, Postgres connection, migrations                      |            |
-| `auth`         | Sign-in, protected routes and user profiles                       | `database` |
-| `email`        | Resend, the contact form and its GraphQL mutation                 |            |
-| `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo |            |
-| `realtime`     | Live updates to the browser (supabase variant only)               | `auth`     |
+| Feature        | Keeps                                                                                            | Needs      |
+| -------------- | ------------------------------------------------------------------------------------------------ | ---------- |
+| `database`     | Drizzle ORM, Postgres connection, migrations                                                     |            |
+| `auth`         | Sign-in, protected routes and user profiles                                                      | `database` |
+| `email`        | Resend, the contact form and its GraphQL mutation                                                |            |
+| `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo                                |            |
+| `payments`     | Stripe subscriptions: Checkout, Customer Portal, webhook, billing page (clerk-neon variant only) | `auth`     |
+| `realtime`     | Live updates to the browser (supabase variant only)                                              | `auth`     |
 
-- GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth` or `email` is.
+- GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth`, `email` or `payments` is.
 - Features that are required by another are added for you, and the script says so.
 - Other feature names (`seo`, `custom_design`, ...) are ignored.
 - `--features=` keeps none, and `--dry-run` previews the changes.
@@ -229,7 +238,7 @@ The variant only matters when `auth` or `database` is kept.
 | `--dry-run`      | Print what would change without touching anything                                  |
 | `--skip-install` | Do not refresh `pnpm-lock.yaml`                                                    |
 | `--skip-format`  | Do not run Prettier on changed files                                               |
-| `--keep-tooling` | Keep `scripts/bootstrap`, `variants` and the feature matrix workflow                    |
+| `--keep-tooling` | Keep `scripts/bootstrap`, `variants` and the feature matrix workflow               |
 | `--strict`       | Fail if a kept file imports a package that was pruned                              |
 | `--root=dir`     | Project root (defaults to the current directory)                                   |
 
@@ -260,6 +269,42 @@ Try accessing `/profile` without signing in - you'll be redirected to the sign-i
 <!-- #endslot auth-demo-redirect -->
 
 <!-- #endregion @module:auth -->
+
+<!-- #region @module:payments -->
+
+## 💳 Payments (Stripe)
+
+One subscription plan, billed through Stripe. Stripe is the billing system and your database is the source of truth
+for access: the webhook is the only writer of the `subscriptions` table, and a success redirect never grants anything.
+
+**Set up**
+
+1. In the Stripe dashboard (test mode), create a product with one recurring price and copy its id into `STRIPE_PRICE_ID`.
+   The price lives in Stripe, not in code.
+2. Turn on the Customer Portal under Settings, Billing, Customer portal.
+3. Add `STRIPE_SECRET_KEY` and `STRIPE_PRICE_ID` to `.env.local`.
+4. Forward webhooks locally and put the printed signing secret in `STRIPE_WEBHOOK_SECRET`:
+
+   ```bash
+   stripe listen --forward-to localhost:3000/api/webhook/stripe
+   ```
+
+5. Apply the migrations with `pnpm run db:migrate`, sign in, and open `/billing`.
+
+For production, create a webhook endpoint at `https://<your-domain>/api/webhook/stripe` for
+`checkout.session.completed`, `customer.subscription.updated` and `customer.subscription.deleted`.
+
+**Gating a feature**
+
+Call `billingService.requirePaidAccess()` at the start of any resolver that is paid only. It throws a
+`SUBSCRIPTION_REQUIRED` GraphQL error, which the UI should turn into an upgrade prompt. `hasPaidAccess` (in
+`BillingService.ts`) is the one access rule: `active` and `trialing` pass, and `past_due` passes for three days after the
+period end. Change the rule there, nowhere else.
+
+**Not included:** coupons, trials, annual plans, tax, emails for failed payments (handle `invoice.payment_failed` in
+`BillingService.handleWebhookEvent`), and a Supabase version of the migration.
+
+<!-- #endregion @module:payments -->
 
 ## 🎨 Theming
 
@@ -316,11 +361,13 @@ src/components/
 src/
 ├── app/                    # Next.js app router pages
 │   ├── (auth)/            # Protected routes # @module:auth
+│   │   ├── billing/       # Subscription page # @module:payments
 │   │   └── profile/       # User profile page # @module:auth
 │   ├── (public)/          # Public routes
 │   │   └── page.tsx       # Homepage
 │   └── api/               # API routes # @module:graphql
-│       └── graphql/       # GraphQL endpoint # @module:graphql
+│       ├── graphql/       # GraphQL endpoint # @module:graphql
+│       └── webhook/stripe # Stripe webhook # @module:payments
 ├── components/            # React components (atomic design)
 ├── graphql/              # GraphQL schema, resolvers, and context # @module:graphql
 ├── services/             # Business logic layer # @module:graphql

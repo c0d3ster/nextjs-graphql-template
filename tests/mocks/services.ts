@@ -17,6 +17,17 @@ export const createMockUserService = () => ({
 })
 // #endregion @module:auth
 
+// #region @module:payments
+// Mock BillingService
+export const createMockBillingService = () => ({
+  getBillingStatus: vi.fn(),
+  requirePaidAccess: vi.fn(),
+  createCheckoutSession: vi.fn(),
+  createPortalSession: vi.fn(),
+  handleWebhookEvent: vi.fn(),
+})
+// #endregion @module:payments
+
 // #region @module:email
 // Mock ContactService
 export const createMockContactService = () => ({
