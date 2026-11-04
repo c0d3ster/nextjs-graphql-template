@@ -70,10 +70,10 @@ describe('resolveSelection', () => {
       expect(added).toEqual(['auth', 'database'])
     })
 
-    it('is rejected in the supabase variant', () => {
-      expect(() => resolveSelection(['payments'], supabase, 'supabase')).toThrow(
-        '"payments" is only available with --variant=clerk-neon'
-      )
+    it('is available in the supabase variant', () => {
+      const { enabled } = resolveSelection(['payments'], supabase, 'supabase')
+
+      expect(sorted(enabled)).toEqual(['auth', 'database', 'graphql', 'payments'])
     })
   })
 

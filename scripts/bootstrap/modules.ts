@@ -80,13 +80,12 @@ export const modules: Record<ModuleId, ModuleDef> = {
 
   // Stripe subscriptions: Checkout, the Customer Portal and a webhook that keeps the `subscriptions`
   // table in sync. Listed before `auth` on purpose: both rewrite the migration journal when off,
-  // and the later write (auth's empty journal) must win when both are off.
+  // and the later write (auth's empty journal) must win when both are off. The supabase variant
+  // overrides the paths: it ships a SQL migration instead of Drizzle output.
   payments: {
     id: 'payments',
     label: 'Payments (Stripe subscriptions)',
     requires: ['auth'],
-    // The supabase variant needs its own SQL migration and RLS policies for `subscriptions`
-    availableIn: ['clerk-neon'],
     paths: [
       'src/libs/Stripe.ts',
       'src/models/subscriptions.ts',

@@ -202,7 +202,7 @@ pnpm bootstrap --features=database,auth,email,realtime --variant=supabase
 | `auth`         | Sign-in, protected routes and user profiles                                                      | `database` |
 | `email`        | Resend, the contact form and its GraphQL mutation                                                |            |
 | `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo                                |            |
-| `payments`     | Stripe subscriptions: Checkout, Customer Portal, webhook, billing page (clerk-neon variant only) | `auth`     |
+| `payments`     | Stripe subscriptions: Checkout, Customer Portal, webhook, billing page | `auth`     |
 | `realtime`     | Live updates to the browser (supabase variant only)                                              | `auth`     |
 
 - GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth`, `email` or `payments` is.
@@ -289,7 +289,15 @@ for access: the webhook is the only writer of the `subscriptions` table, and a s
    stripe listen --forward-to localhost:3000/api/webhook/stripe
    ```
 
-5. Apply the migrations with `pnpm run db:migrate`, sign in, and open `/billing`.
+5. Apply the migration, sign in, and open `/billing`:
+
+   <!-- #slot payments-migrate -->
+
+   ```bash
+   pnpm run db:migrate
+   ```
+
+   <!-- #endslot payments-migrate -->
 
 For production, create a webhook endpoint at `https://<your-domain>/api/webhook/stripe` for
 `checkout.session.completed`, `customer.subscription.updated` and `customer.subscription.deleted`.
@@ -302,7 +310,7 @@ Call `billingService.requirePaidAccess()` at the start of any resolver that is p
 period end. Change the rule there, nowhere else.
 
 **Not included:** coupons, trials, annual plans, tax, emails for failed payments (handle `invoice.payment_failed` in
-`BillingService.handleWebhookEvent`), and a Supabase version of the migration.
+`BillingService.handleWebhookEvent`).
 
 <!-- #endregion @module:payments -->
 

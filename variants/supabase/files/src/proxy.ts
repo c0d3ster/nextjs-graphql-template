@@ -5,7 +5,10 @@ import { NextResponse } from 'next/server'
 import { isSupabaseConfigured } from '@/libs/supabase/client'
 import { updateSession } from '@/libs/supabase/proxy'
 
-const PROTECTED_PATHS = ['/profile']
+const PROTECTED_PATHS = [
+  '/profile',
+  '/billing', // @module:payments
+]
 
 const isProtectedPath = (pathname: string): boolean =>
   PROTECTED_PATHS.some(

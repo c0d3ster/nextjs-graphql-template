@@ -19,6 +19,19 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type BillingSession = {
+  readonly __typename?: 'BillingSession';
+  readonly url: Scalars['String']['output'];
+};
+
+export type BillingStatus = {
+  readonly __typename?: 'BillingStatus';
+  readonly cancelAtPeriodEnd: Scalars['Boolean']['output'];
+  readonly currentPeriodEnd?: Maybe<Scalars['String']['output']>;
+  readonly hasPaidAccess: Scalars['Boolean']['output'];
+  readonly status?: Maybe<SubscriptionStatus>;
+};
+
 export type ContactFormInput = {
   readonly email: Scalars['String']['input'];
   readonly message: Scalars['String']['input'];
@@ -38,6 +51,8 @@ export type ContactSubmission = {
 
 export type Mutation = {
   readonly __typename?: 'Mutation';
+  readonly createBillingPortalSession: BillingSession;
+  readonly createCheckoutSession: BillingSession;
   readonly submitContactForm: ContactSubmission;
   readonly updateUser: User;
 };
@@ -55,6 +70,7 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   readonly __typename?: 'Query';
+  readonly billingStatus: BillingStatus;
   /** Liveness check */
   readonly health: Scalars['Boolean']['output'];
   readonly me?: Maybe<User>;
@@ -66,6 +82,18 @@ export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
 
+/** Subscription status, as reported by Stripe */
+export enum SubscriptionStatus {
+  Active = 'Active',
+  Canceled = 'Canceled',
+  Incomplete = 'Incomplete',
+  IncompleteExpired = 'IncompleteExpired',
+  PastDue = 'PastDue',
+  Paused = 'Paused',
+  Trialing = 'Trialing',
+  Unpaid = 'Unpaid'
+}
+
 export type UpdateUserInput = {
   readonly avatarUrl?: InputMaybe<Scalars['String']['input']>;
   readonly firstName?: InputMaybe<Scalars['String']['input']>;
@@ -74,8 +102,8 @@ export type UpdateUserInput = {
 
 export type User = {
   readonly __typename?: 'User';
-  readonly avatarUrl?: Maybe<Scalars['String']['output']>;
   readonly authId?: Maybe<Scalars['String']['output']>;
+  readonly avatarUrl?: Maybe<Scalars['String']['output']>;
   readonly createdAt?: Maybe<Scalars['String']['output']>;
   readonly email: Scalars['String']['output'];
   readonly firstName?: Maybe<Scalars['String']['output']>;
@@ -92,6 +120,21 @@ export enum UserRole {
   Developer = 'Developer',
   SuperAdmin = 'SuperAdmin'
 }
+
+export type BillingStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BillingStatusQuery = { readonly __typename?: 'Query', readonly billingStatus: { readonly __typename?: 'BillingStatus', readonly hasPaidAccess: boolean, readonly status?: SubscriptionStatus | null, readonly currentPeriodEnd?: string | null, readonly cancelAtPeriodEnd: boolean } };
+
+export type CreateCheckoutSessionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateCheckoutSessionMutation = { readonly __typename?: 'Mutation', readonly createCheckoutSession: { readonly __typename?: 'BillingSession', readonly url: string } };
+
+export type CreateBillingPortalSessionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateBillingPortalSessionMutation = { readonly __typename?: 'Mutation', readonly createBillingPortalSession: { readonly __typename?: 'BillingSession', readonly url: string } };
 
 export type SubmitContactFormMutationVariables = Exact<{
   input: ContactFormInput;
@@ -130,6 +173,100 @@ export const UserDisplayFragmentDoc = gql`
   email
 }
     `;
+export const BillingStatusDocument = gql`
+    query BillingStatus {
+  billingStatus {
+    hasPaidAccess
+    status
+    currentPeriodEnd
+    cancelAtPeriodEnd
+  }
+}
+    `;
+
+/**
+ * __useBillingStatusQuery__
+ *
+ * To run a query within a React component, call `useBillingStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBillingStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBillingStatusQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBillingStatusQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<BillingStatusQuery, BillingStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<BillingStatusQuery, BillingStatusQueryVariables>(BillingStatusDocument, options);
+      }
+export function useBillingStatusLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BillingStatusQuery, BillingStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<BillingStatusQuery, BillingStatusQueryVariables>(BillingStatusDocument, options);
+        }
+export type BillingStatusQueryHookResult = ReturnType<typeof useBillingStatusQuery>;
+export type BillingStatusLazyQueryHookResult = ReturnType<typeof useBillingStatusLazyQuery>;
+export const CreateCheckoutSessionDocument = gql`
+    mutation CreateCheckoutSession {
+  createCheckoutSession {
+    url
+  }
+}
+    `;
+
+/**
+ * __useCreateCheckoutSessionMutation__
+ *
+ * To run a mutation, you first call `useCreateCheckoutSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCheckoutSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCheckoutSessionMutation, { data, loading, error }] = useCreateCheckoutSessionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateCheckoutSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCheckoutSessionMutation, CreateCheckoutSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateCheckoutSessionMutation, CreateCheckoutSessionMutationVariables>(CreateCheckoutSessionDocument, options);
+      }
+export type CreateCheckoutSessionMutationHookResult = ReturnType<typeof useCreateCheckoutSessionMutation>;
+export const CreateBillingPortalSessionDocument = gql`
+    mutation CreateBillingPortalSession {
+  createBillingPortalSession {
+    url
+  }
+}
+    `;
+
+/**
+ * __useCreateBillingPortalSessionMutation__
+ *
+ * To run a mutation, you first call `useCreateBillingPortalSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBillingPortalSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBillingPortalSessionMutation, { data, loading, error }] = useCreateBillingPortalSessionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateBillingPortalSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBillingPortalSessionMutation, CreateBillingPortalSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateBillingPortalSessionMutation, CreateBillingPortalSessionMutationVariables>(CreateBillingPortalSessionDocument, options);
+      }
+export type CreateBillingPortalSessionMutationHookResult = ReturnType<typeof useCreateBillingPortalSessionMutation>;
 export const SubmitContactFormDocument = gql`
     mutation SubmitContactForm($input: ContactFormInput!) {
   submitContactForm(input: $input) {
