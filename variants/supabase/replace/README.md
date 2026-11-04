@@ -151,3 +151,11 @@ useRealtimeTable({ table: 'messages', onChange: () => refetch() })
 
 <!-- #endregion @module:realtime -->
 <!-- #endslot realtime-docs -->
+
+<!-- #slot payments-migrate -->
+
+   ```bash
+   pnpm run db:push
+   ```
+
+<!-- #endslot payments-migrate -->

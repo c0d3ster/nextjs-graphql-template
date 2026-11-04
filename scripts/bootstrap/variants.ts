@@ -52,7 +52,7 @@ export const variants: Record<VariantId, VariantDef> = {
     overlay: 'variants/supabase/files',
     replace: 'variants/supabase/replace',
     removePaths: [
-      'src/app/api/webhook',
+      'src/app/api/webhook/clerk',
       'src/providers/ClerkProvider.tsx',
       'src/providers/ClerkProvider.test.tsx',
       'migrations',
@@ -73,8 +73,8 @@ export const variants: Record<VariantId, VariantDef> = {
       remove: ['db:generate', 'db:migrate', 'db:studio'],
     },
     modules: {
-      // Never selectable here (clerk-neon only), but its paths are checked against this variant.
-      // The webhook folder and the Drizzle migrations are removed by the variant itself.
+      // Migrations are SQL files for the Supabase CLI, not Drizzle output. The billing page comes
+      // from the overlay and is listed because it is deleted when the module is off.
       payments: {
         paths: [
           'src/libs/Stripe.ts',
@@ -87,6 +87,8 @@ export const variants: Record<VariantId, VariantDef> = {
           'src/apiClients/billingApiClient.test.ts',
           'src/components/organisms/billing',
           'src/app/(auth)/billing',
+          'src/app/api/webhook/stripe',
+          'supabase/migrations/20261030000000_create_subscriptions_table.sql',
         ],
         writes: {},
       },
