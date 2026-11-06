@@ -7,9 +7,12 @@ import { getStripe } from '@/libs/Stripe'
 import { BillingService, hasPaidAccess } from './BillingService'
 
 vi.mock('@/libs/Stripe', () => ({ getStripe: vi.fn() }))
-vi.mock('@/libs/Env', () => ({
-  Env: { STRIPE_PRICE_ID: 'price_123', DATABASE_URL: 'test' },
+const mockEnv = vi.hoisted(() => ({
+  STRIPE_PRICE_ID: 'price_123' as string | undefined,
+  DATABASE_URL: 'test',
 }))
+
+vi.mock('@/libs/Env', () => ({ Env: mockEnv }))
 vi.mock('@/utils/Env', () => ({ getBaseUrl: () => 'https://app.test' }))
 vi.mock('@/models', () => ({
   schemas: {
@@ -98,6 +101,7 @@ describe('BillingService', () => {
   const values = vi.fn(() => ({ onConflictDoUpdate }))
 
   beforeEach(() => {
+    mockEnv.STRIPE_PRICE_ID = 'price_123'
     userService.getCurrentUserWithAuth.mockResolvedValue(user)
     vi.mocked(getStripe).mockReturnValue(stripe as never)
     vi.mocked(db.insert).mockReturnValue({ values } as never)
@@ -132,7 +136,44 @@ describe('BillingService', () => {
     })
   })
 
+  describe('getBillingStatus with a subscription', () => {
+    it('reports the stored subscription', async () => {
+      findFirst.mockResolvedValue({
+        status: SubscriptionStatus.Active,
+        currentPeriodEnd: new Date('2026-02-01T00:00:00Z'),
+        cancelAtPeriodEnd: true,
+      } as never)
+
+      await expect(service.getBillingStatus()).resolves.toEqual({
+        hasPaidAccess: true,
+        status: SubscriptionStatus.Active,
+        currentPeriodEnd: '2026-02-01T00:00:00.000Z',
+        cancelAtPeriodEnd: true,
+      })
+    })
+  })
+
   describe('createCheckoutSession', () => {
+    it('fails when the price id is not configured', async () => {
+      mockEnv.STRIPE_PRICE_ID = undefined
+
+      await expect(service.createCheckoutSession()).rejects.toThrow(
+        'STRIPE_PRICE_ID is not configured'
+      )
+      expect(stripe.checkout.sessions.create).not.toHaveBeenCalled()
+    })
+
+    it('fails when Stripe returns no checkout url', async () => {
+      stripe.checkout.sessions.create.mockResolvedValue({
+        id: 'cs_1',
+        url: null,
+      })
+
+      await expect(service.createCheckoutSession()).rejects.toThrow(
+        'Failed to create checkout session'
+      )
+    })
+
     it('starts a subscription checkout for a new customer', async () => {
       stripe.checkout.sessions.create.mockResolvedValue({
         id: 'cs_1',
@@ -244,6 +285,68 @@ describe('BillingService', () => {
         cancelAtPeriodEnd: false,
       })
       expect(onConflictDoUpdate).toHaveBeenCalled()
+    })
+
+    it('accepts an expanded subscription object on the checkout session', async () => {
+      await service.handleWebhookEvent({
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            mode: 'subscription',
+            subscription: { id: 'sub_1' },
+            client_reference_id: 'user-1',
+          },
+        },
+      } as never)
+
+      expect(stripe.subscriptions.retrieve).toHaveBeenCalledWith('sub_1')
+      expect(values).toHaveBeenCalledTimes(1)
+    })
+
+    it('accepts an expanded customer object on the subscription', async () => {
+      stripe.subscriptions.retrieve.mockResolvedValue({
+        ...stripeSubscription,
+        customer: { id: 'cus_2' },
+      })
+
+      await service.handleWebhookEvent({
+        type: 'customer.subscription.updated',
+        data: { object: { id: 'sub_1' } },
+      } as never)
+
+      expect(values).toHaveBeenCalledWith(
+        expect.objectContaining({ stripeCustomerId: 'cus_2' })
+      )
+    })
+
+    it('stores a null period end when Stripe sends no items', async () => {
+      stripe.subscriptions.retrieve.mockResolvedValue({
+        ...stripeSubscription,
+        items: { data: [] },
+      })
+
+      await service.handleWebhookEvent({
+        type: 'customer.subscription.updated',
+        data: { object: { id: 'sub_1' } },
+      } as never)
+
+      expect(values).toHaveBeenCalledWith(
+        expect.objectContaining({ currentPeriodEnd: null })
+      )
+    })
+
+    it('writes nothing for a status it does not store', async () => {
+      stripe.subscriptions.retrieve.mockResolvedValue({
+        ...stripeSubscription,
+        status: 'something_new',
+      })
+
+      await service.handleWebhookEvent({
+        type: 'customer.subscription.updated',
+        data: { object: { id: 'sub_1' } },
+      } as never)
+
+      expect(values).not.toHaveBeenCalled()
     })
 
     it('ignores one-time payment checkouts', async () => {
