@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import {
+  useBillingStatusQuery,
+  useCreateBillingPortalSessionMutation,
+  useCreateCheckoutSessionMutation,
+} from '@/graphql/generated/graphql'
+
+import {
   BILLING_STATUS,
   CREATE_BILLING_PORTAL_SESSION,
   CREATE_CHECKOUT_SESSION,
@@ -22,9 +28,13 @@ describe('Billing API Client', () => {
     expect(CREATE_BILLING_PORTAL_SESSION.definitions).toHaveLength(1)
   })
 
-  it('exports the hooks', () => {
-    expect(typeof useBillingStatus).toBe('function')
-    expect(typeof useCreateCheckoutSession).toBe('function')
-    expect(typeof useCreateBillingPortalSession).toBe('function')
+  it('wraps the generated hooks', () => {
+    useBillingStatus()
+    useCreateCheckoutSession()
+    useCreateBillingPortalSession()
+
+    expect(useBillingStatusQuery).toHaveBeenCalledOnce()
+    expect(useCreateCheckoutSessionMutation).toHaveBeenCalledOnce()
+    expect(useCreateBillingPortalSessionMutation).toHaveBeenCalledOnce()
   })
 })
