@@ -196,14 +196,14 @@ pnpm bootstrap --features=database,auth,email,payments
 pnpm bootstrap --features=database,auth,email,realtime --variant=supabase
 ```
 
-| Feature        | Keeps                                                                                            | Needs      |
-| -------------- | ------------------------------------------------------------------------------------------------ | ---------- |
-| `database`     | Drizzle ORM, Postgres connection, migrations                                                     |            |
-| `auth`         | Sign-in, protected routes and user profiles                                                      | `database` |
-| `email`        | Resend, the contact form and its GraphQL mutation                                                |            |
-| `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo                                |            |
+| Feature        | Keeps                                                                  | Needs      |
+| -------------- | ---------------------------------------------------------------------- | ---------- |
+| `database`     | Drizzle ORM, Postgres connection, migrations                           |            |
+| `auth`         | Sign-in, protected routes and user profiles                            | `database` |
+| `email`        | Resend, the contact form and its GraphQL mutation                      |            |
+| `file_uploads` | Cloudflare R2 (S3) presigned file URLs, such as the homepage logo      |            |
 | `payments`     | Stripe subscriptions: Checkout, Customer Portal, webhook, billing page | `auth`     |
-| `realtime`     | Live updates to the browser (supabase variant only)                                              | `auth`     |
+| `realtime`     | Live updates to the browser (supabase variant only)                    | `auth`     |
 
 - GraphQL (Apollo Server and Client, codegen) is kept automatically whenever `auth`, `email` or `payments` is.
 - Features that are required by another are added for you, and the script says so.

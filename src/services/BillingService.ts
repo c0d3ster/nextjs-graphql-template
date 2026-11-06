@@ -39,6 +39,10 @@ export const hasPaidAccess = (
   )
 }
 
+// Stripe's status type is open ended, so narrow it to the statuses we store instead of casting
+const toSubscriptionStatus = (status: string): SubscriptionStatus | undefined =>
+  Object.values(SubscriptionStatus).find((value) => value === status)
+
 const badRequest = (message: string, code: string): GraphQLError =>
   new GraphQLError(message, { extensions: { code } })
 
@@ -59,7 +63,7 @@ export class BillingService {
 
     return {
       hasPaidAccess: hasPaidAccess(subscription),
-      status: subscription?.status as SubscriptionStatus | undefined,
+      status: subscription?.status,
       currentPeriodEnd: subscription?.currentPeriodEnd?.toISOString(),
       cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd ?? false,
     }
@@ -173,12 +177,21 @@ export class BillingService {
       return
     }
 
+    const status = toSubscriptionStatus(subscription.status)
+    if (!status) {
+      logger.warn('Stripe subscription has an unknown status', {
+        subscriptionId: subscription.id,
+        status: subscription.status,
+      })
+      return
+    }
+
     // Stripe keeps the period on the items since API 2025-03-31
     const periodEnd = subscription.items.data[0]?.current_period_end
     const values = {
       stripeCustomerId: customerId,
       stripeSubscriptionId: subscription.id,
-      status: subscription.status as SubscriptionStatus,
+      status,
       currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     }
@@ -190,6 +203,6 @@ export class BillingService {
         target: schemas.subscriptions.userId,
         set: { ...values, updatedAt: new Date() },
       })
-    logger.info('Subscription synced', { userId, status: values.status })
+    logger.info('Subscription synced', { userId, status })
   }
 }
