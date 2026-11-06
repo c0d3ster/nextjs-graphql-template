@@ -10,12 +10,12 @@ export class BillingResolver {
   constructor(private billingService: BillingService) {}
 
   @Query(() => BillingStatus)
-  async billingStatus() {
+  async billingStatus(): Promise<BillingStatus> {
     return this.billingService.getBillingStatus()
   }
 
   @Mutation(() => BillingSession)
-  async createCheckoutSession() {
+  async createCheckoutSession(): Promise<BillingSession> {
     try {
       return await this.billingService.createCheckoutSession()
     } catch (error) {
@@ -27,7 +27,7 @@ export class BillingResolver {
   }
 
   @Mutation(() => BillingSession)
-  async createBillingPortalSession() {
+  async createBillingPortalSession(): Promise<BillingSession> {
     try {
       return await this.billingService.createPortalSession()
     } catch (error) {
