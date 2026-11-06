@@ -108,11 +108,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run unit tests
-        uses: docker://mcr.microsoft.com/playwright:v1.64.1-noble
-        with:
-          args: sh -c "corepack enable pnpm && pnpm run test --run --project=unit --coverage"
+        run: pnpm run test --run --project=unit --coverage
         env:
-          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
           # #region @module:auth+clerk
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
@@ -178,12 +175,14 @@ jobs:
           # Build environment
           NODE_ENV: production
 
+      # Browsers come from the installed Playwright version, not a container image. The image tag
+      # is mutable: a rebuild once swapped its Node to a version without corepack and broke CI.
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox
+
       - name: Run E2E tests
-        uses: docker://mcr.microsoft.com/playwright:v1.64.1-noble
-        with:
-          args: sh -c "corepack enable pnpm && HOME=/root pnpm run test:e2e" # Set HOME to /root to avoid Playwright error with Firefox
+        run: pnpm run test:e2e
         env:
-          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
           # #region @module:auth+clerk
           # Required Clerk variables
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
@@ -195,10 +194,6 @@ jobs:
           # #endregion @module:database+clerk
           # Test environment
           NODE_ENV: test
-
-      - name: Fix test results permissions
-        run: |
-          sudo chmod -R 777 test-results
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
