@@ -68,7 +68,7 @@ export const variants: Record<VariantId, VariantDef> = {
         'db:reset': 'supabase db reset',
         'db:pull': 'drizzle-kit pull',
         // Migrations are applied with `supabase db push`, not during the build
-        'build': 'pnpm run build:next',
+        build: 'pnpm run build:next',
       },
       remove: ['db:generate', 'db:migrate', 'db:studio'],
     },
@@ -78,10 +78,13 @@ export const variants: Record<VariantId, VariantDef> = {
       payments: {
         paths: [
           'src/libs/Stripe.ts',
+          'src/libs/Stripe.test.ts',
           'src/models/subscriptions.ts',
+          'src/models/subscriptions.test.ts',
           'src/services/BillingService.ts',
           'src/services/BillingService.test.ts',
           'src/graphql/resolvers/BillingResolver.ts',
+          'src/graphql/resolvers/BillingResolver.test.ts',
           'src/graphql/schema/billing.ts',
           'src/apiClients/billingApiClient.ts',
           'src/apiClients/billingApiClient.test.ts',
@@ -93,9 +96,28 @@ export const variants: Record<VariantId, VariantDef> = {
         writes: {},
       },
       database: {
-        paths: ['src/libs/DB.ts', 'src/models', 'drizzle.config.ts', 'supabase'],
-        packages: ['drizzle-orm', 'drizzle-kit', 'pg', '@types/pg', 'dotenv', 'supabase'],
-        scripts: ['db:start', 'db:stop', 'db:new', 'db:push', 'db:reset', 'db:pull'],
+        paths: [
+          'src/libs/DB.ts',
+          'src/models',
+          'drizzle.config.ts',
+          'supabase',
+        ],
+        packages: [
+          'drizzle-orm',
+          'drizzle-kit',
+          'pg',
+          '@types/pg',
+          'dotenv',
+          'supabase',
+        ],
+        scripts: [
+          'db:start',
+          'db:stop',
+          'db:new',
+          'db:push',
+          'db:reset',
+          'db:pull',
+        ],
         scriptReplacements: {},
       },
       auth: {
@@ -198,7 +220,9 @@ export const resolveVariant = (
 ): VariantId => {
   if (explicit !== undefined) {
     if (!isVariantId(explicit)) {
-      throw new Error(`Unknown variant "${explicit}". Choose one of: ${variantIds.join(', ')}`)
+      throw new Error(
+        `Unknown variant "${explicit}". Choose one of: ${variantIds.join(', ')}`
+      )
     }
     return explicit
   }

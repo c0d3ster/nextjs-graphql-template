@@ -47,20 +47,41 @@ const USERS_ONLY_JOURNAL = `${JSON.stringify(
   {
     version: '7',
     dialect: 'postgresql',
-    entries: [{ idx: 0, version: '7', when: 1762575694406, tag: '0000_create_users_table', breakpoints: true }],
+    entries: [
+      {
+        idx: 0,
+        version: '7',
+        when: 1762575694406,
+        tag: '0000_create_users_table',
+        breakpoints: true,
+      },
+    ],
   },
   null,
   2
 )}\n`
 
-export const selectableIds: readonly ModuleId[] = ['database', 'auth', 'email', 'file_uploads', 'payments', 'realtime']
+export const selectableIds: readonly ModuleId[] = [
+  'database',
+  'auth',
+  'email',
+  'file_uploads',
+  'payments',
+  'realtime',
+]
 
 export const modules: Record<ModuleId, ModuleDef> = {
   bootstrap: {
     id: 'bootstrap',
     label: 'Template setup tooling',
     requires: [],
-    paths: ['scripts/bootstrap', 'variants', 'docs/TEMPLATING.md', '.github/workflows/bootstrap.yml', '.github/workflows/feature-matrix.yml'],
+    paths: [
+      'scripts/bootstrap',
+      'variants',
+      'docs/TEMPLATING.md',
+      '.github/workflows/bootstrap.yml',
+      '.github/workflows/feature-matrix.yml',
+    ],
     packages: ['tsx'],
     scripts: ['bootstrap'],
     scriptReplacements: {},
@@ -71,7 +92,13 @@ export const modules: Record<ModuleId, ModuleDef> = {
     id: 'database',
     label: 'Database (Drizzle ORM + Postgres)',
     requires: [],
-    paths: ['src/libs/DB.ts', 'src/models', 'drizzle.config.ts', 'scripts/build.js', 'migrations'],
+    paths: [
+      'src/libs/DB.ts',
+      'src/models',
+      'drizzle.config.ts',
+      'scripts/build.js',
+      'migrations',
+    ],
     packages: ['drizzle-orm', 'drizzle-kit', 'pg', '@types/pg', 'dotenv'],
     scripts: ['db:generate', 'db:migrate', 'db:studio'],
     scriptReplacements: { build: 'pnpm run build:next' },
@@ -88,10 +115,13 @@ export const modules: Record<ModuleId, ModuleDef> = {
     requires: ['auth'],
     paths: [
       'src/libs/Stripe.ts',
+      'src/libs/Stripe.test.ts',
       'src/models/subscriptions.ts',
+      'src/models/subscriptions.test.ts',
       'src/services/BillingService.ts',
       'src/services/BillingService.test.ts',
       'src/graphql/resolvers/BillingResolver.ts',
+      'src/graphql/resolvers/BillingResolver.test.ts',
       'src/graphql/schema/billing.ts',
       'src/apiClients/billingApiClient.ts',
       'src/apiClients/billingApiClient.test.ts',
@@ -155,7 +185,12 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'src/validations',
       'tests/e2e/ContactForm.e2e.ts',
     ],
-    packages: ['resend', '@react-email/render', 'react-hook-form', '@hookform/resolvers'],
+    packages: [
+      'resend',
+      '@react-email/render',
+      'react-hook-form',
+      '@hookform/resolvers',
+    ],
     scripts: [],
     scriptReplacements: {},
     writes: {},

@@ -98,6 +98,54 @@ describe('BillingPanel', () => {
     expect(screen.getByText(/ends on/)).toBeInTheDocument()
   })
 
+  it('shows an error toast when checkout returns no url', async () => {
+    mockStatus.mockReturnValue({
+      loading: false,
+      data: {
+        billingStatus: { hasPaidAccess: false, cancelAtPeriodEnd: false },
+      },
+    })
+    mockCheckout.mockReturnValue([
+      vi.fn().mockResolvedValue({ data: { createCheckoutSession: {} } }),
+      { loading: false },
+    ])
+
+    render(<BillingPanel />)
+    fireEvent.click(screen.getByRole('button', { name: 'Subscribe' }))
+
+    await waitFor(() => {
+      expect(Toast.error).toHaveBeenCalledWith(
+        'Could not start checkout. Please try again.'
+      )
+    })
+
+    expect(assign).not.toHaveBeenCalled()
+  })
+
+  it('shows an error toast when the portal fails', async () => {
+    mockStatus.mockReturnValue({
+      loading: false,
+      data: {
+        billingStatus: { hasPaidAccess: true, cancelAtPeriodEnd: false },
+      },
+    })
+    mockPortal.mockReturnValue([
+      vi.fn().mockRejectedValue(new Error('boom')),
+      { loading: false },
+    ])
+
+    render(<BillingPanel />)
+    fireEvent.click(screen.getByRole('button', { name: 'Manage billing' }))
+
+    await waitFor(() => {
+      expect(Toast.error).toHaveBeenCalledWith(
+        'Could not open billing. Please try again.'
+      )
+    })
+
+    expect(assign).not.toHaveBeenCalled()
+  })
+
   it('shows an error toast when checkout fails', async () => {
     mockStatus.mockReturnValue({
       loading: false,
