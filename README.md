@@ -141,7 +141,7 @@ DATABASE / EXTERNAL APIs
    # #endslot env-provider
 
    # Optional
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_APP_URL=http://localhost:3000 # leave unset locally so it follows the port `pnpm dev` picks
    RESEND_API_KEY=re_... # @module:email
    STRIPE_SECRET_KEY=sk_test_... # @module:payments
    STRIPE_WEBHOOK_SECRET=whsec_... # @module:payments

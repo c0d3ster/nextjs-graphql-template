@@ -201,6 +201,7 @@ export const modules: Record<ModuleId, ModuleDef> = {
       'src/libs/ApolloClient.ts',
       'codegen.ts',
       'scripts/codegen-with-retry.js',
+      'scripts/dev.ts',
     ],
     packages: [
       '@apollo/client',
