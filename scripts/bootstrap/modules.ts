@@ -217,7 +217,6 @@ export const modules: Record<ModuleId, ModuleDef> = {
       '@graphql-codegen/typescript-operations',
       '@graphql-codegen/typescript-react-apollo',
       '@parcel/watcher',
-      'npm-run-all',
     ],
     scripts: ['codegen', 'codegen:watch'],
     scriptReplacements: { dev: 'pnpm run dev:next' },
