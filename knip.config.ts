@@ -23,6 +23,7 @@ const config: KnipConfig = {
     '@supabase/ssr', // Used by the supabase variant @module:bootstrap
     '@supabase/supabase-js', // Used by the supabase variant @module:bootstrap
     'supabase', // CLI for the supabase variant @module:bootstrap
+    'npm-run-all', // run-p, spawned by scripts/dev.ts where knip can't see it @module:graphql
   ],
   // Binaries to ignore during analysis
   ignoreBinaries: [],
